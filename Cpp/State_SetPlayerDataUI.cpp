@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstdlib>
 
 //#include <imm.h>
 
@@ -214,7 +215,7 @@ int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 					// 位置を設定
 
 
-					SetNumberProcess(i);
+					SetNumberProcess(parent, i);
 				}
 			}
 		}
@@ -325,7 +326,7 @@ int SPDUINameSet::CheckYPos(int yPos)
 }
 
 // ナンバーにあった処理をする
-void SPDUINameSet::SetNumberProcess(PROCESS_NUMBER number, bool flag)
+void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER number, bool flag)
 {
 	if ((char)number >= 0)
 	{
@@ -454,7 +455,7 @@ void SPDUINameSet::SetNumberProcess(PROCESS_NUMBER number, bool flag)
 		case PROCESS_NUMBER::TAB:
 			for (int i = 0; i < 4; ++i)
 			{
-				SetNumberProcess(PROCESS_NUMBER::SPACE, false);
+				SetNumberProcess(parent, PROCESS_NUMBER::SPACE, false);
 			}
 			break;
 
@@ -540,6 +541,12 @@ void SPDUINameSet::SetNumberProcess(PROCESS_NUMBER number, bool flag)
 			else
 			{
 				// 次に移動
+				{// 名前入力
+					std::string name(msSetName.size(), L'');
+					wcstombs(&name[0], msSetName.c_str(), msSetName.size());
+					Master::mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), name);
+				}
+				parent->Decision();
 			}
 			break;
 

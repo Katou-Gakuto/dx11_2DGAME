@@ -103,11 +103,11 @@ class SPDUINameSet : public IState_SetPlayerDataUI
 {
 private:
 	// 設定用 名前
-	std::basic_string<char16_t> msSetName;
+	std::wstring msSetName;
 	// 追加文字
-	std::basic_string<char16_t> msAddWord;
+	std::wstring msAddWord;
 	// 選択文字
-	std::basic_string<char16_t> msSelectWord;
+	std::wstring msSelectWord;
 	// 設定用名前 選択中箇所
 	int mnSetNameSelectNumber;
 	// 追加文字 選択中箇所
@@ -219,9 +219,9 @@ private:
 	int CheckYPos(int yPos);
 
 	/*ナンバーにあった処理をする*/
-	void SetNumberProcess(PROCESS_NUMBER number, bool flag = true);
-	void SetNumberProcess(char number, bool flag = true) { SetNumberProcess((PROCESS_NUMBER)number, flag); }
-	void SetNumberProcess(int number, bool flag = true) { SetNumberProcess((PROCESS_NUMBER)number, flag); }
+	void SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER number, bool flag = true);
+	void SetNumberProcess(SetPlayerDataUI* parent, char number, bool flag = true) { SetNumberProcess(parent, (PROCESS_NUMBER)number, flag); }
+	void SetNumberProcess(SetPlayerDataUI* parent, int number, bool flag = true) { SetNumberProcess(parent, (PROCESS_NUMBER)number, flag); }
 
 	// 追加文字を変換する
 	void ChangeAddWord();
