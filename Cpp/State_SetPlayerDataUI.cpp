@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-#include <cstdlib>
+#include <locale>
+#include <codecvt>
 
 //#include <imm.h>
 
@@ -540,12 +541,12 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 			}
 			else
 			{
-				// ŽŸ‚ÉˆÚ“®
 				{// –¼‘O“ü—Í
-					std::string name(msSetName.size(), L'');
-					wcstombs(&name[0], msSetName.c_str(), msSetName.size());
-					Master::mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), name);
+					msSetName = L"dsad";
+					std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+					Master::mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), converter.to_bytes(msSetName));
 				}
+				// ŽŸ‚ÉˆÚ“®
 				parent->Decision();
 			}
 			break;
