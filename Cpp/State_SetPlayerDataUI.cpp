@@ -205,19 +205,120 @@ int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 {
 	if (Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber()) == (int)CONTROLLER_KEY_NUMBER::KEY_BOARD)
 	{
-		unsigned long long keyBoradFlags = (mpKeyState->GetDownWordKeyFlags_Board() & 0xfffffffff);
+		unsigned long long wordKeyBoradFlags = (mpKeyState->GetDownWordKeyFlags_Board() & 0x1'ffff'ffff'ffff);
 		// 押してるワードに反応する
-		if (keyBoradFlags != 0)
+		if (wordKeyBoradFlags != 0)
 		{
 			for (int i = 0; i < WORD_MAX; i++)
 			{
-				if (mpKeyState->GetWordKeyDown_Board(i))
+				if ((wordKeyBoradFlags & ((unsigned long long)1 << i)) != 0)
 				{
-					// 位置を設定
+					// 仮想キーボードの位置を設定
 
 
 					SetNumberProcess(parent, i);
 				}
+			}
+
+			if (((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::ARROW_LEFT)) != 0) &&
+				((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT)) != 0))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::LETF);
+			}
+			if (((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::ARROW_RIGHT)) != 0) &&
+				((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT)) != 0))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::RIGHT);
+			}
+
+			// ホーム
+			if ((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::HOME)) != 0)
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::HOME);
+			}
+
+			// エンド
+			if ((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::END)) != 0)
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::END);
+			}
+		}
+
+		{// 特殊キー処理
+			// 全角半角
+			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::FULL_WIDTH))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, true);
+			}
+			else if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::HALF_WIDTH))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, false);
+			}
+
+			// シフト
+			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_SHIFT, true);
+			}
+			else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_SHIFT, false);
+			}
+
+			// インサート
+			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::INSERT))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_INSERT, true);
+			}
+			else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::INSERT))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_INSERT, false);
+			}
+
+			// オルト
+			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ALT_LEFT_AND_RIGHT))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_ALT, true);
+			}
+			else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::ALT_LEFT_AND_RIGHT))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_ALT, false);
+			}
+
+			// バックスペース
+			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::BACK_SPACE))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::BACK_SPAE);
+			}
+
+			// タブ
+			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::TAB))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::TAB);
+			}
+
+			// デリート
+			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::_DELETE))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::DELETE_PROCESS);
+			}
+
+			// エンター
+			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ENTER))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
+			}
+		}
+
+		{// 
+			// キャプチャーロック
+			if (mpKeyState->GetAllToggleState())// トグルキーダウンとアップ作る
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, true);
+			}
+			else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, false);
 			}
 		}
 	}
@@ -331,29 +432,70 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 {
 	if ((char)number >= 0)
 	{
-		if ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION)) != 0)
+		if ((int)number <= (int)PROCESS_NUMBER::SPACE)
 		{
-			if (msAddWord.size() > 0)
+			if ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION)) != 0)
 			{
-				switch (number)
+				if (((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::CAPS_LOCK)) != 0) || ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT)) != 0))
 				{
-				case PROCESS_NUMBER::SPACE:
-					// msAddWord 変換処理
-					break;
+					if (FULL_CAPITAL_WORD[(int)number] != NULL)
+					{
+						if (msAddWord.size() > 0)
+						{
+							if (mnAddWordChangeNumber != 0)
+							{
+								mnAddWordChangeNumber = 0;
+							}
 
-				case PROCESS_NUMBER::A:
-				case PROCESS_NUMBER::I:
-				case PROCESS_NUMBER::U:
-				case PROCESS_NUMBER::E:
-				case PROCESS_NUMBER::O:
-					// ひらがな生成処理
-					break;
+							msAddWord.insert(mnAddWordSelectNumber, 1, FULL_CAPITAL_WORD[(int)number]);
+							mnAddWordSelectNumber += 1;
+						}
+						else
+						{
+							msSetName.insert(mnSetNameSelectNumber, 1, FULL_CAPITAL_WORD[(int)number]);
+							mnSetNameSelectNumber += 1;
+						}
+						msSelectWord.clear();
+						mnSelectWordSelectNumber = 0;
+					}
+				}
+				else
+				{
+					if (FULL_WORD[(int)number] != NULL)
+					{
+						if (msAddWord.size() > 0)
+						{
+							if (mnAddWordChangeNumber != 0)
+							{
+								mnAddWordChangeNumber = 0;
+							}
+
+							msAddWord.insert(mnAddWordSelectNumber, 1, FULL_WORD[(int)number]);
+							mnAddWordSelectNumber += 1;
+						}
+						else
+						{
+							msSetName.insert(mnSetNameSelectNumber, 1, FULL_WORD[(int)number]);
+							mnSetNameSelectNumber += 1;
+						}
+						msSelectWord.clear();
+						mnSelectWordSelectNumber = 0;
+					}
+					/*
+					switch (number)
+					{
+					case PROCESS_NUMBER::SPACE:
+					case PROCESS_NUMBER::A:
+					case PROCESS_NUMBER::I:
+					case PROCESS_NUMBER::U:
+					case PROCESS_NUMBER::E:
+					case PROCESS_NUMBER::O:
+						// ひらがな生成処理(もう一つ作るそれを変更中の文字列の代わりに表示する)mnAddWordChangeNumberは関数内で変更
+						break;
+					}*/
 				}
 			}
-		}
-		else
-		{
-			if ((int)number <= (int)PROCESS_NUMBER::SPACE)
+			else
 			{
 				if (((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::CAPS_LOCK)) != 0) || ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT)) != 0))
 				{
@@ -361,9 +503,13 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 					{
 						if (msAddWord.size() > 0)
 						{
+							if (mnAddWordChangeNumber != 0)
+							{
+								mnAddWordChangeNumber = 0;
+							}
+
 							msAddWord.insert(mnAddWordSelectNumber, 1, HARF_CAPITAL_WORD[(int)number]);
 							mnAddWordSelectNumber += 1;
-							mnAddWordChangeNumber = 0;
 						}
 						else
 						{
@@ -380,9 +526,13 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 					{
 						if (msAddWord.size() > 0)
 						{
+							if (mnAddWordChangeNumber != 0)
+							{
+								mnAddWordChangeNumber = 0;
+							}
+
 							msAddWord.insert(mnAddWordSelectNumber, 1, HARF_WORD[(int)number]);
 							mnAddWordSelectNumber += 1;
-							mnAddWordChangeNumber = 0;
 						}
 						else
 						{
@@ -401,7 +551,14 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 		switch (number)
 		{
 		case PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH:
-			mucWordFlags &= ~((unsigned char)(flag ? 1 : 0) << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
+			if (flag)
+			{
+				mucWordFlags |= ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
+			}
+			else
+			{
+				mucWordFlags &= ~((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
+			}
 			break;
 		case PROCESS_NUMBER::FULL_HALF_WIDTH:
 			mucWordFlags ^= ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
@@ -432,7 +589,14 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 			break;
 
 		case PROCESS_NUMBER::KEY_BOARD_INSERT:
-			mucWordFlags &= ~((unsigned char)(flag ? 1 : 0) << (int)WORD_FLAGS_BIT::INSERT);
+			if (flag)
+			{
+				mucWordFlags |= ((unsigned char)1 << (int)WORD_FLAGS_BIT::INSERT);
+			}
+			else
+			{
+				mucWordFlags &= ~((unsigned char)1 << (int)WORD_FLAGS_BIT::INSERT);
+			}
 			break;
 		case PROCESS_NUMBER::INSERT:
 			mucWordFlags ^= ((unsigned char)1 << (int)WORD_FLAGS_BIT::INSERT);
@@ -510,7 +674,14 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 			break;
 
 		case PROCESS_NUMBER::KEY_BOARD_CAPSLOCK:
-			mucWordFlags &= ~((unsigned char)(flag ? 1 : 0) << (int)WORD_FLAGS_BIT::CAPS_LOCK);
+			if (flag)
+			{
+				mucWordFlags |= ((unsigned char)1 << (int)WORD_FLAGS_BIT::CAPS_LOCK);
+			}
+			else
+			{
+				mucWordFlags &= ~((unsigned char)1 << (int)WORD_FLAGS_BIT::CAPS_LOCK);
+			}
 			break;
 		case PROCESS_NUMBER::CAPSLOCK:
 			mucWordFlags ^= ((unsigned char)1 << (int)WORD_FLAGS_BIT::CAPS_LOCK);
@@ -544,7 +715,7 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 				{// 名前入力
 					msSetName = L"dsad";
 					std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-					Master::mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), converter.to_bytes(msSetName));
+					Master::mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), /*"sdaあさ");//*/converter.to_bytes(msSetName));// ひらがな変換出来ない
 				}
 				// 次に移動
 				parent->Decision();
@@ -552,14 +723,28 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 			break;
 
 		case PROCESS_NUMBER::KEY_BOARD_ALT:
-			mucWordFlags &= ~((unsigned char)(flag ? 1 : 0) << (int)WORD_FLAGS_BIT::ALT);
+			if (flag)
+			{
+				mucWordFlags |= ((unsigned char)1 << (int)WORD_FLAGS_BIT::ALT);
+			}
+			else
+			{
+				mucWordFlags &= ~((unsigned char)1 << (int)WORD_FLAGS_BIT::ALT);
+			}
 			break;
 		case PROCESS_NUMBER::ALT:
 			mucWordFlags ^= ((unsigned char)1 << (int)WORD_FLAGS_BIT::ALT);
 			break;
 
 		case PROCESS_NUMBER::KEY_BOARD_SHIFT:
-			mucWordFlags &= ~((unsigned char)(flag ? 1 : 0) << (int)WORD_FLAGS_BIT::SHIFT);
+			if (flag)
+			{
+				mucWordFlags |= ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT);
+			}
+			else
+			{
+				mucWordFlags &= ~((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT);
+			}
 			break;
 		case PROCESS_NUMBER::SHIFT:
 			mucWordFlags ^= ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT);

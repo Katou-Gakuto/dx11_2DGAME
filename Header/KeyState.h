@@ -207,8 +207,8 @@ namespace KEY_BOARD_SET_NUMBER
 		
 		// 修飾キー
 		SHIFT_LEFT_AND_RIGHT = 16,	// 両シフト
-		SIFT_LEFT = 160,			// 左シフト
-		SIFT_RIGHT,					// 右シフト
+		SHIFT_LEFT = 160,			// 左シフト
+		SHIFT_RIGHT,					// 右シフト
 		CTRL_LEFT_AND_RIGHT = 17,	// 両コントロール
 		CTRL_LEFT = 162,			// 左コントロール
 		CTRL_RIGHT,					// 右コントロール
@@ -358,8 +358,8 @@ enum class KEY_BOARD_SPECIAL
 
 	// 修飾キー
 	SHIFT_LEFT_AND_RIGHT,	// 両シフト
-	SIFT_LEFT,				// 左シフト
-	SIFT_RIGHT,				// 右シフト
+	SHIFT_LEFT,				// 左シフト
+	SHIFT_RIGHT,				// 右シフト
 	CTRL_LEFT_AND_RIGHT,	// 両コントロール
 	CTRL_LEFT,				// 左コントロール
 	CTRL_RIGHT,				// 右コントロール
