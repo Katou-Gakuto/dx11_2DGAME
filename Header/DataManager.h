@@ -59,5 +59,5 @@ public:
 	void SetPlayerName(int playerNumber, std::string playerName) { mstPlayerDatas[playerNumber].name = playerName; }
 
 	/*ƒvƒŒƒCƒ„[í—Şİ’è*/
-	void SetPlayerType(int playerNumber, int playerType) { mstPlayerDatas[playerNumber].name = playerType; }
+	void SetPlayerType(int playerNumber, int playerType) { mstPlayerDatas[playerNumber].charcterType = playerType; }
 };
