@@ -22,6 +22,15 @@ using namespace DirectX;
 /*----------------------------------------------------------------------------------------------------*/
 /*　【プレイヤー数選択状態】　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　*/
 /*----------------------------------------------------------------------------------------------------*/
+SPDUIPlayerNumber::SPDUIPlayerNumber()
+: IState_SetPlayerDataUI()
+{
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Astro_Bot_Logo.png"));
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Astro_Bot_Logo.png"));
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Astro_Bot_Logo.png"));
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Astro_Bot_Logo.png"));
+}
+
 // この状態に入った時の処理
 int SPDUIPlayerNumber::OnEnter(SetPlayerDataUI* parent)
 {
@@ -40,7 +49,7 @@ void SPDUIPlayerNumber::OnExit(SetPlayerDataUI* parent)
 	{
 		mstPlayerDatas.push_back(PlayerData());
 	}
-	Master::mpDataManager->SetPlayerData(mstPlayerDatas);
+	mpDataManager->SetPlayerData(mstPlayerDatas);
 }
 // マウス更新
 int SPDUIPlayerNumber::MouseUpdate(SetPlayerDataUI* parent)
@@ -88,13 +97,40 @@ int SPDUIPlayerNumber::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 // 描画
 void SPDUIPlayerNumber::Draw(SetPlayerDataUI* parent)
 {
-	Master::mpResourceManager->DrawString(std::to_string(parent->GetSelectNumber()), XMFLOAT2(90.0f, 150.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::UP))
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f,
+			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+	}
+	else
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f,
+			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+	}
+
+	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::DOWN))
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.75f,
+			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+	}
+	else
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.75f,
+			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+	}
+
+	mpResourceManager->DrawString(std::to_string(parent->GetSelectNumber() + 1) + "人で遊ぶ", XMFLOAT2(90.0f, 150.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 }
 
 
 /*----------------------------------------------------------------------------------------------------*/
 /*　【コントローラー選択状態】　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　*/
 /*----------------------------------------------------------------------------------------------------*/
+SPDUIControllerSelect::SPDUIControllerSelect()
+: IState_SetPlayerDataUI()
+{
+}
+
 // この状態に入った時の処理
 int SPDUIControllerSelect::OnEnter(SetPlayerDataUI* parent)
 {
@@ -114,14 +150,18 @@ int SPDUIControllerSelect::ControllerUpdate(SetPlayerDataUI* parent){ return SET
 int SPDUIControllerSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent){	return SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT; }
 
 // 描画
-void SPDUIControllerSelect::Draw(SetPlayerDataUI* parent)
-{
-}
+void SPDUIControllerSelect::Draw(SetPlayerDataUI* parent){}
 
 
 /*----------------------------------------------------------------------------------------------------*/
 /*　【キャラクター選択状態】　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　*/
 /*----------------------------------------------------------------------------------------------------*/
+SPDUICharacterSelect::SPDUICharacterSelect()
+: IState_SetPlayerDataUI()
+{
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/pipo-charachip001.png"));
+}
+
 // この状態に入った時の処理
 int SPDUICharacterSelect::OnEnter(SetPlayerDataUI* parent)
 {
@@ -133,7 +173,7 @@ int SPDUICharacterSelect::OnEnter(SetPlayerDataUI* parent)
 // この状態を出る時の処理
 void SPDUICharacterSelect::OnExit(SetPlayerDataUI* parent)
 {
-	Master::mpDataManager->SetPlayerType(parent->GetSelectPlayerNumber(), parent->GetSelectNumber());
+	mpDataManager->SetPlayerType(parent->GetSelectPlayerNumber(), parent->GetSelectNumber());
 }
 // マウス更新
 int SPDUICharacterSelect::MouseUpdate(SetPlayerDataUI* parent)
@@ -147,16 +187,16 @@ int SPDUICharacterSelect::ControllerUpdate(SetPlayerDataUI* parent){ return SET_
 // キーボードとコントローラー更新
 int SPDUICharacterSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 {
-	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 	{
 		parent->Up();
 	}
-	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 	{
 		parent->Down();
 	}
 
-	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 	{
 		return SET_PLAYER_DATA_UI_STATE_NAME_SET;
 	}
@@ -167,6 +207,10 @@ int SPDUICharacterSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 // 描画
 void SPDUICharacterSelect::Draw(SetPlayerDataUI* parent)
 {
+	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f,
+		mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+
+	mpResourceManager->DrawString("キャラクター種類 : " + std::to_string(parent->GetSelectNumber() + 1), XMFLOAT2(90.0f, 150.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 }
 
 /*----------------------------------------------------------------------------------------------------*/
@@ -223,7 +267,7 @@ int SPDUINameSet::MouseUpdate(SetPlayerDataUI* parent)
 // キーボード更新
 int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 {
-	if (Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber()) == (int)CONTROLLER_KEY_NUMBER::KEY_BOARD)
+	if (mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber()) == (int)CONTROLLER_KEY_NUMBER::KEY_BOARD)
 	{
 		unsigned long long wordKeyBoradFlags = (mpKeyState->GetDownWordKeyFlags_Board() & 0x1'ffff'ffff'ffff);
 		// 押してるワードに反応する
@@ -348,37 +392,37 @@ int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 // コントローラー更新
 int SPDUINameSet::ControllerUpdate(SetPlayerDataUI* parent)
 {
-	if (parent->GetSelectPlayerNumber() < Master::mpDataManager->GetPlayerCount())
+	if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
 	{
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 		{
 			--mnSelectNumberY;
 			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX, mnSelectNumberY + 1);
 		}
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 		{
 			++mnSelectNumberY;
 			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX, mnSelectNumberY - 1);
 		}
 
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 		{
 			--mnSelectNumberX;
 			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX + 1, mnSelectNumberY);
 		}
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 		{
 			++mnSelectNumberX;
 			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX - 1, mnSelectNumberY);
 		}
 
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 		{
 			SetNumberProcess(parent, KEY_POS_NUMBERS[mnSelectNumberY][mnSelectNumberX]);
 		}
 
-		if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) &&
-			mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) &&
+			mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 		{
 			SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
 		}
@@ -771,7 +815,7 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 				{// 名前入力
 					msSetName = L"dsad";
 					std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-					Master::mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), /*"sdaあさ");//*/converter.to_bytes(msSetName));// ひらがな変換出来ない
+					mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), /*"sdaあさ");//*/converter.to_bytes(msSetName));// ひらがな変換出来ない
 				}
 				// 次に移動
 				parent->Decision();

@@ -154,8 +154,8 @@ void SetPlayerDataUI::UIUpdate()
 /*UI•`‰æ*/
 void SetPlayerDataUI::UIDraw()
 {
-	Master::mpDataManager->GetDisplaySize();
-	Master::mpResourceManager->DrawSprite(100.0f, 100.0f, 500.0f, 500.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID);
+	Master::mpResourceManager->DrawSprite(Master::mpDataManager->GetDisplaySize().X * 0.5f, Master::mpDataManager->GetDisplaySize().Y * 0.5f,
+		Master::mpDataManager->GetDisplaySize().X * 0.9f, Master::mpDataManager->GetDisplaySize().Y * 0.9f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID, MIDDLE_FLAG);
 
 	Master::mpResourceManager->DrawString("SELECT", XMFLOAT2(90.0f, 90.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 

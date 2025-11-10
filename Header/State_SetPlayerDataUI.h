@@ -30,7 +30,7 @@ private:
 	std::vector<PlayerData> mstPlayerDatas;
 
 public:
-	SPDUIPlayerNumber() : IState_SetPlayerDataUI() {}
+	SPDUIPlayerNumber();
 	virtual ~SPDUIPlayerNumber() = default;
 
 	/*‚±‚Ìó‘Ô‚É“ü‚Á‚½‚Ìˆ—*/
@@ -57,7 +57,7 @@ public:
 class SPDUIControllerSelect : public IState_SetPlayerDataUI
 {
 public:
-	SPDUIControllerSelect() : IState_SetPlayerDataUI() {}
+	SPDUIControllerSelect();
 	virtual ~SPDUIControllerSelect() = default;
 
 	/*‚±‚Ìó‘Ô‚É“ü‚Á‚½‚Ìˆ—*/
@@ -84,7 +84,7 @@ public:
 class SPDUICharacterSelect : public IState_SetPlayerDataUI
 {
 public:
-	SPDUICharacterSelect(): IState_SetPlayerDataUI() {}
+	SPDUICharacterSelect();
 	virtual ~SPDUICharacterSelect() = default;
 
 	/*‚±‚Ìó‘Ô‚É“ü‚Á‚½‚Ìˆ—*/

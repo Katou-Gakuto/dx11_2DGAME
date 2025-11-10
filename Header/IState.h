@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 
-class SetPlayerDataUI;
+class DataManager;
 class KeyState;
+class ResourceManager;
+class SetPlayerDataUI;
 
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 * 【選択UI】
@@ -10,8 +12,14 @@ class KeyState;
 class IState_SetPlayerDataUI
 {
 protected:
+	// データマネージャー
+	DataManager* mpDataManager;
+
 	// キーステート
 	KeyState* mpKeyState;
+
+	// リソースマネージャー
+	ResourceManager* mpResourceManager;
 
 	// リソースID達
 	std::vector<int> mnResourceIDs;
