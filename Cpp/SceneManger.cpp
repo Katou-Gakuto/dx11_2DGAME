@@ -1,6 +1,7 @@
 #include "../Header/Camera.h"
 #include "../Header/Characters.h"
 #include "../Header/Collisions.h"
+#include "../Header/DataManager.h"
 #include "../Header/GameManager.h"
 #include "../Header/LoadingManager.h"
 #include "../Header/MapManager.h"
@@ -68,9 +69,10 @@ void SceneManager::NewSceneProcess()
 		Master::mpGameManager->getMapManager()->Initilize();
 
 		std::vector<int> setNumber;
-		setNumber.push_back(0);
-/*		setNumber.push_back(1);
-		setNumber.push_back(2);*/
+		for (int i = 0; i < Master::mpDataManager->GetPlayerCount(); i++)
+		{
+			setNumber.push_back(Master::mpDataManager->GetPlayerKeyNumber(i));
+		}
 		PlayerManager* playerManager = new PlayerManager(setNumber, 5);
 		playerManager->Initilize();
 

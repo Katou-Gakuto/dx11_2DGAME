@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 class SetPlayerDataUI;
 class KeyState;
@@ -9,7 +10,11 @@ class KeyState;
 class IState_SetPlayerDataUI
 {
 protected:
+	// キーステート
 	KeyState* mpKeyState;
+
+	// リソースID達
+	std::vector<int> mnResourceIDs;
 
 public:
 	IState_SetPlayerDataUI();
@@ -28,4 +33,7 @@ public:
 	virtual int ControllerUpdate(SetPlayerDataUI* parent) = 0;
 	/*キーボードとコントローラー更新*/
 	virtual int Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent) = 0;
+
+	/*描画*/
+	virtual void Draw(SetPlayerDataUI* parent) = 0;
 };

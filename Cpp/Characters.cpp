@@ -222,13 +222,11 @@ void PlayerBase::TemplateKeyProcess(int playerNumber)
 		playerNumber = mnPlayerNumber;
 	}
 
-	//if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::UP, playerNumber))
-	if (mpKeyState->GetMouse(MOUSE_TYPE::RIGHT_BUTTON))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::UP, playerNumber))
 	{
 		mpCharacter->SetUpMove();
 	}
-	//if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::DOWN, playerNumber))
-	if (mpKeyState->GetMouse(MOUSE_TYPE::LEFT_BUTTON))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::DOWN, playerNumber))
 	{
 		mpCharacter->SetDownMove();
 	}
@@ -241,8 +239,7 @@ void PlayerBase::TemplateKeyProcess(int playerNumber)
 		mpCharacter->SetRightMove();
 	}
 
-	//if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::A, playerNumber))
-	if (mpKeyState->GetMouse(MOUSE_TYPE::WHEEL_BUTTON))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::A, playerNumber))
 	{
 		mpCharacter->SetAttack();
 	}

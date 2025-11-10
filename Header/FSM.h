@@ -39,6 +39,9 @@ public:
 	/*キーボードとコントローラー更新*/
 	void Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent);
 
+	/*描画*/
+	void Draw(SetPlayerDataUI* parent);
+
 	/*実行状態取得*/
-	int GetCurrentState() { return mnCurrentState; }
+	IState_SetPlayerDataUI* GetCurrentState() { return mmStateMap[mnCurrentState]; }
 };

@@ -1,7 +1,9 @@
 #include "../Header/DataManager.h"
+#include "../Header/TemplateData.h"
 
 // コンストラクタ
 DataManager::DataManager()
+: mstDisplaySize(VECTOR_2D::Zero())
 {
 	mstPlayerDatas.clear();
 }
@@ -9,6 +11,17 @@ DataManager::DataManager()
 // デストラクタ
 DataManager::~DataManager()
 {
+}
+
+// 初期化
+void DataManager::Initilize(HWND hwnd)
+{
+	RECT rc;
+	GetClientRect(hwnd, &rc);   // ウィンドの黒い領域の大きさを返してくれる
+	//GetWindowRect(); // ウィンドの大きさ
+	// 基本はいらない　ツールを作る時とかに必要
+	mstDisplaySize.X = rc.right - rc.left;
+	mstDisplaySize.Y = rc.bottom - rc.top;
 }
 
 // プレイヤーキーナンバー設定

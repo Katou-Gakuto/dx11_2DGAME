@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "../Header/IState.h"
 
 #include "../Header/KeyState.h"
@@ -6,4 +8,6 @@
 IState_SetPlayerDataUI::IState_SetPlayerDataUI()
 {
 	mpKeyState = Master::mpKeyState;
+
+	mnResourceIDs.clear();
 }

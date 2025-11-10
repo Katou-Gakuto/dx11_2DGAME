@@ -10,11 +10,17 @@ private:
 	// プレイヤーデータ
 	std::vector<PlayerData> mstPlayerDatas;
 
+	// 画面サイズ
+	VECTOR_2D mstDisplaySize;
+
 public:
 	/*コンストラクタ*/
 	DataManager();
 	/*デストラクタ*/
 	~DataManager();
+
+	/*初期化*/
+	void Initilize(HWND hwnd);
 
 	/*プレイヤーデータクリア*/
 	void ClearPlayerData() { mstPlayerDatas.clear(); }
@@ -42,6 +48,9 @@ public:
 
 	/*プレイヤーデータ全取得*/
 	std::vector<PlayerData> GetPlayerData() { return mstPlayerDatas; }
+
+	/*画面サイズ取得*/
+	VECTOR_2D GetDisplaySize() { return mstDisplaySize; }
 
 	/*--------------------------------------------------------------------------------------------------------------
 	* 【設定】

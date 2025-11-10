@@ -782,6 +782,7 @@ HRESULT InitDevice()
     g_pImmediateContext->UpdateSubresource( g_pCBChangeOnResize, 0, NULL, &cbChangesOnResize, 0, 0 );
 
     Master::mpResourceManager->SetResourceDatas(g_pd3dDevice, g_pImmediateContext, g_pVertexBuffer, g_pVertexShader, g_pCBNeverChanges, g_pCBChangeOnResize, g_pCBChangesEveryFrame, g_pPixelShader, g_pSamplerLinear, g_pRenderTargetView, g_pDepthStencilView, g_pSwapChain, g_hWnd);
+    Master::mpDataManager->Initilize(g_hWnd);
     //testNumber[0] = Master::mpResourceManager->AddResource(L"Resource/pipo-charachip001.png");
     //testNumber[1] = Master::mpResourceManager->AddResource(L"Resource/Astro_Bot_Logo.png");
     //testNumber[2] = Master::mpResourceManager->AddResource(L"Resource/mapchip.png");

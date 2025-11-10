@@ -45,6 +45,9 @@ public:
 	int ControllerUpdate(SetPlayerDataUI* parent) override;
 	/*キーボードとコントローラー更新*/
 	int Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent) override;
+
+	/*描画*/
+	void Draw(SetPlayerDataUI* parent) override;
 };
 
 
@@ -69,6 +72,9 @@ public:
 	int ControllerUpdate(SetPlayerDataUI* parent) override;
 	/*キーボードとコントローラー更新*/
 	int Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent) override;
+
+	/*描画*/
+	void Draw(SetPlayerDataUI* parent) override;
 };
 
 
@@ -93,6 +99,9 @@ public:
 	int ControllerUpdate(SetPlayerDataUI* parent) override;
 	/*キーボードとコントローラー更新*/
 	int Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent) override;
+
+	/*描画*/
+	void Draw(SetPlayerDataUI* parent) override;
 };
 
 
@@ -208,6 +217,9 @@ public:
 	int ControllerUpdate(SetPlayerDataUI* parent) override;
 	/*キーボードとコントローラー更新*/
 	int Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent) override;
+
+	/*描画*/
+	void Draw(SetPlayerDataUI* parent) override;
 
 private:
 	/*次のポジションを取得する*/

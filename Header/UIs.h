@@ -54,6 +54,9 @@ private:
     // 有限状態マシン
     FSM_SelectUI* mpFSM;
 
+    // リソースID
+    int mnResourceID;
+
 public:
     /*コンストラクタ*/
     SetPlayerDataUI();
@@ -171,6 +174,9 @@ private:
 
     // データマネージャー
     DataManager* mpDataManager;
+
+    // リソースID
+    int mnResourceID;
 
 public:
     /*コンストラクタ*/

@@ -85,3 +85,12 @@ void FSM_SelectUI::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 		Update(mmStateMap[mnCurrentState]->Keyboard_And_ControllerUpdate(parent), parent);
 	}
 }
+
+// •`‰æ
+void FSM_SelectUI::Draw(SetPlayerDataUI* parent)
+{
+	if (mnCurrentState == mnNextState)
+	{
+		mmStateMap[mnCurrentState]->Draw(parent);
+	}
+}

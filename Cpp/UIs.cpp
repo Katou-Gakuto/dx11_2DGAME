@@ -5,6 +5,7 @@
 #include "../Header/DataManager.h"
 #include "../Header/FSM.h"
 #include "../Header/KeyState.h"
+#include "../Header/Macro.h"
 #include "../Header/Master.h"
 #include "../Header/ObjectBases.h"
 #include "../Header/ResourceManager.h"
@@ -69,6 +70,7 @@ SetPlayerDataUI::SetPlayerDataUI()
 , mnProcessNumber(0)
 , mpSetPlayerController(nullptr)
 , mpFSM(nullptr)
+, mnResourceID(-1)
 {
 }
 
@@ -90,6 +92,8 @@ void SetPlayerDataUI::UIInitilize()
 	mpFSM->RegisterState(SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT, new SPDUICharacterSelect());
 	mpFSM->RegisterState(SET_PLAYER_DATA_UI_STATE_NAME_SET, new SPDUINameSet());
 	mpFSM->SetCurrentState(SET_PLAYER_DATA_UI_STATE_PLAYER_NUMBER, this);
+
+	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/gamen.png");
 }
 
 /*UII—¹*/
@@ -150,16 +154,22 @@ void SetPlayerDataUI::UIUpdate()
 /*UI•`‰æ*/
 void SetPlayerDataUI::UIDraw()
 {
+	Master::mpDataManager->GetDisplaySize();
+	Master::mpResourceManager->DrawSprite(100.0f, 100.0f, 500.0f, 500.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID);
+
 	Master::mpResourceManager->DrawString("SELECT", XMFLOAT2(90.0f, 90.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+
+	mpFSM->Draw(this);
 }
 
 /*‘I‘ğŒˆ’èˆ—*/
 void SetPlayerDataUI::DecisionProcess()
 {
 	++mnSelectPlayerNumber;
-	if (mnSelectPlayerNumber < mnPlayerCount)
+	if (mnSelectPlayerNumber < Master::mpDataManager->GetPlayerCount())
 	{
-		mnProcessNumber = 2;
+		mpFSM->GetCurrentState()->OnExit(this);
+		mpFSM->SetCurrentState(SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT, this);
 	}
 	else
 	{
@@ -243,6 +253,7 @@ PlayerControllerUI::PlayerControllerUI()
 : UIBase(1, true)
 , mnStartFlag(false)
 , mpDataManager(nullptr)
+, mnResourceID(-1)
 {
 	mpDataManager = Master::mpDataManager;
 
@@ -258,6 +269,8 @@ PlayerControllerUI::~PlayerControllerUI()
 void PlayerControllerUI::UIInitilize()
 {
 	memset(mnSetPlayerKey, -1, sizeof(int) * 5);
+
+	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/gamen.png");
 }
 
 /*UII—¹*/
@@ -325,7 +338,9 @@ void PlayerControllerUI::UIDraw()
 {
 	if (mnStartFlag)
 	{
+		//Master::mpResourceManager->DrawSprite(500.0f, 500.0f, 1000.0f, 1000.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID);
 
+		Master::mpResourceManager->DrawString(std::to_string(mnSelectNumber), XMFLOAT2(150.0f, 150.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 	}
 }
 

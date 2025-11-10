@@ -3,6 +3,8 @@
 #include <locale>
 #include <codecvt>
 
+#include <DirectXMath.h>
+
 //#include <imm.h>
 
 
@@ -12,6 +14,8 @@
 #include "../Header/State_SetPlayerDataUI.h"
 #include "../Header/TemplateData.h"
 #include "../Header/UIs.h"
+
+using namespace DirectX;
 
 //#pragma comment(lib, "imm32.lib")
 
@@ -81,6 +85,12 @@ int SPDUIPlayerNumber::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 	return SET_PLAYER_DATA_UI_STATE_PLAYER_NUMBER;
 }
 
+// 描画
+void SPDUIPlayerNumber::Draw(SetPlayerDataUI* parent)
+{
+	Master::mpResourceManager->DrawString(std::to_string(parent->GetSelectNumber()), XMFLOAT2(90.0f, 150.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+}
+
 
 /*----------------------------------------------------------------------------------------------------*/
 /*　【コントローラー選択状態】　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　*/
@@ -102,6 +112,11 @@ int SPDUIControllerSelect::KeyboardUpdate(SetPlayerDataUI* parent){	return SET_P
 int SPDUIControllerSelect::ControllerUpdate(SetPlayerDataUI* parent){ return SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT; }
 // キーボードとコントローラー更新
 int SPDUIControllerSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent){	return SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT; }
+
+// 描画
+void SPDUIControllerSelect::Draw(SetPlayerDataUI* parent)
+{
+}
 
 
 /*----------------------------------------------------------------------------------------------------*/
@@ -132,21 +147,26 @@ int SPDUICharacterSelect::ControllerUpdate(SetPlayerDataUI* parent){ return SET_
 // キーボードとコントローラー更新
 int SPDUICharacterSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 {
-	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, parent->GetSelectPlayerNumber()))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 	{
 		parent->Up();
 	}
-	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, parent->GetSelectPlayerNumber()))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 	{
 		parent->Down();
 	}
 
-	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, parent->GetSelectPlayerNumber()))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 	{
 		return SET_PLAYER_DATA_UI_STATE_NAME_SET;
 	}
 
 	return SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT;
+}
+
+// 描画
+void SPDUICharacterSelect::Draw(SetPlayerDataUI* parent)
+{
 }
 
 /*----------------------------------------------------------------------------------------------------*/
@@ -328,6 +348,42 @@ int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 // コントローラー更新
 int SPDUINameSet::ControllerUpdate(SetPlayerDataUI* parent)
 {
+	if (parent->GetSelectPlayerNumber() < Master::mpDataManager->GetPlayerCount())
+	{
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		{
+			--mnSelectNumberY;
+			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX, mnSelectNumberY + 1);
+		}
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		{
+			++mnSelectNumberY;
+			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX, mnSelectNumberY - 1);
+		}
+
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		{
+			--mnSelectNumberX;
+			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX + 1, mnSelectNumberY);
+		}
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		{
+			++mnSelectNumberX;
+			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX - 1, mnSelectNumberY);
+		}
+
+		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		{
+			SetNumberProcess(parent, KEY_POS_NUMBERS[mnSelectNumberY][mnSelectNumberX]);
+		}
+
+		if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) &&
+			mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, Master::mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		{
+			SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
+		}
+	}
+
 	return SET_PLAYER_DATA_UI_STATE_NAME_SET;
 }
 // キーボードとコントローラー更新
@@ -902,4 +958,9 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 
 		}
 	}
+}
+
+// 描画
+void SPDUINameSet::Draw(SetPlayerDataUI* parent)
+{
 }
