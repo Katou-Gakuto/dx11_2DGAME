@@ -78,8 +78,8 @@ void ResourceManager::Initilize()
 
 	// デフォルト設定
 	mdxsFontData = new FontData();
-	mdxsFontData->fontSize = 60;
-	mdxsFontData->fontWeight = DWRITE_FONT_WEIGHT_BOLD;
+	//mdxsFontData->fontSize = 60;
+	//mdxsFontData->fontWeight = DWRITE_FONT_WEIGHT_BOLD;
 
 
 	// Direct2D,DirectWriteの初期化
@@ -420,7 +420,7 @@ int ResourceManager::SetFontData(Font font, IDWriteFontCollection* fontCollectio
 }
 
 // 文字描画, string：文字列, pos：描画ポジション, options：テキストの整形
-void ResourceManager::DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options)
+void ResourceManager::DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, unsigned int intFlag, float fontSize)
 {
 	// 文字列の変換
 	std::wstring wstr = StringToWString(str.c_str());
@@ -435,6 +435,25 @@ void ResourceManager::DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DR
 	D2D1_POINT_2F pounts;
 	pounts.x = pos.x;
 	pounts.y = pos.y;
+	if ((intFlag & CAMERA_VIEW_FLAG) != 0)
+	{
+		VECTOR_2D setOneLength = mpCamera->GetNowOneLength() * MAP_ONE_SQUARE_SIZE;
+		pounts.x -= mpCamera->GetCameraPos().X;
+		pounts.y -= mpCamera->GetCameraPos().Y;
+
+		pounts.x *= setOneLength.X;
+		pounts.y *= setOneLength.Y;
+
+		//0.5f がカメラが中心である事を示している
+		pounts.x += (mpCamera->GetDisplayDistance().X * 0.5f * setOneLength.X);
+		pounts.y += (mpCamera->GetDisplayDistance().Y * 0.5f * setOneLength.Y);
+
+	}
+
+	if ((intFlag & MIDDLE_FLAG) != 0)
+	{
+		pounts.x -= (wstr.size() * MAP_ONE_SQUARE_SIZE * (fontSize * 0.01f)) * 0.5f;
+	}
 
 	// 描画の開始
 	mdxsRT->BeginDraw();

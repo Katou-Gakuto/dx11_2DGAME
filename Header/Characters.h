@@ -75,6 +75,15 @@ private:
 	// プレイヤーナンバー
 	int mnPlayerNumber;
 
+	// キーナンバー
+	int mnKeyNumber;
+
+	// プレイヤーネーム
+	std::string msName;
+
+	// リソースID
+	int mnResourceID;
+
 protected:
 	// キー状態
 	KeyState* mpKeyState;
@@ -83,7 +92,7 @@ protected:
 
 public:
 	/*コンストラクタ*/
-	PlayerBase(int playerNumber, int characterType);
+	PlayerBase(int playerNumber);
 	/*デストラクタ*/
 	~PlayerBase();
 
@@ -97,8 +106,11 @@ protected:
 	/*キャラクターコントローラー描画*/
 	virtual void CharacterControllerDraw();
 
+	/*最終描画*/
+	void LastDraw() override;
+
 	/*定型キー行動*/
-	void TemplateKeyProcess(int playerNumber = -1);
+	void TemplateKeyProcess(int keyNumber = -1);
 };
 
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

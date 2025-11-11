@@ -46,6 +46,8 @@ public:
     void Update();
     /*描画*/
     void Draw();
+    /*最終描画*/
+    void LastDraw();
 
     /*リストにオブジェクトを追加する*/
     void Add(ObjectBase* object, int typeNumber);

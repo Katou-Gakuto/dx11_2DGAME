@@ -108,12 +108,12 @@ void SPDUIPlayerNumber::Draw(SetPlayerDataUI* parent)
 
 	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::DOWN))
 	{
-		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.75f,
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.7f,
 			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.0f, 0.5f, mnResourceIDs[0], MIDDLE_FLAG);
 	}
 	else
 	{
-		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.75f,
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.7f,
 			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.0f, 0.5f, mnResourceIDs[1], MIDDLE_FLAG);
 	}
 

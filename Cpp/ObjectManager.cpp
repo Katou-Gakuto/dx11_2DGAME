@@ -69,6 +69,22 @@ void ObjectManager::Draw()
 	} while (workObject != nullptr);
 }
 
+// 最終描画
+void ObjectManager::LastDraw()
+{
+	if (mpObjectBase == nullptr)
+	{
+		return;
+	}
+
+	ObjectBase* workObject = mpObjectBase;
+	do
+	{
+		workObject->LastDraw();
+		workObject = workObject->GetNextObject();
+	} while (workObject != nullptr);
+}
+
 // リストにオブジェクトを追加する
 void ObjectManager::Add(ObjectBase* object, int typeNumber)
 {

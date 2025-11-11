@@ -35,6 +35,8 @@ TitleUI::~TitleUI()
 /*UI‰Šú‰»*/
 void TitleUI::UIInitilize()
 {
+	FontData fontData = FontData();
+	Master::mpResourceManager->SetFontData(&fontData);
 }
 
 /*UII—¹*/

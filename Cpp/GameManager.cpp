@@ -100,6 +100,7 @@ void GameManager::Draw()
 
     // オブジェクト描画
     mpObjectManager->Draw();
+    mpObjectManager->LastDraw();
 
     // 描画終了
     Master::mpResourceManager->EndDraw();

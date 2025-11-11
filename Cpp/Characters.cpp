@@ -1,5 +1,7 @@
 #include <vector>
 
+#include <DirectXMath.h>
+
 #include "../Header/Calculation.h"
 #include "../Header/Characters.h"
 #include "../Header/Collisions.h"
@@ -13,6 +15,8 @@
 #include "../Header/TargetDatas.h"
 #include "../Header/TemplateData.h"
 #include "../Header/UIs.h"
+
+using namespace DirectX;
 
 class PlayerBase;
 
@@ -110,7 +114,7 @@ PlayerManager::PlayerManager(int playerHp)
 	mpPlayerControllers.reserve(dataManager->GetPlayerCount());
 	for (int i = 0; i < dataManager->GetPlayerCount(); i++)
 	{
-		CharacterControllerBase* setController = new PlayerBase(dataManager->GetPlayerData(i).keyNumber, dataManager->GetPlayerData(i).characterType);
+		CharacterControllerBase* setController = new PlayerBase(i);
 		
 		mpPlayerControllers.push_back(setController);
 	}
@@ -185,11 +189,14 @@ void PlayerManager::Draw()
 * 【プレイヤーベース】
 */
 // コンストラクタ
-PlayerBase::PlayerBase(int playerNumber, int characterType)
+PlayerBase::PlayerBase(int playerNumber)
 : CharacterControllerBase(OBJECT_TYPE::CHARACTER_CONTROLLER_PLAYER)
 , mnPlayerNumber(playerNumber)
+, mnKeyNumber(-1)
+, msName("NULL")
 , mpKeyState(nullptr)
-, mnCharacterType(characterType)
+, mnCharacterType(0)
+, mnResourceID(-1)
 {
 }
 
@@ -201,6 +208,11 @@ PlayerBase::~PlayerBase()
 // キャラクターコントローラー初期化
 void PlayerBase::CharacterControllerInitilize()
 {
+	DataManager* dataManager = Master::mpDataManager;
+	mnCharacterType = dataManager->GetPlayerData(mnPlayerNumber).characterType;
+	mnKeyNumber = dataManager->GetPlayerKeyNumber(mnPlayerNumber);
+	msName = dataManager->GetPlayerName(mnPlayerNumber);
+
 	wchar_t* fileName = nullptr;
 	switch (mnCharacterType)
 	{
@@ -236,6 +248,8 @@ void PlayerBase::CharacterControllerInitilize()
 	meSetCharacterType = CHARACTER_TYPE::CLOSE_RENGE;
 
 	mpKeyState = Master::mpKeyState;
+
+	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/Back.png");
 }
 
 // キャラクターコントローラー終了
@@ -255,32 +269,47 @@ void PlayerBase::CharacterControllerDraw()
 {
 }
 
-// 定型キー行動
-void PlayerBase::TemplateKeyProcess(int playerNumber)
+// 最終描画
+void PlayerBase::LastDraw()
 {
-	if (playerNumber == -1)
+	FontData fontData = FontData();
+	fontData.fontSize = 20.0f;
+	Master::mpResourceManager->SetFontData(&fontData);
+
+	Master::mpResourceManager->DrawSprite(mpCharacter->GetStatus().Position.X, mpCharacter->GetStatus().Position.Y - 0.65f, (msName.size() + 2) * 20.0f * 0.01f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID, MIDDLE_FLAG | CAMERA_VIEW_FLAG);
+	Master::mpResourceManager->DrawString(msName, XMFLOAT2(mpCharacter->GetStatus().Position.X, mpCharacter->GetStatus().Position.Y - 0.9f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG | CAMERA_VIEW_FLAG, 20);
+
+
+	fontData = FontData();
+	Master::mpResourceManager->SetFontData(&fontData);
+}
+
+// 定型キー行動
+void PlayerBase::TemplateKeyProcess(int keyNumber)
+{
+	if (keyNumber == -1)
 	{
-		playerNumber = mnPlayerNumber;
+		keyNumber = mnKeyNumber;
 	}
 
-	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::UP, playerNumber))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::UP, keyNumber))
 	{
 		mpCharacter->SetUpMove();
 	}
-	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::DOWN, playerNumber))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::DOWN, keyNumber))
 	{
 		mpCharacter->SetDownMove();
 	}
-	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::LEFT, playerNumber))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::LEFT, keyNumber))
 	{
 		mpCharacter->SetLeftMove();
 	}
-	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::RIGHT, playerNumber))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::RIGHT, keyNumber))
 	{
 		mpCharacter->SetRightMove();
 	}
 
-	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::A, playerNumber))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::A, keyNumber))
 	{
 		mpCharacter->SetAttack();
 	}

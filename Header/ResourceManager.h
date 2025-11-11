@@ -67,7 +67,7 @@ struct FontData
 		fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_NORMAL;
 		fontStyle = DWRITE_FONT_STYLE::DWRITE_FONT_STYLE_NORMAL;
 		fontStretch = DWRITE_FONT_STRETCH::DWRITE_FONT_STRETCH_NORMAL;
-		fontSize = 20;
+		fontSize = 60.0f;
 		localeName = L"ja-jp";
 		textAlignment = DWRITE_TEXT_ALIGNMENT::DWRITE_TEXT_ALIGNMENT_LEADING;
 		Color = D2D1::ColorF(D2D1::ColorF::White);
@@ -210,7 +210,7 @@ public:
 	* pos：描画ポジション
 	* options：テキストの整形
 	*/
-	void DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options);
+	void DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, unsigned int intFlag = 0U, float fontSize = 60.0f);
 
 	/*文字描画
 	* string：文字列

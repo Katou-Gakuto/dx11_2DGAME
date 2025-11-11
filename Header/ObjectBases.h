@@ -73,6 +73,8 @@ public:
     virtual void Update() = 0;
     /*描画*/
     virtual void Draw() = 0;
+    /*最終描画*/
+    virtual void LastDraw() {};
 
     /*前オブジェクトへのポインタ取得*/
     ObjectBase* GetPrevObject(bool allBaseFlag = true) { return allBaseFlag ? mpPrevObject : mpInheritClassPrevObject; }
