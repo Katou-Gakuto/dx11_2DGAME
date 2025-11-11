@@ -3,6 +3,7 @@
 #include "../Header/Calculation.h"
 #include "../Header/Characters.h"
 #include "../Header/Collisions.h"
+#include "../Header/DataManager.h"
 #include "../Header/GameManager.h"
 #include "../Header/KeyState.h"
 #include "../Header/Master.h"
@@ -11,6 +12,7 @@
 #include "../Header/SceneManager.h"
 #include "../Header/TargetDatas.h"
 #include "../Header/TemplateData.h"
+#include "../Header/UIs.h"
 
 class PlayerBase;
 
@@ -98,15 +100,17 @@ void CloseRangeCharacter::CharacterDraw()
 * 【プレイヤーマネージャー】
 */
 // コンストラクタ
-PlayerManager::PlayerManager(std::vector<int> playerNumber, int playerHp)
+PlayerManager::PlayerManager(int playerHp)
 : ObjectBase(OBJECT_TYPE::BASE)
 , mnPlayerHP(playerHp)
+, mnResourceID(-1)
 {
+	DataManager* dataManager = Master::mpDataManager;
 	mpPlayerControllers.clear();
-	mpPlayerControllers.reserve(playerNumber.size());
-	for (int i = 0; i < playerNumber.size(); i++)
+	mpPlayerControllers.reserve(dataManager->GetPlayerCount());
+	for (int i = 0; i < dataManager->GetPlayerCount(); i++)
 	{
-		CharacterControllerBase* setController = new PlayerBase(playerNumber[i]);
+		CharacterControllerBase* setController = new PlayerBase(dataManager->GetPlayerData(i).keyNumber, dataManager->GetPlayerData(i).characterType);
 		
 		mpPlayerControllers.push_back(setController);
 	}
@@ -124,6 +128,8 @@ void PlayerManager::Initilize()
 	{
 		mpPlayerControllers[i]->Initilize();
 	}
+
+	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/Heart.png");
 }
 
 // 終了
@@ -134,31 +140,31 @@ void PlayerManager::Finalize()
 // 更新
 void PlayerManager::Update()
 {
+	bool DamegeFlag = false;
+
 	for (int i = 0; i < mpPlayerControllers.size(); i++)
 	{
 		if (mpPlayerControllers[i]->GetCharacter()->GetStatus().HpCheck())
 		{
+			if (DamegeFlag)
+			{
+				mpPlayerControllers[i]->GetCharacter()->GetStatus().Recovery(1);
+				continue;
+			}
+
 			mnPlayerHP -= 1;
 
 			if (mnPlayerHP > 0)
 			{
-				for (int i = 0; i < mpPlayerControllers.size(); i++)
-				{
-					mpPlayerControllers[i]->GetCharacter()->GetStatus().Recovery(1);
-				}
+				mpPlayerControllers[i]->GetCharacter()->GetStatus().Recovery(1);
 			}
 			else
 			{
-				for (int i = 0; i < mpPlayerControllers.size(); i++)
-				{
-					mpPlayerControllers[i]->SetDeleteFlag(true);
-					mpPlayerControllers[i]->GetCharacter()->SetDeleteFlag(true);
-				}
-				mpPlayerControllers.clear();
-				Master::mpSceneManager->SetNextScene(SCENE_NAME::RESULT);
+				ResultUI* result = new ResultUI();
+				result->Initilize();
 			}
 
-			return;
+			DamegeFlag = true;
 		}
 	}
 }
@@ -166,6 +172,11 @@ void PlayerManager::Update()
 // 描画
 void PlayerManager::Draw()
 {
+	for (int i = 0; i < mnPlayerHP; i++)
+	{
+		Master::mpResourceManager->DrawSprite(Master::mpDataManager->GetDisplaySize().X * 0.05f + (Master::mpDataManager->GetDisplaySize().X * (i * 0.06f)), Master::mpDataManager->GetDisplaySize().Y * 0.05f,
+			Master::mpDataManager->GetDisplaySize().X * 0.05f, Master::mpDataManager->GetDisplaySize().Y * 0.05f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID, MIDDLE_FLAG);
+	}
 }
 
 
@@ -173,10 +184,11 @@ void PlayerManager::Draw()
 * 【プレイヤーベース】
 */
 // コンストラクタ
-PlayerBase::PlayerBase(int playerNumber)
+PlayerBase::PlayerBase(int playerNumber, int characterType)
 : CharacterControllerBase(OBJECT_TYPE::CHARACTER_CONTROLLER_PLAYER)
 , mnPlayerNumber(playerNumber)
 , mpKeyState(nullptr)
+, mnCharacterType(characterType)
 {
 }
 
@@ -188,7 +200,35 @@ PlayerBase::~PlayerBase()
 // キャラクターコントローラー初期化
 void PlayerBase::CharacterControllerInitilize()
 {
-	mpCharacter = new CloseRangeCharacter(DrawData::GetDrawData(0, L"Resource/pipo-charachip001.png"), this, 3, 0, 1, 2, 1, STATUS::SetAllStatus(1, 1, 1, 1, 0.15f, VECTOR_2D::Zero(), VECTOR_2D::One(), CHARACTER_TYPE::CLOSE_RENGE), 450, 450, false);
+	wchar_t* fileName = nullptr;
+	switch (mnCharacterType)
+	{
+	case 0:
+		fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018.png";
+		break;
+	case 1:
+		fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018a.png";
+		break;
+	case 2:
+		fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018b.png";
+		break;
+	case 3:
+		fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018c.png";
+		break;
+	case 4:
+		fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018d.png";
+		break;
+	case 5:
+		fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018e.png";
+		break;
+	case 6:
+		fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018f.png";
+		break;
+	case 7:
+		fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018g.png";
+		break;
+	}
+	mpCharacter = new CloseRangeCharacter(DrawData::GetDrawData(0, (const wchar_t*)fileName), this, 3, 0, 1, 2, 1, STATUS::SetAllStatus(1, 1, 1, 1, 0.15f, VECTOR_2D::Zero(), VECTOR_2D::One(), CHARACTER_TYPE::CLOSE_RENGE), 450, 450, false);
 	mpCharacter->Initilize();
 	Master::mpGameManager->GetTargetDatas()->AddPlayer(mpCharacter);
 

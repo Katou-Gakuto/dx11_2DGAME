@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 
 #include "../Header/DataManager.h"
+#include "../Header/GameManager.h"
 #include "../Header/FSM.h"
 #include "../Header/KeyState.h"
 #include "../Header/Macro.h"
@@ -93,7 +94,7 @@ void SetPlayerDataUI::UIInitilize()
 	mpFSM->RegisterState(SET_PLAYER_DATA_UI_STATE_NAME_SET, new SPDUINameSet());
 	mpFSM->SetCurrentState(SET_PLAYER_DATA_UI_STATE_PLAYER_NUMBER, this);
 
-	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/gamen.png");
+	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/Back.png");
 }
 
 /*UI終了*/
@@ -157,8 +158,6 @@ void SetPlayerDataUI::UIDraw()
 	Master::mpResourceManager->DrawSprite(Master::mpDataManager->GetDisplaySize().X * 0.5f, Master::mpDataManager->GetDisplaySize().Y * 0.5f,
 		Master::mpDataManager->GetDisplaySize().X * 0.9f, Master::mpDataManager->GetDisplaySize().Y * 0.9f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID, MIDDLE_FLAG);
 
-	Master::mpResourceManager->DrawString("SELECT", XMFLOAT2(90.0f, 90.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
-
 	mpFSM->Draw(this);
 }
 
@@ -201,13 +200,39 @@ void SetPlayerDataUI::Keyboard_ControllerProcess()
 	mpFSM->Keyboard_And_ControllerUpdate(this);
 }
 
+/*選択肢上変更(プラス)*/
+void SetPlayerDataUI::UpKeyDown()
+{
+	if (CheckUp_Frame())
+	{
+		++mnSelectNumber;
+		if (mnSelectNumber >= mnMaxSelectNumber)
+		{
+			mnSelectNumber = 0;
+		}
+	}
+}
+
+/*選択肢下変更(マイナス)*/
+void SetPlayerDataUI::DownKeyUp()
+{
+	if (CheckDown_Frame())
+	{
+		--mnSelectNumber;
+		if (mnSelectNumber < 0)
+		{
+			mnSelectNumber = mnMaxSelectNumber - 1;
+		}
+	}
+}
+
 
 /*--------------------------------------------------------------------------------------------------------------
 * 【リザルトUI】
 */
 /*コンストラクタ*/
 ResultUI::ResultUI()
-: UIBase(1, true)
+: UIBase(1, true, true)
 {
 }
 
@@ -230,6 +255,16 @@ void ResultUI::UIFinalize()
 void ResultUI::UIUpdate()
 {
 	DefaultDecision();
+
+	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::L) && mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::R))
+	{
+		Master::mpGameManager->SetEndFlag(true);
+	}
+
+	if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::B))
+	{
+		Master::mpSceneManager->SetNextScene(SCENE_NAME::TITLE);
+	}
 }
 
 /*UI描画*/
@@ -241,7 +276,7 @@ void ResultUI::UIDraw()
 /*選択決定時処理*/
 void ResultUI::DecisionProcess()
 {
-	Master::mpSceneManager->SetNextScene(SCENE_NAME::GAME);
+	Master::mpSceneManager->SetNextScene(SCENE_NAME::RESULT);
 }
 
 
@@ -253,8 +288,10 @@ PlayerControllerUI::PlayerControllerUI()
 : UIBase(1, true)
 , mnStartFlag(false)
 , mpDataManager(nullptr)
-, mnResourceID(-1)
+, mnBlinkTime(0)
 {
+	mnResourceIDs.clear();
+
 	mpDataManager = Master::mpDataManager;
 
 	memset(mnSetPlayerKey, -1, sizeof(int) * 5);
@@ -270,7 +307,12 @@ void PlayerControllerUI::UIInitilize()
 {
 	memset(mnSetPlayerKey, -1, sizeof(int) * 5);
 
-	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/gamen.png");
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/WhiteBack.jpg"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Frame.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Controller/3.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Controller/0.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Controller/1.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Controller/2.png"));
 }
 
 /*UI終了*/
@@ -283,8 +325,18 @@ void PlayerControllerUI::UIUpdate()
 {
 	if (mnStartFlag)
 	{
+		if ((mnBlinkTime + 40) < Master::mpTimeManager->GetFrame())
+		{
+			mnBlinkTime = Master::mpTimeManager->GetFrame() + 40;
+		}
+
 		if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::B))
 		{
+			if (mnSelectNumber == 0)
+			{
+				mnStartFlag = false;
+				DeleteUINumber();
+			}
 			mnSelectNumber = mnMaxSelectNumber + 1;
 			DecisionProcess();
 		}
@@ -338,9 +390,52 @@ void PlayerControllerUI::UIDraw()
 {
 	if (mnStartFlag)
 	{
-		//Master::mpResourceManager->DrawSprite(500.0f, 500.0f, 1000.0f, 1000.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID);
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
+			mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
 
 		Master::mpResourceManager->DrawString(std::to_string(mnSelectNumber), XMFLOAT2(150.0f, 150.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+
+		for (int i = 0; i < mnMaxSelectNumber; i++)
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.15f, mpDataManager->GetDisplaySize().Y * 0.3f,
+				mpDataManager->GetDisplaySize().X * 0.15f, mpDataManager->GetDisplaySize().Y * 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+		}
+
+		if (mnSelectNumber >= mnMaxSelectNumber)
+		{
+			for (int i = 0; i < mnSelectNumber; i++)
+			{
+				if (mnBlinkTime < Master::mpTimeManager->GetFrame())
+				{
+					Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
+						mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[3], MIDDLE_FLAG);
+				}
+				else
+				{
+					Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
+						mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[5], MIDDLE_FLAG);
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < mnSelectNumber; i++)
+			{
+				Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
+					mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[2], MIDDLE_FLAG);
+			}
+
+			if (mnBlinkTime < Master::mpTimeManager->GetFrame())
+			{
+				Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
+					mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[3], MIDDLE_FLAG);
+			}
+			else
+			{
+				Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
+					mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[4], MIDDLE_FLAG);
+			}
+		}
 	}
 }
 

@@ -98,8 +98,12 @@ public:
     */
     /*選択肢上変更(マイナス)*/
     void Up() { DefaultDecrease(); }
+    /*選択肢上変更(プラス)*/
+    void UpKeyDown();
     /*選択肢下変更(プラス)*/
     void Down() { DefaultIncrease(); }
+    /*選択肢下変更(マイナス)*/
+    void DownKeyUp();
     /*決定時処理*/
     void Decision() { DecisionProcess(); }
 
@@ -176,7 +180,10 @@ private:
     DataManager* mpDataManager;
 
     // リソースID
-    int mnResourceID;
+    std::vector<int> mnResourceIDs;
+
+    // 点滅時間
+    int mnBlinkTime;
 
 public:
     /*コンストラクタ*/

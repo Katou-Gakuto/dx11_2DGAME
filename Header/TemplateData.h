@@ -25,13 +25,13 @@ struct PlayerData
 	// 名前
 	std::string name;
 	// キャラクタータイプ
-	int charcterType;
+	int characterType;
 	// リザルト
 	Result result;
 
 	PlayerData()
-	: keyNumber(0)
-	, charcterType(-1)
+	: keyNumber(-1)
+	, characterType(-1)
 	, result(Result())
 	{
 		name.clear();
@@ -372,6 +372,12 @@ private:
 	// 攻撃力
 	unsigned int LevelOneAttackPower;
 
+	// 前回のダメージを受けた時間
+	int PreDamegeTime;
+
+	// 無敵時間
+	int InvincibilityTime;
+
 public:
 	// レベル
 	unsigned int Level;
@@ -420,6 +426,8 @@ public:
 		result.Size = size;
 		result.CharacterType = characterType;
 		result.Score = 0;
+		result.PreDamegeTime = 0;
+		result.InvincibilityTime = 15;
 
 		return result;
 	}
@@ -432,10 +440,14 @@ public:
 	/*ダメージ*/
 	void Damege(int damege)
 	{
-		this->Hp -= damege;
-		if (this->Hp < 0)
+		if ((PreDamegeTime + InvincibilityTime) <= Master::mpTimeManager->GetGameTime())
 		{
-			this->Hp = 0;
+			PreDamegeTime = Master::mpTimeManager->GetGameTime();
+			this->Hp -= damege;
+			if (this->Hp < 0)
+			{
+				this->Hp = 0;
+			}
 		}
 	}
 

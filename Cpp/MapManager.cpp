@@ -120,7 +120,7 @@ VECTOR_2D MapData::NumberChange(VECTOR_2D changeVolume, VECTOR_2D mapPos)
     {
         for (int y = 0; y < changeVolume.IntY(); y++)
         {
-            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, 0/*-1*/), mapPos);
+            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, /*/0/*/-1/**/ ), mapPos);
             moveNumber.Y += 1.0f;
         }
     }
@@ -137,7 +137,7 @@ VECTOR_2D MapData::NumberChange(VECTOR_2D changeVolume, VECTOR_2D mapPos)
     {
         for (int x = 0; x < changeVolume.IntX(); x++)
         {
-            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, 0/*-1*/), mapPos);
+            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, /*/0/*/-1/**/), mapPos);
             moveNumber.X += 1.0f;
         }
     }

@@ -41,14 +41,19 @@ protected:
 */
 class PlayerManager : public ObjectBase
 {
+private:
 	// プレイヤーコントローラー
 	std::vector<CharacterControllerBase*> mpPlayerControllers;
 
 	// プレイヤーHP
 	int mnPlayerHP;
+
+	// リソースID
+	int mnResourceID;
+
 public:
 	/*コンストラクタ*/
-	PlayerManager(std::vector<int> playerNumber, int playerHp);
+	PlayerManager(int playerHp);
 	/*デストラクタ*/
 	~PlayerManager();
 
@@ -74,11 +79,11 @@ protected:
 	// キー状態
 	KeyState* mpKeyState;
 
-
+	int mnCharacterType;
 
 public:
 	/*コンストラクタ*/
-	PlayerBase(int playerNumber);
+	PlayerBase(int playerNumber, int characterType);
 	/*デストラクタ*/
 	~PlayerBase();
 

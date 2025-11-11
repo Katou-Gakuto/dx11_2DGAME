@@ -117,7 +117,10 @@ void CharacterBase::Draw()
 {
 	if (mbDrawFlag)
 	{
-		SetDrawData();
+		if (!Master::mpTimeManager->GetStopFlag())
+		{
+			SetDrawData();
+		}
 		mstDrawData.Draw();
 //		Master::mpResourceManager->DrawSprite(mstStatus.Position.X, mstStatus.Position.Y, mstStatus.Size.X, mstStatus.Size.Y, (float)mstAnimeNumber.IntX() * mstResourceSize[1].X, mstResourceSize[1].X, mstAnimeNumber.IntY() * mstResourceSize[1].Y, mstResourceSize[1].Y, mnResourceNumber, MIDDLE_FLAG | ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG);
 	}
@@ -128,6 +131,11 @@ void CharacterBase::Draw()
 // ’èŒ^ˆÚ“®ˆ—
 void CharacterBase::TemplateMoveProcess()
 {
+	if (Master::mpTimeManager->GetStopFlag())
+	{
+		return;
+	}
+
 	mstOldPosition = mstStatus.Position;
 	mstMoveVec = VECTOR_2D::Zero();
 
@@ -532,7 +540,7 @@ void AttackBase::TemplateAttackProcess()
 void AttackBase::TemplateDrawProcess()
 {
 	mstDrawData.drawPos = mstAttackPosition;
-	mstDrawData.DrawUpdate(0);
+	mstDrawData.DrawUpdate(Master::mpTimeManager->GetStopFlag() ? -1 : 0);
 	mstDrawData.Draw();
 //	Master::mpResourceManager->DrawSprite(mstAttackPosition.X, mstAttackPosition.Y, mstAttackSize.X, mstAttackSize.Y, 0.0f, mstUVSize.X, 0.0f, mstUVSize.Y, mnResourceNumber, MIDDLE_FLAG | ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG);
 }

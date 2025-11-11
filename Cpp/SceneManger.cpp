@@ -48,7 +48,7 @@ void SceneManager::NewSceneProcess()
 	{
 	case SCENE_NAME::TITLE:
 	{
-		Master::mpGameManager->getMapManager()->SetStartupFlag(false);
+		Master::mpGameManager->GetMapManager()->Initilize();
 		TitleUI* title = new TitleUI();
 		title->Initilize();
 	}
@@ -66,14 +66,9 @@ void SceneManager::NewSceneProcess()
 		Master::mpGameManager->GetCamera()->Initilize();
 		Master::mpGameManager->GetCamera()->SetCameraMode(CAMERA_MODE::PLAYERS_MIDDLE_MOVE);
 
-		Master::mpGameManager->getMapManager()->Initilize();
+		Master::mpGameManager->GetMapManager()->Initilize();
 
-		std::vector<int> setNumber;
-		for (int i = 0; i < Master::mpDataManager->GetPlayerCount(); i++)
-		{
-			setNumber.push_back(Master::mpDataManager->GetPlayerKeyNumber(i));
-		}
-		PlayerManager* playerManager = new PlayerManager(setNumber, 5);
+		PlayerManager* playerManager = new PlayerManager(5);
 		playerManager->Initilize();
 
 		/*
@@ -99,10 +94,7 @@ void SceneManager::NewSceneProcess()
 		break;
 
 	case SCENE_NAME::RESULT:
-		Master::mpGameManager->getMapManager()->SetStartupFlag(false);
-
-		ResultUI *result = new ResultUI();
-		result->Initilize();
+		SetNextScene(SCENE_NAME::GAME);
 		break;
 	}
 }

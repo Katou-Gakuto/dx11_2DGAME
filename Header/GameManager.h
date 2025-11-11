@@ -39,6 +39,9 @@ public:
 	/*描画*/
 	void Draw();
 
+	/*終了フラグ設定*/
+	void SetEndFlag(bool endFlag) { mbEndFlag = endFlag; }
+
 	/*終了フラグ取得*/
 	bool GetEndFlag() { return mbEndFlag; }
 
@@ -46,7 +49,7 @@ public:
 	Camera* GetCamera() { return mpCamera; }
 
 	/*マップマネジャー取得*/
-	MapManager* getMapManager() { return mpMapManager; }
+	MapManager* GetMapManager() { return mpMapManager; }
 
 	/*オブジェクトマネジャー取得*/
 	ObjectManager* GetObjectManager() { return mpObjectManager; }
