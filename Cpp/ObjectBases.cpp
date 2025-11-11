@@ -700,11 +700,7 @@ void UIBase::DefaultDecrease()
 {
 	if (CheckUp_Frame())
 	{
-		--mnSelectNumber;
-		if (mnSelectNumber < 0)
-		{
-			mnSelectNumber = mnMaxSelectNumber - 1;
-		}
+		Decrease();
 	}
 }
 
@@ -713,11 +709,27 @@ void UIBase::DefaultIncrease()
 {
 	if (CheckDown_Frame())
 	{
-		++mnSelectNumber;
-		if (mnSelectNumber >= mnMaxSelectNumber)
-		{
-			mnSelectNumber = 0;
-		}
+		Increase();
+	}
+}
+
+/*選択ナンバー減少処理*/
+void UIBase::Decrease()
+{
+	--mnSelectNumber;
+	if (mnSelectNumber < 0)
+	{
+		mnSelectNumber = mnMaxSelectNumber - 1;
+	}
+}
+
+/*選択ナンバー増加処理*/
+void UIBase::Increase()
+{
+	++mnSelectNumber;
+	if (mnSelectNumber >= mnMaxSelectNumber)
+	{
+		mnSelectNumber = 0;
 	}
 }
 

@@ -26,7 +26,7 @@ protected:
 
 public:
 	IState_SetPlayerDataUI();
-	virtual ~IState_SetPlayerDataUI() = default;
+	~IState_SetPlayerDataUI();
 
 	/*‚±‚Ìó‘Ô‚É“ü‚Á‚½‚Ìˆ—*/
 	virtual int OnEnter(SetPlayerDataUI* parent) = 0;

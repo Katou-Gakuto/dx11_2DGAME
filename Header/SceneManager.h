@@ -12,7 +12,7 @@ enum class SCENE_NAME
 	/// <summary>ƒQ[ƒ€</summary>
 	GAME,
 	/// <summary>ƒŠƒUƒ‹ƒg</summary>
-	RESULT
+	RE_GAME
 };
 
 class LoadingManager;

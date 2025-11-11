@@ -427,7 +427,7 @@ public:
 		result.CharacterType = characterType;
 		result.Score = 0;
 		result.PreDamegeTime = 0;
-		result.InvincibilityTime = 15;
+		result.InvincibilityTime = 340;
 
 		return result;
 	}

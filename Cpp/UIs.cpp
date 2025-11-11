@@ -78,7 +78,6 @@ SetPlayerDataUI::SetPlayerDataUI()
 /*デストラクタ*/
 SetPlayerDataUI::~SetPlayerDataUI()
 {
-	delete mpFSM;
 }
 
 /*UI初期化*/
@@ -100,6 +99,9 @@ void SetPlayerDataUI::UIInitilize()
 /*UI終了*/
 void SetPlayerDataUI::UIFinalize()
 {
+	Master::mpResourceManager->SubResource(mnResourceID);
+
+	delete mpFSM;
 }
 
 /*UI更新*/
@@ -200,32 +202,6 @@ void SetPlayerDataUI::Keyboard_ControllerProcess()
 	mpFSM->Keyboard_And_ControllerUpdate(this);
 }
 
-/*選択肢上変更(プラス)*/
-void SetPlayerDataUI::UpKeyDown()
-{
-	if (CheckUp_Frame())
-	{
-		++mnSelectNumber;
-		if (mnSelectNumber >= mnMaxSelectNumber)
-		{
-			mnSelectNumber = 0;
-		}
-	}
-}
-
-/*選択肢下変更(マイナス)*/
-void SetPlayerDataUI::DownKeyUp()
-{
-	if (CheckDown_Frame())
-	{
-		--mnSelectNumber;
-		if (mnSelectNumber < 0)
-		{
-			mnSelectNumber = mnMaxSelectNumber - 1;
-		}
-	}
-}
-
 
 /*--------------------------------------------------------------------------------------------------------------
 * 【リザルトUI】
@@ -263,6 +239,7 @@ void ResultUI::UIUpdate()
 
 	if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::B))
 	{
+		SetDeleteFlag(true);
 		Master::mpSceneManager->SetNextScene(SCENE_NAME::TITLE);
 	}
 }
@@ -276,7 +253,7 @@ void ResultUI::UIDraw()
 /*選択決定時処理*/
 void ResultUI::DecisionProcess()
 {
-	Master::mpSceneManager->SetNextScene(SCENE_NAME::RESULT);
+	Master::mpSceneManager->SetNextScene(SCENE_NAME::RE_GAME);
 }
 
 
@@ -313,11 +290,18 @@ void PlayerControllerUI::UIInitilize()
 	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Controller/0.png"));
 	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Controller/1.png"));
 	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Controller/2.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/KeyBoard/2.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/KeyBoard/0.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/KeyBoard/1.png"));
 }
 
 /*UI終了*/
 void PlayerControllerUI::UIFinalize()
 {
+	for (int i = 0; i < mnResourceIDs.size(); i++)
+	{
+		Master::mpResourceManager->SubResource(mnResourceIDs[i]);
+	}
 }
 
 /*UI更新*/
@@ -345,17 +329,12 @@ void PlayerControllerUI::UIUpdate()
 		{
 			for (int i = 0; i < mnMaxSelectNumber; i++)
 			{
-				if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, mnSetPlayerKey[i]))
+
+				if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, mnSetPlayerKey[i]))
 				{
-					mnSelectNumber = mnMaxSelectNumber;
-				}
-				if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mnSetPlayerKey[i]))
-				{
-					mnSelectNumber = mnMaxSelectNumber + 1;
+					DecisionProcess();
 				}
 			}
-
-			DefaultDecision();
 		}
 		else
 		{
@@ -393,12 +372,18 @@ void PlayerControllerUI::UIDraw()
 		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
 			mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
 
-		Master::mpResourceManager->DrawString(std::to_string(mnSelectNumber), XMFLOAT2(150.0f, 150.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
-
 		for (int i = 0; i < mnMaxSelectNumber; i++)
 		{
-			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.15f, mpDataManager->GetDisplaySize().Y * 0.3f,
-				mpDataManager->GetDisplaySize().X * 0.15f, mpDataManager->GetDisplaySize().Y * 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+			if (i < 3)
+			{
+				Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.2f + (mpDataManager->GetDisplaySize().X * (0.31f * i)), mpDataManager->GetDisplaySize().Y * 0.2f,
+					mpDataManager->GetDisplaySize().X * 0.3f, mpDataManager->GetDisplaySize().Y * 0.3f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+			}
+			else
+			{
+				Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.2f + (mpDataManager->GetDisplaySize().X * (0.31f * (i - 3))), mpDataManager->GetDisplaySize().Y * 0.6f,
+					mpDataManager->GetDisplaySize().X * 0.3f, mpDataManager->GetDisplaySize().Y * 0.3f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+			}
 		}
 
 		if (mnSelectNumber >= mnMaxSelectNumber)
@@ -407,13 +392,11 @@ void PlayerControllerUI::UIDraw()
 			{
 				if (mnBlinkTime < Master::mpTimeManager->GetFrame())
 				{
-					Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
-						mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[3], MIDDLE_FLAG);
+					ControllerDraw(i, mnResourceIDs[3], mnResourceIDs[7], mnSetPlayerKey[i] == 0);
 				}
 				else
 				{
-					Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
-						mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[5], MIDDLE_FLAG);
+					ControllerDraw(i, mnResourceIDs[5], mnResourceIDs[8], mnSetPlayerKey[i] == 0);
 				}
 			}
 		}
@@ -421,19 +404,16 @@ void PlayerControllerUI::UIDraw()
 		{
 			for (int i = 0; i < mnSelectNumber; i++)
 			{
-				Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
-					mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[2], MIDDLE_FLAG);
+				ControllerDraw(i, mnResourceIDs[2], mnResourceIDs[6], mnSetPlayerKey[i] == 0);
 			}
 
 			if (mnBlinkTime < Master::mpTimeManager->GetFrame())
 			{
-				Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
-					mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[3], MIDDLE_FLAG);
+				ControllerDraw(mnSelectNumber, mnResourceIDs[3]);
 			}
 			else
 			{
-				Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
-					mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[4], MIDDLE_FLAG);
+				ControllerDraw(mnSelectNumber, mnResourceIDs[4]);
 			}
 		}
 	}
@@ -470,5 +450,36 @@ void PlayerControllerUI::DecisionProcess()
 
 		mnStartFlag = false;
 		DeleteUINumber();
+	}
+}
+
+/*コントローラー描画*/
+void PlayerControllerUI::ControllerDraw(int number, int resourceID, int keyBoardResourceID, bool keyBoardFlag)
+{
+	if (keyBoardFlag)
+	{
+		if (number < 3)
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.2f + (mpDataManager->GetDisplaySize().X * (0.31f * number)), mpDataManager->GetDisplaySize().Y * 0.2f,
+				mpDataManager->GetDisplaySize().X * 0.29f, mpDataManager->GetDisplaySize().Y * 0.29f, 0.0f, 1.0f, 0.0f, 1.0f, keyBoardResourceID, MIDDLE_FLAG);
+		}
+		else
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.2f + (mpDataManager->GetDisplaySize().X * (0.31f * (number - 3))), mpDataManager->GetDisplaySize().Y * 0.6f,
+				mpDataManager->GetDisplaySize().X * 0.29f, mpDataManager->GetDisplaySize().Y * 0.29f, 0.0f, 1.0f, 0.0f, 1.0f, keyBoardResourceID, MIDDLE_FLAG);
+		}
+	}
+	else
+	{
+		if (number < 3)
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.2f + (mpDataManager->GetDisplaySize().X * (0.31f * number)), mpDataManager->GetDisplaySize().Y * 0.2f,
+				mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.55f, 0.0f, 1.0f, 0.0f, 1.0f, resourceID, MIDDLE_FLAG);
+		}
+		else
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.2f + (mpDataManager->GetDisplaySize().X * (0.31f * (number - 3))), mpDataManager->GetDisplaySize().Y * 0.6f,
+				mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.55f, 0.0f, 1.0f, 0.0f, 1.0f, resourceID, MIDDLE_FLAG);
+		}
 	}
 }

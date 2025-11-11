@@ -17,3 +17,11 @@ IState_SetPlayerDataUI::IState_SetPlayerDataUI()
 
 	mnResourceIDs.clear();
 }
+
+IState_SetPlayerDataUI::~IState_SetPlayerDataUI()
+{
+	for (int i = 0; i < mnResourceIDs.size(); i++)
+	{
+		Master::mpResourceManager->SubResource(mnResourceIDs[i]);
+	}
+}

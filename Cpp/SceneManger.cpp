@@ -61,6 +61,10 @@ void SceneManager::NewSceneProcess()
 	}
 		break;
 
+	case SCENE_NAME::RE_GAME:
+		meNextScene = SCENE_NAME::GAME;
+		meNowScene = meNextScene;
+
 	case SCENE_NAME::GAME:
 	{
 		Master::mpGameManager->GetCamera()->Initilize();
@@ -91,10 +95,6 @@ void SceneManager::NewSceneProcess()
 		CameraCollision* cameraCollision = new CameraCollision();
 		cameraCollision->Initilize();
 	}
-		break;
-
-	case SCENE_NAME::RESULT:
-		SetNextScene(SCENE_NAME::GAME);
 		break;
 	}
 }

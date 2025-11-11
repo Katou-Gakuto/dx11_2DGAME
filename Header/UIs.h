@@ -97,13 +97,11 @@ public:
     * 【処理】
     */
     /*選択肢上変更(マイナス)*/
-    void Up() { DefaultDecrease(); }
-    /*選択肢上変更(プラス)*/
-    void UpKeyDown();
+    void Up() { Decrease(); }
     /*選択肢下変更(プラス)*/
-    void Down() { DefaultIncrease(); }
-    /*選択肢下変更(マイナス)*/
-    void DownKeyUp();
+    void Down() { Increase(); }
+    /*選択変更フレーム確認*/
+    bool CheckChangeFrame() { return CheckFrame(0); }
     /*決定時処理*/
     void Decision() { DecisionProcess(); }
 
@@ -206,4 +204,7 @@ public:
 private:
     /*選択決定時処理*/
     void DecisionProcess() override;
+
+    /*コントローラー描画*/
+    void ControllerDraw(int number, int resourceID, int keyBoardResourceID = -1, bool keyBoardFlag = false);
 };

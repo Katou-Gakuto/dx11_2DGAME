@@ -580,6 +580,12 @@ protected:
     /*デフォルト選択ナンバー増加処理*/
     void DefaultIncrease();
 
+    /*選択ナンバー減少処理*/
+    void Decrease();
+    /*選択ナンバー増加処理*/
+    void Increase();
+
+
     /*デフォルト選択決定処理*/
     void DefaultDecision();
     /*選択決定時処理*/

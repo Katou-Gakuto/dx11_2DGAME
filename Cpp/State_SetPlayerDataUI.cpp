@@ -76,8 +76,14 @@ int SPDUIPlayerNumber::ControllerUpdate(SetPlayerDataUI* parent){ return SET_PLA
 // キーボードとコントローラー更新
 int SPDUIPlayerNumber::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 {
-	parent->UpKeyDown();
-	parent->DownKeyUp();
+	if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::DOWN) && parent->CheckChangeFrame())
+	{
+		parent->Up();
+	}
+	if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::UP) && parent->CheckChangeFrame())
+	{
+		parent->Down();
+	}
 
 	if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::A, false))
 	{
@@ -159,12 +165,15 @@ SPDUICharacterSelect::SPDUICharacterSelect()
 	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Swordsman/pipo-charachip018e.png"));
 	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Swordsman/pipo-charachip018f.png"));
 	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Swordsman/pipo-charachip018g.png"));
+
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/ArrowMark.png"));
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/WhiteArrowMark.png"));
 }
 
 // この状態に入った時の処理
 int SPDUICharacterSelect::OnEnter(SetPlayerDataUI* parent)
 {
-	parent->SetSelectMaxNumber(mnResourceIDs.size());
+	parent->SetSelectMaxNumber(mnResourceIDs.size() - 2);
 	parent->SetSelectNumber(0);
 
 	return -1;
@@ -201,11 +210,11 @@ int SPDUICharacterSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 		}
 	}
 
-	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) && parent->CheckChangeFrame())
 	{
 		parent->Up();
 	}
-	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) && parent->CheckChangeFrame())
 	{
 		parent->Down();
 	}
@@ -227,6 +236,28 @@ void SPDUICharacterSelect::Draw(SetPlayerDataUI* parent)
 		{
 			return;
 		}
+	}
+
+	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::RIGHT))
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.75f, mpDataManager->GetDisplaySize().Y * 0.5f,
+			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.5f, 0.875f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 2], MIDDLE_FLAG);
+	}
+	else
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.75f, mpDataManager->GetDisplaySize().Y * 0.5f,
+			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.5f, 0.875f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
+	}
+
+	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::LEFT))
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.5f,
+			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 2], MIDDLE_FLAG);
+	}
+	else
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.5f,
+			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
 	}
 
 	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,

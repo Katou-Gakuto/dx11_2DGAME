@@ -135,6 +135,7 @@ void PlayerManager::Initilize()
 // I—¹
 void PlayerManager::Finalize()
 {
+	Master::mpResourceManager->SubResource(mnResourceID);
 }
 
 // XV
@@ -158,7 +159,7 @@ void PlayerManager::Update()
 			{
 				mpPlayerControllers[i]->GetCharacter()->GetStatus().Recovery(1);
 			}
-			else
+			else if (mnPlayerHP == 0)
 			{
 				ResultUI* result = new ResultUI();
 				result->Initilize();
