@@ -420,16 +420,13 @@ int ResourceManager::SetFontData(Font font, IDWriteFontCollection* fontCollectio
 }
 
 // 文字描画, string：文字列, pos：描画ポジション, options：テキストの整形
-void ResourceManager::DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, unsigned int intFlag, float fontSize)
+void ResourceManager::DrawString(std::wstring str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, unsigned int intFlag, float fontSize)
 {
-	// 文字列の変換
-	std::wstring wstr = StringToWString(str.c_str());
-
 	// ターゲットサイズの取得
 	D2D1_SIZE_F TargetSize = mdxsRT->GetSize();
 
 	// テキストレイアウトを作成
-	mdxsDWriteFactory->CreateTextLayout(wstr.c_str(), wstr.size(), mdxsTextFormat, TargetSize.width, TargetSize.height, &mdxsTextLayout);
+	mdxsDWriteFactory->CreateTextLayout(str.c_str(), str.size(), mdxsTextFormat, TargetSize.width, TargetSize.height, &mdxsTextLayout);
 
 	// 描画位置の確定
 	D2D1_POINT_2F pounts;
@@ -452,7 +449,8 @@ void ResourceManager::DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DR
 
 	if ((intFlag & MIDDLE_FLAG) != 0)
 	{
-		pounts.x -= (wstr.size() * MAP_ONE_SQUARE_SIZE * (fontSize * 0.01f)) * 0.5f;
+		pounts.x -= (str.size() * MAP_ONE_SQUARE_SIZE * (fontSize * 0.01f)) * 0.5f;
+		pounts.y -= (fontSize * 0.5f);
 	}
 
 	// 描画の開始

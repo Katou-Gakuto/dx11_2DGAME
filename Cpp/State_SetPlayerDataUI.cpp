@@ -25,8 +25,8 @@ using namespace DirectX;
 SPDUIPlayerNumber::SPDUIPlayerNumber()
 : IState_SetPlayerDataUI()
 {
-	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/ArrowMark.png"));
-	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/WhiteArrowMark.png"));
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/ArrowBoxMark.png"));
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/WhiteArrowBoxMark.png"));
 }
 
 // この状態に入った時の処理
@@ -97,27 +97,40 @@ void SPDUIPlayerNumber::Draw(SetPlayerDataUI* parent)
 {
 	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::UP))
 	{
-		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f,
-			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.5f, 0.875f, 0.0f, 0.5f, mnResourceIDs[0], MIDDLE_FLAG);
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.7f, mpDataManager->GetDisplaySize().Y * 0.25f,
+			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.5f, 0.875f, 0.0f, 0.5f, mnResourceIDs[0], MIDDLE_FLAG);
 	}
 	else
 	{
-		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f,
-			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.5f, 0.875f, 0.0f, 0.5f, mnResourceIDs[1], MIDDLE_FLAG);
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.7f, mpDataManager->GetDisplaySize().Y * 0.25f,
+			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.5f, 0.875f, 0.0f, 0.5f, mnResourceIDs[1], MIDDLE_FLAG);
 	}
 
 	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::DOWN))
 	{
-		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.7f,
-			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.0f, 0.5f, mnResourceIDs[0], MIDDLE_FLAG);
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.7f, mpDataManager->GetDisplaySize().Y * 0.7f,
+			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.0f, 0.5f, mnResourceIDs[0], MIDDLE_FLAG);
 	}
 	else
 	{
-		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.7f,
-			mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.0f, 0.5f, mnResourceIDs[1], MIDDLE_FLAG);
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.7f, mpDataManager->GetDisplaySize().Y * 0.7f,
+			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.0f, 0.5f, mnResourceIDs[1], MIDDLE_FLAG);
 	}
 
-	mpResourceManager->DrawString(std::to_string(parent->GetSelectNumber() + 1) + "人で遊ぶ", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.4f, mpDataManager->GetDisplaySize().Y * 0.45f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	for (int i = 0; i < 5; i++)
+	{
+		mpResourceManager->DrawString(std::to_string(i + 1), XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.2f, mpDataManager->GetDisplaySize().Y * (0.43f - (i * 0.08f) + (parent->GetSelectNumber() * 0.08f))), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	}
+
+	mpResourceManager->DrawString("人で遊ぶ", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.23f, mpDataManager->GetDisplaySize().Y * 0.43f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+
+	FontData fontData = FontData();
+	fontData.fontSize = 20.0f;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_THIN;
+	Master::mpResourceManager->SetFontData(&fontData);
+	mpResourceManager->DrawString("※5人でやる場合は一名、キーボードでやる事となります。", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.43f, mpDataManager->GetDisplaySize().Y * 0.49f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	fontData = FontData();
+	Master::mpResourceManager->SetFontData(&fontData);
 }
 
 
@@ -166,6 +179,7 @@ SPDUICharacterSelect::SPDUICharacterSelect()
 	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Swordsman/pipo-charachip018f.png"));
 	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Swordsman/pipo-charachip018g.png"));
 
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Back.png"));
 	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/ArrowMark.png"));
 	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/WhiteArrowMark.png"));
 }
@@ -173,7 +187,7 @@ SPDUICharacterSelect::SPDUICharacterSelect()
 // この状態に入った時の処理
 int SPDUICharacterSelect::OnEnter(SetPlayerDataUI* parent)
 {
-	parent->SetSelectMaxNumber(mnResourceIDs.size() - 2);
+	parent->SetSelectMaxNumber(mnResourceIDs.size() - 3);
 	parent->SetSelectNumber(0);
 
 	return -1;
@@ -238,7 +252,19 @@ void SPDUICharacterSelect::Draw(SetPlayerDataUI* parent)
 		}
 	}
 
-	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::RIGHT))
+	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.1325f, mpDataManager->GetDisplaySize().Y * 0.14f,
+		mpDataManager->GetDisplaySize().X * 0.055f, mpDataManager->GetDisplaySize().Y * 0.07f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 3], MIDDLE_FLAG);
+	
+	FontData fontData = FontData();
+	fontData.fontSize = 40.0f;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_BOLD;
+	Master::mpResourceManager->SetFontData(&fontData);
+	Master::mpResourceManager->DrawString(std::to_string(parent->GetSelectPlayerNumber() + 1) + "P", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.13f, mpDataManager->GetDisplaySize().Y * 0.13f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+	fontData = FontData();
+	Master::mpResourceManager->SetFontData(&fontData);
+
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 	{
 		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.75f, mpDataManager->GetDisplaySize().Y * 0.5f,
 			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.5f, 0.875f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 2], MIDDLE_FLAG);
@@ -249,7 +275,7 @@ void SPDUICharacterSelect::Draw(SetPlayerDataUI* parent)
 			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.5f, 0.875f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
 	}
 
-	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::LEFT))
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
 	{
 		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.5f,
 			mpDataManager->GetDisplaySize().X * 0.25f, mpDataManager->GetDisplaySize().Y * 0.25f, 0.125f, 0.5f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 2], MIDDLE_FLAG);
@@ -294,6 +320,9 @@ SPDUINameSet::SPDUINameSet()
 	msSetName.clear();
 	msAddWord.clear();
 	msSelectWord.clear();
+
+	mnResourceIDs.clear();
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Back.png"));
 }
 
 // この状態に入った時の処理
@@ -1068,7 +1097,131 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 	}
 }
 
+std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
+{
+	std::wstring wordName = L"";
+
+	if (number >= 0)
+	{
+		if ((int)number <= (int)PROCESS_NUMBER::SPACE)
+		{
+			if ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION)) != 0)
+			{
+				if (((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::CAPS_LOCK)) != 0) || ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT)) != 0))
+				{
+					wordName = FULL_CAPITAL_WORD[(int)number];
+				}
+				else
+				{
+					wordName = FULL_WORD[(int)number];
+				}
+			}
+			else
+			{
+				if (((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::CAPS_LOCK)) != 0) || ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT)) != 0))
+				{
+					wordName = HARF_CAPITAL_WORD[(int)number];
+				}
+				else
+				{
+					wordName = HARF_WORD[(int)number];
+				}
+			}
+		}
+
+		return wordName;
+	}
+
+	switch ((PROCESS_NUMBER)number)
+	{
+	case PROCESS_NUMBER::FULL_HALF_WIDTH:
+		if ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION)) != 0)
+		{
+			wordName = L"HALF";
+		}
+		else
+		{
+			wordName = L"FULL";
+		}
+		break;
+
+	case PROCESS_NUMBER::BACK_SPAE:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::INSERT:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::HOME:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::TAB:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::DELETE_PROCESS:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::END:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::CAPSLOCK:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::ENTER:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::ALT:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::SHIFT:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::LETF:
+		wordName = L"";
+		break;
+
+	case PROCESS_NUMBER::RIGHT:
+		wordName = L"";
+		break;
+	}
+
+	return wordName;
+}
+
 // 描画
 void SPDUINameSet::Draw(SetPlayerDataUI* parent)
 {
+	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.1325f, mpDataManager->GetDisplaySize().Y * 0.14f,
+		mpDataManager->GetDisplaySize().X * 0.055f, mpDataManager->GetDisplaySize().Y * 0.07f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+
+	FontData fontData = FontData();
+	fontData.fontSize = 40.0f;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_BOLD;
+	Master::mpResourceManager->SetFontData(&fontData);
+	Master::mpResourceManager->DrawString(std::to_string(parent->GetSelectPlayerNumber() + 1) + "P", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.13f, mpDataManager->GetDisplaySize().Y * 0.13f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+	fontData = FontData();
+	Master::mpResourceManager->SetFontData(&fontData);
+
+	float setNumberX = 0.03f;
+	float setNumberY = 0.1f;
+
+	std::wstring draw;
+	for (int y = 0; y < KEY_POS_NUMBER_HEIGHT; y++)
+	{
+		for (int x = 0; x < KEY_POS_NUMBER_WIDTH; x++)
+		{
+			draw = GetWordName(KEY_POS_NUMBERS[y][x], &fontData.fontSize);
+			mpResourceManager->DrawString(draw, XMFLOAT2(mpDataManager->GetDisplaySize().X * (0.1f + (x * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.13f + (y * setNumberY))), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+		}
+	}
 }

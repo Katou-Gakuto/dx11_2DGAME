@@ -53,6 +53,24 @@ void ObjectManager::Update()
 	} while (workObject != nullptr);
 }
 
+// ÅIXV
+void ObjectManager::LastUpdate()
+{
+	if (mpObjectBase == nullptr)
+	{
+		return;
+	}
+	mnObjectChangeFlags = mnSetObjectChangeFlags;
+	mnSetObjectChangeFlags = 0;
+
+	ObjectBase* workObject = mpObjectBase;
+	do
+	{
+		workObject->LastUpdate();
+		workObject = workObject->GetNextObject();
+	} while (workObject != nullptr);
+}
+
 // •`‰æ
 void ObjectManager::Draw()
 {

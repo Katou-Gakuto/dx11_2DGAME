@@ -5,6 +5,7 @@
 #include "TemplateData.h"
 
 class KeyState;
+class PlayerControllerUI;
 
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 * 【近距離キャラクター】
@@ -51,6 +52,15 @@ private:
 	// リソースID
 	int mnResourceID;
 
+	// コントローラー設定中フラグ
+	bool mbSetControllerFlag;
+
+	// プレイヤーコントローラー設定用UI
+	PlayerControllerUI* mpSetPlayerControllerUI;
+
+	// ダメージカウント
+	std::vector<int> mnDamegeCount;
+
 public:
 	/*コンストラクタ*/
 	PlayerManager(int playerHp);
@@ -65,6 +75,9 @@ public:
 	void Update() override final;
 	/*描画*/
 	void Draw() override final;
+
+	/*最終描画*/
+	void LastDraw() override;
 };
 /*--------------------------------------------------------------------------------------------------------------
 * 【プレイヤーコントローラー】

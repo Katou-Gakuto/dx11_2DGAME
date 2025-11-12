@@ -44,6 +44,8 @@ public:
     void Finalize();
     /*更新*/
     void Update();
+    /*最終更新*/
+    void LastUpdate();
     /*描画*/
     void Draw();
     /*最終描画*/

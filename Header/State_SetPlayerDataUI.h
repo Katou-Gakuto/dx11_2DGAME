@@ -138,17 +138,17 @@ private:
 	// ëSï∂éöêî
 	static constexpr int WORD_MAX = 49;
 	// îºäpï∂éö
-	static constexpr char16_t HARF_WORD[49] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ':', ';', ',', '-', '.', '/', '@','[','\\',']', '^','\\', ' '};
-	static constexpr char16_t HARF_CAPITAL_WORD[49] = { NULL, '!', '"', '#', '$', '%', '&', '\'', '(', ')', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '*', '+', '<', '=', '>', '?', '`', '{', '|', '}', '~', '_' , ' ' };
+	static constexpr wchar_t HARF_WORD[49] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ':', ';', ',', '-', '.', '/', '@','[','\\',']', '^','\\', ' '};
+	static constexpr wchar_t HARF_CAPITAL_WORD[49] = { NULL, '!', '"', '#', '$', '%', '&', '\'', '(', ')', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '*', '+', '<', '=', '>', '?', '`', '{', '|', '}', '~', '_' , ' ' };
 	// ëSäpï∂éö
-	static constexpr char16_t FULL_WORD[49] = { 'ÇO', 'ÇP', 'ÇQ', 'ÇR', 'ÇS', 'ÇT', 'ÇU', 'ÇV', 'ÇW', 'ÇX', 'ÇÅ', 'ÇÇ', 'ÇÉ', 'ÇÑ', 'ÇÖ', 'ÇÜ', 'Çá', 'Çà', 'Çâ', 'Çä', 'Çã', 'Çå', 'Çç', 'Çé', 'Çè', 'Çê', 'Çë', 'Çí', 'Çì', 'Çî', 'Çï', 'Çñ', 'Çó', 'Çò', 'Çô', 'Çö', 'ÅF', 'ÅG', 'ÅA', 'Å[', 'ÅB', 'ÅE', 'Åó', 'Åu', 'Åè', 'Åv', 'ÅO', 'Åè', 'Å@' };
-	static constexpr char16_t FULL_CAPITAL_WORD[49] = { NULL, 'ÅI', 'Åh', 'Åî', 'Åê', 'Åì', 'Åï', 'Åf', 'Åi', 'Åj', 'Ç`', 'Ça', 'Çb', 'Çc', 'Çd', 'Çe', 'Çf', 'Çg', 'Çh', 'Çi', 'Çj', 'Çk', 'Çl', 'Çm', 'Çn', 'Ço', 'Çp', 'Çq', 'Çr', 'Çs', 'Çt', 'Çu', 'Çv', 'Çw', 'Çx', 'Çy', 'Åñ', 'Å{', 'ÅÉ', 'ÅÅ', 'ÅÑ', 'ÅH', 'Åe', 'Åo', 'Åb', 'Åp', 'Å`', 'ÅQ', ' ' };
+	static constexpr wchar_t FULL_WORD[49] = { 'ÇO', 'ÇP', 'ÇQ', 'ÇR', 'ÇS', 'ÇT', 'ÇU', 'ÇV', 'ÇW', 'ÇX', 'ÇÅ', 'ÇÇ', 'ÇÉ', 'ÇÑ', 'ÇÖ', 'ÇÜ', 'Çá', 'Çà', 'Çâ', 'Çä', 'Çã', 'Çå', 'Çç', 'Çé', 'Çè', 'Çê', 'Çë', 'Çí', 'Çì', 'Çî', 'Çï', 'Çñ', 'Çó', 'Çò', 'Çô', 'Çö', 'ÅF', 'ÅG', 'ÅA', 'Å[', 'ÅB', 'ÅE', 'Åó', 'Åu', 'Åè', 'Åv', 'ÅO', 'Åè', 'Å@' };
+	static constexpr wchar_t FULL_CAPITAL_WORD[49] = { NULL, 'ÅI', 'Åh', 'Åî', 'Åê', 'Åì', 'Åï', 'Åf', 'Åi', 'Åj', 'Ç`', 'Ça', 'Çb', 'Çc', 'Çd', 'Çe', 'Çf', 'Çg', 'Çh', 'Çi', 'Çj', 'Çk', 'Çl', 'Çm', 'Çn', 'Ço', 'Çp', 'Çq', 'Çr', 'Çs', 'Çt', 'Çu', 'Çv', 'Çw', 'Çx', 'Çy', 'Åñ', 'Å{', 'ÅÉ', 'ÅÅ', 'ÅÑ', 'ÅH', 'Åe', 'Åo', 'Åb', 'Åp', 'Å`', 'ÅQ', ' ' };
 	
 	//[49 + îºäp/ëSäp + tab + capslock + shift + backspae + enter + left(ÉVÉtÉg) + right(ÉVÉtÉg) + home + end + insert + delete + alt] = [62]
 	static constexpr int KEY_POS_NUMBER_WIDTH = 17;
 	static constexpr int KEY_POS_NUMBER_HEIGHT = 5;
 	// ÉvÉçÉZÉXÉiÉìÉoÅ[
-	enum class PROCESS_NUMBER
+	enum class PROCESS_NUMBER : char
 	{
 		KEY_BOARD_FULL_HALF_WIDTH = -18,
 		KEY_BOARD_SHIFT = -17,
@@ -201,6 +201,9 @@ private:
 	// ÉèÅ[ÉhÉtÉâÉO
 	unsigned char mucWordFlags;
 
+	// ÉäÉ\Å[ÉXID
+	std::vector<int> mnResourceID;
+
 public:
 	SPDUINameSet();
 	virtual ~SPDUINameSet() = default;
@@ -234,6 +237,8 @@ private:
 	void SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER number, bool flag = true);
 	void SetNumberProcess(SetPlayerDataUI* parent, char number, bool flag = true) { SetNumberProcess(parent, (PROCESS_NUMBER)number, flag); }
 	void SetNumberProcess(SetPlayerDataUI* parent, int number, bool flag = true) { SetNumberProcess(parent, (PROCESS_NUMBER)number, flag); }
+
+	std::wstring GetWordName(char number, FLOAT* fontSize);
 
 	// í«â¡ï∂éöÇïœä∑Ç∑ÇÈ
 	void ChangeAddWord();

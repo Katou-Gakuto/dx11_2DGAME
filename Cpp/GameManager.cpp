@@ -82,6 +82,7 @@ void GameManager::Update()
 
     // オブジェクト更新
     mpObjectManager->Update();
+    mpObjectManager->LastUpdate();
 
     // マップ更新(シーンマネージャーにオブジェクトベース化して移す)
     mpMapManager->Update();

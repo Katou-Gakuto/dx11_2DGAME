@@ -549,6 +549,7 @@ void AttackBase::TemplateDrawProcess()
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 * 【UIベース】
 */
+bool UIBase::mbDecisionFlag = false;
 // コンストラクタ
 UIBase::UIBase(int maxMenuSelect, bool keyboardFlag, bool timeStopFlag, bool decreaseFlag)
 : ObjectBase(OBJECT_TYPE::UI_BASE)
@@ -619,6 +620,15 @@ void UIBase::Update()
 {
 	if (mnUINumber == Master::mpUIManager->GetNowUINumber()) {
 		UIUpdate();
+	}
+}
+
+// 最終更新
+void UIBase::LastUpdate()
+{
+	if (mbDecisionFlag)
+	{
+		mbDecisionFlag = false;
 	}
 }
 
@@ -817,7 +827,7 @@ bool UIBase::CheckLeft_Frame()
 // A/Enterが押されているなら「true」を返す
 bool UIBase::CheckDecision()
 {
-	return (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::A, false) || mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ENTER));
+	return (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::A, false) || mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ENTER) && !mbDecisionFlag);
 }
 
 // フレームが一定時間経っているかどうか

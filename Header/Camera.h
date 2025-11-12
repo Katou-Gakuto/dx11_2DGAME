@@ -76,7 +76,7 @@ public:
 	void SetCameraChangeSizeSpeed(float setChangeSpeed) { mfCameraSizeChangeSpeed = setChangeSpeed; }
 
 	/*ÉJÉÅÉâÉÇÅ[Éhê›íË*/
-	void SetCameraMode(CAMERA_MODE mode) { meCameraMode = mode; }
+	void SetCameraMode(CAMERA_MODE mode);
 
 public:
 	/*--------------------------------------------------------------------------------------------------------------

@@ -8,6 +8,7 @@
 #include "../Header/Master.h"
 #include "../Header/ObjectManager.h"
 #include "../Header/SceneManager.h"
+#include "../Header/TimeManager.h"
 #include "../Header/UIs.h"
 
 // コンストラクタ
@@ -94,6 +95,8 @@ void SceneManager::NewSceneProcess()
 
 		CameraCollision* cameraCollision = new CameraCollision();
 		cameraCollision->Initilize();
+
+		Master::mpDataManager->SetGameStartTime(Master::mpTimeManager->GetGameTime());
 	}
 		break;
 	}

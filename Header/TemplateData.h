@@ -11,8 +11,10 @@
 struct Result//(プレイヤー状態も後々含めたい)
 {
 	int score;
+	int damegeCount;
 	Result()
 	: score(0)
+	, damegeCount(0)
 	{
 	}
 };
@@ -474,7 +476,7 @@ public:
 	/*スコア増加*/
 	void PlusScore(int score)
 	{
-		this->Score = score;
+		this->Score += score;
 	}
 };
 

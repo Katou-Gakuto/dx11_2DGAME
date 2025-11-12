@@ -1,5 +1,6 @@
 #include "../Header/Calculation.h"
 #include "../Header/Camera.h"
+#include "../Header/DataManager.h"
 #include "../Header/GameManager.h"
 #include "../Header/Macro.h"
 #include "../Header/Master.h"
@@ -68,17 +69,26 @@ void Camera::Update()
 	{
 	case CAMERA_MODE::PLAYERS_MIDDLE_MOVE:
 	{
-		if (mpPlayerData == nullptr)
-		{
-			mpPlayerData = Master::mpGameManager->GetTargetDatas();
-		}
-
 		VECTOR_2D playerMiddlePos = VECTOR_2D::Zero();
 		std::vector<CharacterBase*> players = mpPlayerData->GetPlayers();
-		for (int i = 0; i < players.size(); i++)
+		if ((players.size() > 0) && players[0]->IsDeleteFlag())
 		{
-			playerMiddlePos += (players[i]->GetStatus().Position - mstCameraPosition);
+			for (int i = 0; i < players.size(); i++)
+			{
+				if (!players[i]->IsDeleteFlag())
+				{
+					playerMiddlePos += (players[i]->GetStatus().Position - mstCameraPosition);
+				}
+			}
 		}
+		else
+		{
+			for (int i = 0; i < players.size(); i++)
+			{
+				playerMiddlePos += (players[i]->GetStatus().Position - mstCameraPosition);
+			}
+		}
+
 		playerMiddlePos /= (int)players.size();
 		VECTOR_2D checkField = GetDisplayDistance();
 		if (playerMiddlePos.Abs().X >= (checkField.X * 0.2f))
@@ -116,5 +126,22 @@ void Camera::Update()
 		Calculation::DiffReduce(&diffPos.Y, mfCameraMoveSpeed);
 
 		mstCameraPosition = mstTargetPosition - diffPos;
+	}
+}
+
+void Camera::SetCameraMode(CAMERA_MODE mode)
+{
+	meCameraMode = mode; 
+
+	switch (meCameraMode)
+	{
+	case CAMERA_MODE::PLAYERS_MIDDLE_MOVE:
+		if (mpPlayerData == nullptr)
+		{
+			mpPlayerData = Master::mpGameManager->GetTargetDatas();
+		}
+		mstTargetSize.X = 1.0f + ((float)(Master::mpDataManager->GetPlayerCount() - 1) * 0.2f);
+		mstTargetSize.Y = 1.0f + ((float)(Master::mpDataManager->GetPlayerCount() - 1) * 0.2f);
+		break;
 	}
 }

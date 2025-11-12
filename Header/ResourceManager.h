@@ -210,7 +210,8 @@ public:
 	* pos：描画ポジション
 	* options：テキストの整形
 	*/
-	void DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, unsigned int intFlag = 0U, float fontSize = 60.0f);
+	void DrawString(std::wstring str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, unsigned int intFlag = 0U, float fontSize = 60.0f);
+	void DrawString(std::string str, DirectX::XMFLOAT2 pos, D2D1_DRAW_TEXT_OPTIONS options, unsigned int intFlag = 0U, float fontSize = 60.0f) { DrawString(StringToWString(str.c_str()), pos, options, intFlag, fontSize); }
 
 	/*文字描画
 	* string：文字列

@@ -71,6 +71,8 @@ public:
     virtual void Finalize() = 0;
     /*更新*/
     virtual void Update() = 0;
+    /*最終更新*/
+    virtual void LastUpdate() {}
     /*描画*/
     virtual void Draw() = 0;
     /*最終描画*/
@@ -514,6 +516,8 @@ protected:
     // 選択変更したフレーム数
     int mnChangeFrame;
 
+    // 決定フラグ
+    static bool mbDecisionFlag;
 
 public:
     /*コンストラクタ*/
@@ -527,12 +531,17 @@ public:
     void Finalize() override final;
     /*更新*/
     void Update() override final;
+    /*最終更新*/
+    void LastUpdate() override final;
     /*描画*/
     void Draw() override final;
 
     /*--------------------------------------------------------------------------------------------------------------
     * 【独自処理】
     */
+public:
+    static void SetDecisionFlag(bool flag) { mbDecisionFlag = flag; }
+
 protected:
     /*UI初期化*/
     virtual void UIInitilize() = 0;

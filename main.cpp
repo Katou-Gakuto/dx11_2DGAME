@@ -17,7 +17,7 @@
 * レベル制　敵も少しずつステータスが上がる
 * 4人までプレイできる
 * メニューあり
-* 遠のみ、中まで、近のみ、設置のみ 4種類のキャラ
+* 近接、魔法の2種類のキャラ
 * エフェクト
 * 名前
 */
@@ -882,27 +882,27 @@ void Render()
 //        setCamera->SetCameraTargetPos(setCamera->GetCameraPos() + setPos);
 //    }
 //
-    if ((Master::mpKeyState->GetNowKeyFlags_Controller(CONTROLLER_KEY_NUMBER::CONTROLLER_1) & (KeyState::FlagPos_Controller(CONTROLLER_KEY_TYPE::R) | KeyState::FlagPos_Controller(CONTROLLER_KEY_TYPE::RT) | KeyState::FlagPos_Controller(CONTROLLER_KEY_TYPE::L) | KeyState::FlagPos_Controller(CONTROLLER_KEY_TYPE::LT))) != 0)
-    {
-        VECTOR_2D setSize = VECTOR_2D::Zero();
-        if (Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::RT, CONTROLLER_KEY_NUMBER::CONTROLLER_1))
-        {
-            setSize.X += 0.01f;
-        }
-        if (Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, CONTROLLER_KEY_NUMBER::CONTROLLER_1))
-        {
-            setSize.Y += 0.01f;
-        }
-        if (Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::LT, CONTROLLER_KEY_NUMBER::CONTROLLER_1))
-        {
-            setSize.X -= 0.01f;
-        }
-        if (Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, CONTROLLER_KEY_NUMBER::CONTROLLER_1))
-        {
-            setSize.Y -= 0.01f;
-        }
-        setCamera->SetCameraTargetSize(setCamera->GetCameraSize() + setSize);
-    }
+    // if ((Master::mpKeyState->GetNowKeyFlags_Controller(CONTROLLER_KEY_NUMBER::CONTROLLER_1) & (KeyState::FlagPos_Controller(CONTROLLER_KEY_TYPE::R) | KeyState::FlagPos_Controller(CONTROLLER_KEY_TYPE::RT) | KeyState::FlagPos_Controller(CONTROLLER_KEY_TYPE::L) | KeyState::FlagPos_Controller(CONTROLLER_KEY_TYPE::LT))) != 0)
+    // {
+    //     VECTOR_2D setSize = VECTOR_2D::Zero();
+    //     if (Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::RT, CONTROLLER_KEY_NUMBER::CONTROLLER_1))
+    //     {
+    //         setSize.X += 0.01f;
+    //     }
+    //     if (Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, CONTROLLER_KEY_NUMBER::CONTROLLER_1))
+    //     {
+    //         setSize.Y += 0.01f;
+    //     }
+    //     if (Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::LT, CONTROLLER_KEY_NUMBER::CONTROLLER_1))
+    //     {
+    //         setSize.X -= 0.01f;
+    //     }
+    //     if (Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, CONTROLLER_KEY_NUMBER::CONTROLLER_1))
+    //     {
+    //         setSize.Y -= 0.01f;
+    //     }
+    //     setCamera->SetCameraTargetSize(setCamera->GetCameraSize() + setSize);
+    // }
 //    /*
 //    g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
 //    //                                       /*スロット番号が決まっている 一つ目

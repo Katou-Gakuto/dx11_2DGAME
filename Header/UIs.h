@@ -7,13 +7,23 @@
 
 class PlayerControllerUI;
 class FSM_SelectUI;
-class Datamanager;
+class DataManager;
 
 /*--------------------------------------------------------------------------------------------------------------
 * 【タイトルUI】
 */
 class TitleUI : public UIBase
 {
+private:
+    // リソースID
+    int mnResourceID;
+
+    // 文字の透明度設定用
+    float mfFontColorAlpha;
+    
+    // 透明度設定用に足すフラグ(falseなら引く)
+    bool mbFontColorAlphaPlusFlag;
+
 public:
     /*コンストラクタ*/
     TitleUI();
@@ -141,6 +151,14 @@ public:
 class ResultUI : public UIBase
 {
 private:
+    // リソースID
+    std::vector<int> mnResourceIDs;
+
+    // データマネージャー
+    DataManager* mpDataManager;
+
+    // ゲーム時間
+    int mnGameTime;
 
 public:
     /*コンストラクタ*/
@@ -172,7 +190,7 @@ private:
     int mnSetPlayerKey[5/*(int)CONTROLLER_KEY_NUMBER::MAX_CONTROLLER*/];
 
     // コントローラー設定が開始しているかのフラグ
-    bool mnStartFlag;
+    bool mbStartFlag;
 
     // データマネージャー
     DataManager* mpDataManager;
@@ -198,8 +216,14 @@ public:
     /*UI描画*/
     void UIDraw() override;
 
+    /*最終描画*/
+    void LastDraw() override;
+
     /*プレイヤーキー設定開始*/
     void SetControllerStart();
+
+    /*プレイヤー設定中かどうかを取得(設定中なら「true」)*/
+    bool GetSettingUpFlag() { return mbStartFlag; }
 
 private:
     /*選択決定時処理*/

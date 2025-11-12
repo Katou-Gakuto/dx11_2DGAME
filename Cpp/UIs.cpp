@@ -24,6 +24,9 @@ using namespace DirectX;
 /*コンストラクタ*/
 TitleUI::TitleUI()
 : UIBase(1, true)
+, mnResourceID(-1)
+, mfFontColorAlpha(0.2f)
+, mbFontColorAlphaPlusFlag(true)
 {
 }
 
@@ -35,25 +38,58 @@ TitleUI::~TitleUI()
 /*UI初期化*/
 void TitleUI::UIInitilize()
 {
-	FontData fontData = FontData();
-	Master::mpResourceManager->SetFontData(&fontData);
+	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/Back.png");
 }
 
 /*UI終了*/
 void TitleUI::UIFinalize()
 {
+	FontData fontData = FontData();
+	Master::mpResourceManager->SetFontData(&fontData);
 }
 
 /*UI更新*/
 void TitleUI::UIUpdate()
 {
+	if (mbFontColorAlphaPlusFlag)
+	{
+		mfFontColorAlpha += 0.01f;
+		if (mfFontColorAlpha >= 1.0f)
+		{
+			mfFontColorAlpha = 1.0f;
+			mbFontColorAlphaPlusFlag = false;
+		}
+	}
+	else
+	{
+		mfFontColorAlpha -= 0.01f;
+		if (mfFontColorAlpha <= 0.2f)
+		{
+			mfFontColorAlpha = 0.2f;
+			mbFontColorAlphaPlusFlag = true;
+		}
+	}
+
 	DefaultDecision();
 }
 
 /*UI描画*/
 void TitleUI::UIDraw()
 {
-	Master::mpResourceManager->DrawString("TITLE", XMFLOAT2(90.0f, 90.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	Master::mpResourceManager->DrawSprite(Master::mpDataManager->GetDisplaySize().X * 0.5f, Master::mpDataManager->GetDisplaySize().Y * 0.5f,
+		Master::mpDataManager->GetDisplaySize().X * 0.9f, Master::mpDataManager->GetDisplaySize().Y * 0.9f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID, MIDDLE_FLAG);
+
+	FontData fontData = FontData();
+	fontData.fontSize = 130.0f;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_HEAVY;
+	Master::mpResourceManager->SetFontData(&fontData);
+	Master::mpResourceManager->DrawString("TEAM BATTLE", XMFLOAT2(Master::mpDataManager->GetDisplaySize().X * 0.5f, Master::mpDataManager->GetDisplaySize().Y * 0.4f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+	fontData.fontSize = 50.0f;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_THIN;
+	fontData.Color.a = mfFontColorAlpha;
+	Master::mpResourceManager->SetFontData(&fontData);
+	Master::mpResourceManager->DrawString("PRESS A/ENTER TO START", XMFLOAT2(Master::mpDataManager->GetDisplaySize().X * 0.5f, Master::mpDataManager->GetDisplaySize().Y * 0.8f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
 }
 
 /*選択決定時処理*/
@@ -211,7 +247,10 @@ void SetPlayerDataUI::Keyboard_ControllerProcess()
 /*コンストラクタ*/
 ResultUI::ResultUI()
 : UIBase(1, true, true)
+, mpDataManager(nullptr)
+, mnGameTime(0)
 {
+	mnResourceIDs.clear();
 }
 
 /*デストラクタ*/
@@ -222,6 +261,48 @@ ResultUI::~ResultUI()
 /*UI初期化*/
 void ResultUI::UIInitilize()
 {
+	mpDataManager = Master::mpDataManager;
+
+	mnSelectNumber = 0;
+	mnMaxSelectNumber = mpDataManager->GetPlayerCount();
+	mnGameTime = (Master::mpTimeManager->GetGameTime() - mpDataManager->GetGameStartTime()) / 1000;
+
+	for (int i = 0; i < mnMaxSelectNumber; i++)
+	{
+		wchar_t* fileName = nullptr;
+		switch (mpDataManager->GetPlayerData(i).characterType)
+		{
+		case 0:
+			fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018.png";
+			break;
+		case 1:
+			fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018a.png";
+			break;
+		case 2:
+			fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018b.png";
+			break;
+		case 3:
+			fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018c.png";
+			break;
+		case 4:
+			fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018d.png";
+			break;
+		case 5:
+			fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018e.png";
+			break;
+		case 6:
+			fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018f.png";
+			break;
+		case 7:
+			fileName = (wchar_t*)L"Resource/Swordsman/pipo-charachip018g.png";
+			break;
+		}
+		mnResourceIDs.push_back(Master::mpResourceManager->AddResource(fileName));
+	}
+
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/ArrowMark.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/WhiteArrowMark.png"));
+	mnResourceIDs.push_back(Master::mpResourceManager->AddResource(L"Resource/Back.png"));
 }
 
 /*UI終了*/
@@ -232,14 +313,27 @@ void ResultUI::UIFinalize()
 /*UI更新*/
 void ResultUI::UIUpdate()
 {
-	DefaultDecision();
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(0)))
+	{
+		Decrease();
+	}
 
-	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::L) && mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::R))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(0)))
+	{
+		Increase();
+	}
+
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, mpDataManager->GetPlayerKeyNumber(0)))
+	{
+		DecisionProcess();
+	}
+
+	if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, mpDataManager->GetPlayerKeyNumber(0)) && mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::R, mpDataManager->GetPlayerKeyNumber(0)))
 	{
 		Master::mpGameManager->SetEndFlag(true);
 	}
 
-	if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::B))
+	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::B, mpDataManager->GetPlayerKeyNumber(0)))
 	{
 		SetDeleteFlag(true);
 		Master::mpSceneManager->SetNextScene(SCENE_NAME::TITLE);
@@ -249,7 +343,104 @@ void ResultUI::UIUpdate()
 /*UI描画*/
 void ResultUI::UIDraw()
 {
-	Master::mpResourceManager->DrawString("RESULT", XMFLOAT2(90.0f, 90.0f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
+		mpDataManager->GetDisplaySize().X * 0.9f, mpDataManager->GetDisplaySize().Y * 0.9f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
+
+	{
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.1325f, mpDataManager->GetDisplaySize().Y * 0.14f,
+			mpDataManager->GetDisplaySize().X * 0.055f, mpDataManager->GetDisplaySize().Y * 0.07f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
+
+		FontData fontData = FontData();
+		fontData.fontSize = 40.0f;
+		fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_BOLD;
+		Master::mpResourceManager->SetFontData(&fontData);
+		Master::mpResourceManager->DrawString(std::to_string(mnSelectNumber + 1) + "P", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.13f, mpDataManager->GetDisplaySize().Y * 0.13f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+		fontData = FontData();
+		Master::mpResourceManager->SetFontData(&fontData);
+	}
+
+	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.51f, mpDataManager->GetDisplaySize().Y * 0.15f,
+		mpDataManager->GetDisplaySize().X * 0.35f, mpDataManager->GetDisplaySize().Y * 0.15f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
+
+	FontData fontData = FontData();
+	fontData.fontSize = 100.0f;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_HEAVY;
+	Master::mpResourceManager->SetFontData(&fontData);
+	Master::mpResourceManager->DrawString("RESULT", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.12f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+	// タイトル移動　リゲーム
+	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.7825f, mpDataManager->GetDisplaySize().Y * 0.8f,
+		mpDataManager->GetDisplaySize().X * 0.295f, mpDataManager->GetDisplaySize().Y * 0.07f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
+	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.7825f, mpDataManager->GetDisplaySize().Y * 0.88f,
+		mpDataManager->GetDisplaySize().X * 0.295f, mpDataManager->GetDisplaySize().Y * 0.07f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
+	fontData = FontData();
+	fontData.fontSize = 30.0f;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_BOLD;
+	Master::mpResourceManager->SetFontData(&fontData);
+	Master::mpResourceManager->DrawString("PRESS A TO RESTART", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.65f, mpDataManager->GetDisplaySize().Y * 0.77f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	Master::mpResourceManager->DrawString("PRESS B TO TITLE", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.65f, mpDataManager->GetDisplaySize().Y * 0.85f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+
+	// 右左画像
+	if (mpDataManager->GetPlayerCount() >= 2)
+	{
+			if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(0)))
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.11f, mpDataManager->GetDisplaySize().Y * 0.5f,
+				mpDataManager->GetDisplaySize().X * 0.1f, mpDataManager->GetDisplaySize().Y * 0.1f, 0.0f, 0.5f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 3], MIDDLE_FLAG);
+		}
+		else
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.11f, mpDataManager->GetDisplaySize().Y * 0.5f,
+				mpDataManager->GetDisplaySize().X * 0.1f, mpDataManager->GetDisplaySize().Y * 0.1f, 0.0f, 0.5f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 2], MIDDLE_FLAG);
+		}
+		
+		if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(0)))
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.9f, mpDataManager->GetDisplaySize().Y * 0.5f,
+				mpDataManager->GetDisplaySize().X * 0.1f, mpDataManager->GetDisplaySize().Y * 0.1f, 0.5f, 1.0f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 3], MIDDLE_FLAG);
+		}
+		else
+		{
+			Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.9f, mpDataManager->GetDisplaySize().Y * 0.5f,
+				mpDataManager->GetDisplaySize().X * 0.1f, mpDataManager->GetDisplaySize().Y * 0.1f, 0.5f, 1.0f, 0.5f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 2], MIDDLE_FLAG);
+		}
+	}
+
+	// ゲーム時間
+	fontData = FontData();
+	fontData.fontSize = 20.0f;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_THIN;
+	Master::mpResourceManager->SetFontData(&fontData);
+	Master::mpResourceManager->DrawString("GAME TIME : " + std::to_string(mnGameTime) + "sec",
+		XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.08f, mpDataManager->GetDisplaySize().Y * 0.87f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+
+	{
+		// プレイヤー画像
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.77f,
+			mpDataManager->GetDisplaySize().X * 0.12f, mpDataManager->GetDisplaySize().Y * 0.17f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[mnResourceIDs.size() - 1], MIDDLE_FLAG);
+		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.77f,
+			mpDataManager->GetDisplaySize().X * 0.1f, mpDataManager->GetDisplaySize().Y * 0.15f, 1.0f / 3.0f, 2.0f / 3.0f, 0.0f, 1.0f / 4.0f, mnResourceIDs[mnSelectNumber], MIDDLE_FLAG);
+
+		// 名前
+		fontData = FontData();
+		fontData.fontSize = 60.0f;
+		fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_BOLD;
+		Master::mpResourceManager->SetFontData(&fontData);
+		Master::mpResourceManager->DrawString("NAME : " + mpDataManager->GetPlayerData(mnSelectNumber).name,
+			XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.2f, mpDataManager->GetDisplaySize().Y * 0.3f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+
+		// スコア
+		Master::mpResourceManager->DrawString("SCORE : " + std::to_string(mpDataManager->GetPlayerData(mnSelectNumber).result.score),
+			XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.2f, mpDataManager->GetDisplaySize().Y * 0.4f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+
+		// ダメージを受けた回数
+		Master::mpResourceManager->DrawString("DAMAGE : " + std::to_string(mpDataManager->GetPlayerData(mnSelectNumber).result.damegeCount),
+			XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.2f, mpDataManager->GetDisplaySize().Y * 0.5f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	}
+
+	fontData = FontData();
+	Master::mpResourceManager->SetFontData(&fontData);
 }
 
 /*選択決定時処理*/
@@ -265,7 +456,7 @@ void ResultUI::DecisionProcess()
 /*コンストラクタ*/
 PlayerControllerUI::PlayerControllerUI()
 : UIBase(1, true)
-, mnStartFlag(false)
+, mbStartFlag(false)
 , mpDataManager(nullptr)
 , mnBlinkTime(0)
 {
@@ -309,7 +500,7 @@ void PlayerControllerUI::UIFinalize()
 /*UI更新*/
 void PlayerControllerUI::UIUpdate()
 {
-	if (mnStartFlag)
+	if (mbStartFlag)
 	{
 		if ((mnBlinkTime + 40) < Master::mpTimeManager->GetFrame())
 		{
@@ -320,7 +511,7 @@ void PlayerControllerUI::UIUpdate()
 		{
 			if (mnSelectNumber == 0)
 			{
-				mnStartFlag = false;
+				mbStartFlag = false;
 				DeleteUINumber();
 			}
 			mnSelectNumber = mnMaxSelectNumber + 1;
@@ -369,7 +560,12 @@ void PlayerControllerUI::UIUpdate()
 /*UI描画*/
 void PlayerControllerUI::UIDraw()
 {
-	if (mnStartFlag)
+}
+
+/*最終描画*/
+void PlayerControllerUI::LastDraw()
+{
+	if (mbStartFlag)
 	{
 		Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.5f, mpDataManager->GetDisplaySize().Y * 0.5f,
 			mpDataManager->GetDisplaySize().X * 1.0f, mpDataManager->GetDisplaySize().Y * 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
@@ -426,7 +622,7 @@ void PlayerControllerUI::SetControllerStart()
 {
 	mnSelectNumber = 0;
 	mnMaxSelectNumber = (int)mpDataManager->GetPlayerData().size();
-	mnStartFlag = true;
+	mbStartFlag = true;
 
 	SetUINumber();
 }
@@ -450,7 +646,7 @@ void PlayerControllerUI::DecisionProcess()
 			return;
 		}
 
-		mnStartFlag = false;
+		mbStartFlag = false;
 		DeleteUINumber();
 	}
 }

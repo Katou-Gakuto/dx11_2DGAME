@@ -13,6 +13,9 @@ private:
 	// 画面サイズ
 	VECTOR_2D mstDisplaySize;
 
+	// ゲーム開始時間
+	int mnGameStartTime;
+
 public:
 	/*コンストラクタ*/
 	DataManager();
@@ -52,6 +55,9 @@ public:
 	/*画面サイズ取得*/
 	VECTOR_2D GetDisplaySize() { return mstDisplaySize; }
 
+	/*ゲーム開始時間取得*/
+	int GetGameStartTime() { return mnGameStartTime; }
+
 	/*--------------------------------------------------------------------------------------------------------------
 	* 【設定】
 	*/
@@ -69,4 +75,7 @@ public:
 
 	/*プレイヤー種類設定*/
 	void SetPlayerType(int playerNumber, int playerType) { mstPlayerDatas[playerNumber].characterType = playerType; }
+
+	/*ゲーム開始時間設定*/
+	void SetGameStartTime(int time) { mnGameStartTime = time; }
 };

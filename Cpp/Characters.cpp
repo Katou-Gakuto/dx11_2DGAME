@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 
 #include "../Header/Calculation.h"
+#include "../Header/Camera.h"
 #include "../Header/Characters.h"
 #include "../Header/Collisions.h"
 #include "../Header/DataManager.h"
@@ -108,6 +109,8 @@ PlayerManager::PlayerManager(int playerHp)
 : ObjectBase(OBJECT_TYPE::BASE)
 , mnPlayerHP(playerHp)
 , mnResourceID(-1)
+, mbSetControllerFlag(false)
+, mpSetPlayerControllerUI(nullptr)
 {
 	DataManager* dataManager = Master::mpDataManager;
 	mpPlayerControllers.clear();
@@ -117,6 +120,7 @@ PlayerManager::PlayerManager(int playerHp)
 		CharacterControllerBase* setController = new PlayerBase(i);
 		
 		mpPlayerControllers.push_back(setController);
+		mnDamegeCount.push_back(0);
 	}
 }
 
@@ -134,6 +138,9 @@ void PlayerManager::Initilize()
 	}
 
 	mnResourceID = Master::mpResourceManager->AddResource(L"Resource/Heart.png");
+
+	mpSetPlayerControllerUI = new PlayerControllerUI();
+	mpSetPlayerControllerUI->Initilize();
 }
 
 // 終了
@@ -145,37 +152,69 @@ void PlayerManager::Finalize()
 // 更新
 void PlayerManager::Update()
 {
-	bool DamegeFlag = false;
-
-	for (int i = 0; i < mpPlayerControllers.size(); i++)
+	if (mbSetControllerFlag)
 	{
-		if (mpPlayerControllers[i]->GetCharacter()->GetStatus().HpCheck())
+		if (!mpSetPlayerControllerUI->GetSettingUpFlag())
 		{
-			if (DamegeFlag)
+			for (int i = 0; i < Master::mpDataManager->GetPlayerCount(); i++)
 			{
-				mpPlayerControllers[i]->GetCharacter()->GetStatus().Recovery(1);
-				continue;
+				if (!Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::EXISTENCE, Master::mpDataManager->GetPlayerKeyNumber(i)))
+				{
+					mpSetPlayerControllerUI->SetControllerStart();
+					return;
+				}
 			}
 
-			mnPlayerHP -= 1;
-
-			if (mnPlayerHP > 0)
+			mbSetControllerFlag = false;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < mpPlayerControllers.size(); i++)
+		{
+			if (mpPlayerControllers[i]->GetCharacter()->GetStatus().HpCheck())
 			{
-				mpPlayerControllers[i]->GetCharacter()->GetStatus().Recovery(1);
-			}
-			else if (mnPlayerHP == 0)
-			{
-				ResultUI* result = new ResultUI();
-				result->Initilize();
+				mnPlayerHP -= 1;
+				++mnDamegeCount[i];
+
+				if (mnPlayerHP > 0)
+				{
+					mpPlayerControllers[i]->GetCharacter()->GetStatus().Recovery(1);
+				}
+				else if (mnPlayerHP == 0)
+				{
+					std::vector<PlayerData> setPlayerData = Master::mpDataManager->GetPlayerData();
+
+					for (int j = 0; j < mpPlayerControllers.size(); j++)
+					{
+						setPlayerData[j].result.score = mpPlayerControllers[j]->GetCharacter()->GetStatus().Score;
+						setPlayerData[j].result.damegeCount = mnDamegeCount[j];
+					}
+
+					Master::mpDataManager->SetPlayerData(setPlayerData);
+
+					ResultUI* result = new ResultUI();
+					result->Initilize();
+					return;
+				}
 			}
 
-			DamegeFlag = true;
+			if (!Master::mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::EXISTENCE, Master::mpDataManager->GetPlayerKeyNumber(i)))
+			{
+				mbSetControllerFlag = true;
+				mpSetPlayerControllerUI->SetControllerStart();
+			}
 		}
 	}
 }
 
 // 描画
 void PlayerManager::Draw()
+{
+}
+
+// 最終描画
+void PlayerManager::LastDraw()
 {
 	for (int i = 0; i < mnPlayerHP; i++)
 	{
@@ -261,6 +300,11 @@ void PlayerBase::CharacterControllerFinalize()
 // キャラクターコントローラー更新
 void PlayerBase::CharacterControllerUpdate()
 {
+	if (Master::mpDataManager->GetPlayerKeyNumber(mnPlayerNumber) != mnKeyNumber)
+	{
+		mnKeyNumber = Master::mpDataManager->GetPlayerKeyNumber(mnPlayerNumber);
+	}
+
 	TemplateKeyProcess();
 }
 
@@ -272,12 +316,17 @@ void PlayerBase::CharacterControllerDraw()
 // 最終描画
 void PlayerBase::LastDraw()
 {
+	if (Master::mpTimeManager->GetStopFlag())
+	{
+		return;
+	}
+
 	FontData fontData = FontData();
 	fontData.fontSize = 20.0f;
 	Master::mpResourceManager->SetFontData(&fontData);
 
-	Master::mpResourceManager->DrawSprite(mpCharacter->GetStatus().Position.X, mpCharacter->GetStatus().Position.Y - 0.65f, (msName.size() + 2) * 20.0f * 0.01f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID, MIDDLE_FLAG | CAMERA_VIEW_FLAG);
-	Master::mpResourceManager->DrawString(msName, XMFLOAT2(mpCharacter->GetStatus().Position.X, mpCharacter->GetStatus().Position.Y - 0.9f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG | CAMERA_VIEW_FLAG, 20);
+	Master::mpResourceManager->DrawSprite(mpCharacter->GetStatus().Position.X, mpCharacter->GetStatus().Position.Y - 0.65f, (msName.size() + 2) * 20.0f * 0.01f * Master::mpGameManager->GetCamera()->GetCameraSize().X, 0.5f * Master::mpGameManager->GetCamera()->GetCameraSize().Y, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceID, MIDDLE_FLAG | CAMERA_VIEW_FLAG);
+	Master::mpResourceManager->DrawString(msName, XMFLOAT2(mpCharacter->GetStatus().Position.X, mpCharacter->GetStatus().Position.Y - 0.7f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG | CAMERA_VIEW_FLAG, fontData.fontSize);
 
 
 	fontData = FontData();

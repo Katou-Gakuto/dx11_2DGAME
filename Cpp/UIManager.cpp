@@ -6,6 +6,7 @@
 UIManager::UIManager()
 : mnNowUINumber(0)
 {
+    UIBase::SetDecisionFlag(false);
     mpUIBases.clear();
 }
 
@@ -39,6 +40,7 @@ void UIManager::DecreaseUINumber()
 {
     // ˆê”ÔŒã‚ë‚ğíœ
     mpUIBases.pop_back();
+    UIBase::SetDecisionFlag(true);
 
     mnNowUINumber -= 1;
     if (mnNowUINumber <= 0) {
