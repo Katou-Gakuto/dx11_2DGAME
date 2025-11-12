@@ -138,11 +138,12 @@ private:
 	// ëSï∂éöêî
 	static constexpr int WORD_MAX = 49;
 	// îºäpï∂éö
-	static constexpr wchar_t HARF_WORD[49] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ':', ';', ',', '-', '.', '/', '@','[','\\',']', '^','\\', ' '};
+	static constexpr wchar_t HARF_WORD[49] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ':', ';', ',', '-', '.', '/', '@','[','\\',']', '^','\\', ' ' };
 	static constexpr wchar_t HARF_CAPITAL_WORD[49] = { NULL, '!', '"', '#', '$', '%', '&', '\'', '(', ')', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '*', '+', '<', '=', '>', '?', '`', '{', '|', '}', '~', '_' , ' ' };
 	// ëSäpï∂éö
-	static constexpr wchar_t FULL_WORD[49] = { 'ÇO', 'ÇP', 'ÇQ', 'ÇR', 'ÇS', 'ÇT', 'ÇU', 'ÇV', 'ÇW', 'ÇX', 'ÇÅ', 'ÇÇ', 'ÇÉ', 'ÇÑ', 'ÇÖ', 'ÇÜ', 'Çá', 'Çà', 'Çâ', 'Çä', 'Çã', 'Çå', 'Çç', 'Çé', 'Çè', 'Çê', 'Çë', 'Çí', 'Çì', 'Çî', 'Çï', 'Çñ', 'Çó', 'Çò', 'Çô', 'Çö', 'ÅF', 'ÅG', 'ÅA', 'Å[', 'ÅB', 'ÅE', 'Åó', 'Åu', 'Åè', 'Åv', 'ÅO', 'Åè', 'Å@' };
-	static constexpr wchar_t FULL_CAPITAL_WORD[49] = { NULL, 'ÅI', 'Åh', 'Åî', 'Åê', 'Åì', 'Åï', 'Åf', 'Åi', 'Åj', 'Ç`', 'Ça', 'Çb', 'Çc', 'Çd', 'Çe', 'Çf', 'Çg', 'Çh', 'Çi', 'Çj', 'Çk', 'Çl', 'Çm', 'Çn', 'Ço', 'Çp', 'Çq', 'Çr', 'Çs', 'Çt', 'Çu', 'Çv', 'Çw', 'Çx', 'Çy', 'Åñ', 'Å{', 'ÅÉ', 'ÅÅ', 'ÅÑ', 'ÅH', 'Åe', 'Åo', 'Åb', 'Åp', 'Å`', 'ÅQ', ' ' };
+	static constexpr wchar_t FULL_WORD[49][2] = { L"ÇO", L"ÇP", L"ÇQ", L"ÇR", L"ÇS", L"ÇT", L"ÇU", L"ÇV", L"ÇW", L"ÇX", L"ÇÅ", L"ÇÇ", L"ÇÉ", L"ÇÑ", L"ÇÖ", L"ÇÜ", L"Çá", L"Çà", L"Çâ", L"Çä", L"Çã", L"Çå", L"Çç", L"Çé", L"Çè", L"Çê", L"Çë", L"Çí", L"Çì", L"Çî", L"Çï", L"Çñ", L"Çó", L"Çò", L"Çô", L"Çö", L"ÅF", L"ÅG", L"ÅA", L"Å[", L"ÅB", L"ÅE", L"Åó", L"Åu" ,L"Åè", L"Åv", L"ÅO", L"Åè", L"Å@" };
+	static constexpr wchar_t FULL_CAPITAL_WORD[49][2] = { {(const wchar_t)NULL, (const wchar_t)NULL}, L"ÅI", L"Åh", L"Åî", L"Åê", L"Åì", L"Åï", L"Åf", L"Åi", L"Åj", L"Ç`", L"Ça", L"Çb", L"Çc", L"Çd", L"Çe", L"Çf", L"Çg", L"Çh", L"Çi", L"Çj", L"Çk", L"Çl", L"Çm", L"Çn", L"Ço", L"Çp", L"Çq", L"Çr", L"Çs", L"Çt", L"Çu", L"Çv", L"Çw", L"Çx", L"Çy", L"Åñ", L"Å{", L"ÅÉ", L"ÅÅ", L"ÅÑ", L"ÅH", L"Åe", L"Åo", L"Åb", L"Åp", L"Å`", L"ÅQ", L" "
+};
 	
 	//[49 + îºäp/ëSäp + tab + capslock + shift + backspae + enter + left(ÉVÉtÉg) + right(ÉVÉtÉg) + home + end + insert + delete + alt] = [62]
 	static constexpr int KEY_POS_NUMBER_WIDTH = 17;

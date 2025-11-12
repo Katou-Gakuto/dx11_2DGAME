@@ -640,13 +640,13 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 								mnAddWordChangeNumber = 0;
 							}
 
-							msAddWord.insert(mnAddWordSelectNumber, 1, FULL_CAPITAL_WORD[(int)number]);
-							mnAddWordSelectNumber += 1;
+							msAddWord.insert(mnAddWordSelectNumber, FULL_CAPITAL_WORD[(int)number]);
+							mnAddWordSelectNumber += 2;
 						}
 						else
 						{
-							msSetName.insert(mnSetNameSelectNumber, 1, FULL_CAPITAL_WORD[(int)number]);
-							mnSetNameSelectNumber += 1;
+							msSetName.insert(mnSetNameSelectNumber, FULL_CAPITAL_WORD[(int)number]);
+							mnSetNameSelectNumber += 2;
 						}
 						msSelectWord.clear();
 						mnSelectWordSelectNumber = 0;
@@ -663,13 +663,13 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 								mnAddWordChangeNumber = 0;
 							}
 
-							msAddWord.insert(mnAddWordSelectNumber, 1, FULL_WORD[(int)number]);
-							mnAddWordSelectNumber += 1;
+							msAddWord.insert(mnAddWordSelectNumber, FULL_WORD[(int)number]);
+							mnAddWordSelectNumber += 2;
 						}
 						else
 						{
-							msSetName.insert(mnSetNameSelectNumber, 1, FULL_WORD[(int)number]);
-							mnSetNameSelectNumber += 1;
+							msSetName.insert(mnSetNameSelectNumber, FULL_WORD[(int)number]);
+							mnSetNameSelectNumber += 2;
 						}
 						msSelectWord.clear();
 						mnSelectWordSelectNumber = 0;
@@ -1103,7 +1103,7 @@ std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
 
 	if (number >= 0)
 	{
-		if ((int)number <= (int)PROCESS_NUMBER::SPACE)
+		if ((int)number < (int)PROCESS_NUMBER::SPACE)
 		{
 			if ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION)) != 0)
 			{
@@ -1128,6 +1128,10 @@ std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
 				}
 			}
 		}
+		else
+		{
+			wordName = L"SPACE";
+		}
 
 		return wordName;
 	}
@@ -1146,51 +1150,51 @@ std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
 		break;
 
 	case PROCESS_NUMBER::BACK_SPAE:
-		wordName = L"";
+		wordName = L"BACK SPAE";
 		break;
 
 	case PROCESS_NUMBER::INSERT:
-		wordName = L"";
+		wordName = L"INSERT";
 		break;
 
 	case PROCESS_NUMBER::HOME:
-		wordName = L"";
+		wordName = L"HOME";
 		break;
 
 	case PROCESS_NUMBER::TAB:
-		wordName = L"";
+		wordName = L"TAB";
 		break;
 
 	case PROCESS_NUMBER::DELETE_PROCESS:
-		wordName = L"";
+		wordName = L"DELETE";
 		break;
 
 	case PROCESS_NUMBER::END:
-		wordName = L"";
+		wordName = L"END";
 		break;
 
 	case PROCESS_NUMBER::CAPSLOCK:
-		wordName = L"";
+		wordName = L"CAPSLOCK";
 		break;
 
 	case PROCESS_NUMBER::ENTER:
-		wordName = L"";
+		wordName = L"ENTER";
 		break;
 
 	case PROCESS_NUMBER::ALT:
-		wordName = L"";
+		wordName = L"ALT";
 		break;
 
 	case PROCESS_NUMBER::SHIFT:
-		wordName = L"";
+		wordName = L"SHIFT";
 		break;
 
 	case PROCESS_NUMBER::LETF:
-		wordName = L"";
+		wordName = L"©";
 		break;
 
 	case PROCESS_NUMBER::RIGHT:
-		wordName = L"";
+		wordName = L"¨";
 		break;
 	}
 
@@ -1212,7 +1216,7 @@ void SPDUINameSet::Draw(SetPlayerDataUI* parent)
 	fontData = FontData();
 	Master::mpResourceManager->SetFontData(&fontData);
 
-	float setNumberX = 0.03f;
+	float setNumberX = 0.055f;
 	float setNumberY = 0.1f;
 
 	std::wstring draw;
@@ -1221,7 +1225,7 @@ void SPDUINameSet::Draw(SetPlayerDataUI* parent)
 		for (int x = 0; x < KEY_POS_NUMBER_WIDTH; x++)
 		{
 			draw = GetWordName(KEY_POS_NUMBERS[y][x], &fontData.fontSize);
-			mpResourceManager->DrawString(draw, XMFLOAT2(mpDataManager->GetDisplaySize().X * (0.1f + (x * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.13f + (y * setNumberY))), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+			mpResourceManager->DrawString(draw, XMFLOAT2(mpDataManager->GetDisplaySize().X * (0.1f + (x * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.35f + (y * setNumberY))), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
 		}
 	}
 }
