@@ -5,6 +5,7 @@
 #include "TemplateData.h"
 
 class Camera;
+class DataManager;
 class ObjectManager;
 class ResourceManager;
 

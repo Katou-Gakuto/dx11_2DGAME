@@ -3,6 +3,8 @@
 #include <locale>
 #include <codecvt>
 
+#include <dxgi.h>
+
 #include <DirectXMath.h>
 
 //#include <imm.h>
@@ -11,6 +13,7 @@
 #include "../Header/DataManager.h"
 #include "../Header/KeyState.h"
 #include "../Header/Master.h"
+#include "../Header/SceneManager.h"
 #include "../Header/State_SetPlayerDataUI.h"
 #include "../Header/TemplateData.h"
 #include "../Header/UIs.h"
@@ -18,6 +21,8 @@
 using namespace DirectX;
 
 //#pragma comment(lib, "imm32.lib")
+
+#pragma comment(lib, "DXGI.lib")
 
 /*----------------------------------------------------------------------------------------------------*/
 /*　【プレイヤー数選択状態】　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　*/
@@ -72,7 +77,16 @@ int SPDUIPlayerNumber::KeyboardUpdate(SetPlayerDataUI* parent)
 	return SET_PLAYER_DATA_UI_STATE_PLAYER_NUMBER;
 }
 // コントローラー更新
-int SPDUIPlayerNumber::ControllerUpdate(SetPlayerDataUI* parent){ return SET_PLAYER_DATA_UI_STATE_PLAYER_NUMBER; }
+int SPDUIPlayerNumber::ControllerUpdate(SetPlayerDataUI* parent)
+{
+	if (mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::B))
+	{
+		Master::mpSceneManager->SetNextScene(SCENE_NAME::TITLE);
+	}
+
+	return SET_PLAYER_DATA_UI_STATE_PLAYER_NUMBER;
+}
+
 // キーボードとコントローラー更新
 int SPDUIPlayerNumber::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 {
@@ -212,9 +226,7 @@ int SPDUICharacterSelect::MouseUpdate(SetPlayerDataUI* parent)
 // キーボード更新
 int SPDUICharacterSelect::KeyboardUpdate(SetPlayerDataUI* parent){	return SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT;}
 // コントローラー更新
-int SPDUICharacterSelect::ControllerUpdate(SetPlayerDataUI* parent){ return SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT; }
-// キーボードとコントローラー更新
-int SPDUICharacterSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
+int SPDUICharacterSelect::ControllerUpdate(SetPlayerDataUI* parent)
 {
 	for (int i = 0; i < mpDataManager->GetPlayerCount(); i++)
 	{
@@ -223,6 +235,19 @@ int SPDUICharacterSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
 			return SET_PLAYER_DATA_UI_STATE_PLAYER_NUMBER;
 		}
 	}
+
+	if (mpKeyState->GetKeyUpAllController(CONTROLLER_KEY_TYPE::B))
+	{
+		int nullKeyNumber[5] = {-1, -1, -1, -1, -1};
+		mpDataManager->SetPlayerKeyNumber(nullKeyNumber);
+		return SET_PLAYER_DATA_UI_STATE_CONTROLLER_SELECT;
+	}
+
+	return SET_PLAYER_DATA_UI_STATE_CHARACTER_SELECT;
+}
+// キーボードとコントローラー更新
+int SPDUICharacterSelect::Keyboard_And_ControllerUpdate(SetPlayerDataUI* parent)
+{
 
 	if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) && parent->CheckChangeFrame())
 	{
@@ -323,6 +348,7 @@ SPDUINameSet::SPDUINameSet()
 
 	mnResourceIDs.clear();
 	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/Back.png"));
+	mnResourceIDs.push_back(mpResourceManager->AddResource(L"Resource/GrayBack.png"));
 }
 
 // この状態に入った時の処理
@@ -360,122 +386,156 @@ int SPDUINameSet::MouseUpdate(SetPlayerDataUI* parent)
 // キーボード更新
 int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 {
-	if (mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber()) == (int)CONTROLLER_KEY_NUMBER::KEY_BOARD)
+	if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
 	{
-		unsigned long long wordKeyBoradFlags = (mpKeyState->GetDownWordKeyFlags_Board() & 0x1'ffff'ffff'ffff);
-		// 押してるワードに反応する
-		if (wordKeyBoradFlags != 0)
+		if (mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber()) == (int)CONTROLLER_KEY_NUMBER::KEY_BOARD)
 		{
-			for (int i = 0; i < WORD_MAX; i++)
+			unsigned long long wordKeyBoradFlags = (mpKeyState->GetDownWordKeyFlags_Board() & 0x1'ffff'ffff'ffff);
+			// 押してるワードに反応する
+			if (wordKeyBoradFlags != 0)
 			{
-				if ((wordKeyBoradFlags & ((unsigned long long)1 << i)) != 0)
+				for (int i = 0; i < WORD_MAX; i++)
 				{
-					// 仮想キーボードの位置を設定
+					if ((wordKeyBoradFlags & ((unsigned long long)1 << i)) != 0)
+					{
+						// 仮想キーボードの位置を設定
 
 
-					SetNumberProcess(parent, i);
+						SetNumberProcess(parent, i);
+					}
+				}
+
+				if (((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::ARROW_LEFT)) != 0) &&
+					((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::ALT)) != 0))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::LETF);
+				}
+				if (((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::ARROW_RIGHT)) != 0) &&
+					((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::ALT)) != 0))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::RIGHT);
+				}
+
+				// ホーム
+				if ((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::HOME)) != 0)
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::HOME);
+				}
+
+				// エンド
+				if ((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::END)) != 0)
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::END);
 				}
 			}
 
-			if (((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::ARROW_LEFT)) != 0) &&
-				((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT)) != 0))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::LETF);
-			}
-			if (((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::ARROW_RIGHT)) != 0) &&
-				((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::SHIFT)) != 0))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::RIGHT);
+			{// 特殊キー処理
+				// 全角半角
+				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::FULL_WIDTH))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, true);
+				}
+				else if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::HALF_WIDTH))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, false);
+				}
+
+				// シフト
+				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_SHIFT, true);
+				}
+				else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_SHIFT, false);
+				}
+
+				// インサート
+				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::INSERT))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_INSERT, true);
+				}
+				else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::INSERT))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_INSERT, false);
+				}
+
+				// オルト
+				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ALT_LEFT_AND_RIGHT))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_ALT, true);
+				}
+				else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::ALT_LEFT_AND_RIGHT))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_ALT, false);
+				}
+
+				// バックスペース
+				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::BACK_SPACE))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::BACK_SPAE);
+				}
+
+				// タブ
+				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::TAB))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::TAB);
+				}
+
+				// デリート
+				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::_DELETE))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::DELETE_PROCESS);
+				}
+
+				// コントロール別処理
+				if (!mpKeyState->GetSpecialKey_Board(KEY_BOARD_SPECIAL::CTRL_LEFT_AND_RIGHT))
+				{
+					// エンター
+					if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ENTER))
+					{
+						SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
+					}
+				}
+				else
+				{
+					// エンター
+					if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ENTER))
+					{
+						SetNumberProcess(parent, KEY_POS_NUMBERS[mnSelectNumberY][mnSelectNumberX]);
+					}
+
+					// マス移動
+					if (mpKeyState->GetWordKeyDown_Board(KEY_BOARD_WORD::ARROW_UP))
+					{
+						mnSelectNumberY = CheckYPos(mnSelectNumberY - 1);
+					}
+					if (mpKeyState->GetWordKeyDown_Board(KEY_BOARD_WORD::ARROW_DOWN))
+					{
+						mnSelectNumberY = CheckYPos(mnSelectNumberY + 1);
+					}
+
+					if (mpKeyState->GetWordKeyDown_Board(KEY_BOARD_WORD::ARROW_RIGHT))
+					{
+						mnSelectNumberX = CheckXPos(mnSelectNumberX + 1);
+					}
+					if (mpKeyState->GetWordKeyDown_Board(KEY_BOARD_WORD::ARROW_LEFT))
+					{
+						mnSelectNumberX = CheckXPos(mnSelectNumberX - 1);
+					}
+				}
 			}
 
-			// ホーム
-			if ((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::HOME)) != 0)
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::HOME);
-			}
-
-			// エンド
-			if ((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::END)) != 0)
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::END);
-			}
-		}
-
-		{// 特殊キー処理
-			// 全角半角
-			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::FULL_WIDTH))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, true);
-			}
-			else if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::HALF_WIDTH))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, false);
-			}
-
-			// シフト
-			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_SHIFT, true);
-			}
-			else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_SHIFT, false);
-			}
-
-			// インサート
-			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::INSERT))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_INSERT, true);
-			}
-			else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::INSERT))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_INSERT, false);
-			}
-
-			// オルト
-			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ALT_LEFT_AND_RIGHT))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_ALT, true);
-			}
-			else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::ALT_LEFT_AND_RIGHT))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_ALT, false);
-			}
-
-			// バックスペース
-			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::BACK_SPACE))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::BACK_SPAE);
-			}
-
-			// タブ
-			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::TAB))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::TAB);
-			}
-
-			// デリート
-			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::_DELETE))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::DELETE_PROCESS);
-			}
-
-			// エンター
-			if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ENTER))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
-			}
-		}
-
-		{// 
-			// キャプチャーロック
-			if (mpKeyState->GetAllToggleState())// トグルキーダウンとアップ作る
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, true);
-			}
-			else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
-			{
-				SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, false);
+			{// 
+				// キャプチャーロック
+				if (mpKeyState->GetAllToggleState())// トグルキーダウンとアップ作る
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, true);
+				}
+				else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, false);
+				}
 			}
 		}
 	}
@@ -487,37 +547,36 @@ int SPDUINameSet::ControllerUpdate(SetPlayerDataUI* parent)
 {
 	if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
 	{
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+		if (mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber()) != 0)
 		{
-			--mnSelectNumberY;
-			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX, mnSelectNumberY + 1);
-		}
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
-		{
-			++mnSelectNumberY;
-			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX, mnSelectNumberY - 1);
-		}
+			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			{
+				mnSelectNumberY = CheckYPos(mnSelectNumberY - 1);
+			}
+			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			{
+				mnSelectNumberY = CheckYPos(mnSelectNumberY + 1);
+			}
 
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
-		{
-			--mnSelectNumberX;
-			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX + 1, mnSelectNumberY);
-		}
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
-		{
-			++mnSelectNumberX;
-			GetNextPos(&mnSelectNumberX, &mnSelectNumberY, mnSelectNumberX - 1, mnSelectNumberY);
-		}
+			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			{
+				mnSelectNumberX = CheckXPos(mnSelectNumberX + 1);
+			}
+			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			{
+				mnSelectNumberX = CheckXPos(mnSelectNumberX - 1);
+			}
 
-		if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
-		{
-			SetNumberProcess(parent, KEY_POS_NUMBERS[mnSelectNumberY][mnSelectNumberX]);
-		}
+			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			{
+				SetNumberProcess(parent, KEY_POS_NUMBERS[mnSelectNumberY][mnSelectNumberX]);
+			}
 
-		if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) &&
-			mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
-		{
-			SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
+			if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) &&
+				mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			{
+				SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
+			}
 		}
 	}
 
@@ -1097,7 +1156,7 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 	}
 }
 
-std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
+std::wstring SPDUINameSet::GetWordName(char number, FontData* fontData)
 {
 	std::wstring wordName = L"";
 
@@ -1130,7 +1189,7 @@ std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
 		}
 		else
 		{
-			wordName = L"SPACE";
+			wordName = L"A";//SPACE";
 		}
 
 		return wordName;
@@ -1139,6 +1198,7 @@ std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
 	switch ((PROCESS_NUMBER)number)
 	{
 	case PROCESS_NUMBER::FULL_HALF_WIDTH:
+		fontData->fontSize = 20.0f;
 		if ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION)) != 0)
 		{
 			wordName = L"HALF";
@@ -1150,53 +1210,70 @@ std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
 		break;
 
 	case PROCESS_NUMBER::BACK_SPAE:
+		fontData->fontSize = 20.0f;
 		wordName = L"BACK SPAE";
 		break;
 
 	case PROCESS_NUMBER::INSERT:
+		fontData->fontSize = 20.0f;
 		wordName = L"INSERT";
 		break;
 
 	case PROCESS_NUMBER::HOME:
+		fontData->fontSize = 20.0f;
 		wordName = L"HOME";
 		break;
 
 	case PROCESS_NUMBER::TAB:
+		fontData->fontSize = 20.0f;
 		wordName = L"TAB";
 		break;
 
 	case PROCESS_NUMBER::DELETE_PROCESS:
+		fontData->fontSize = 20.0f;
 		wordName = L"DELETE";
 		break;
 
 	case PROCESS_NUMBER::END:
+		fontData->fontSize = 20.0f;
 		wordName = L"END";
 		break;
 
 	case PROCESS_NUMBER::CAPSLOCK:
+		fontData->fontSize = 20.0f;
 		wordName = L"CAPSLOCK";
 		break;
 
 	case PROCESS_NUMBER::ENTER:
+		fontData->fontSize = 20.0f;
+		if ((msAddWord.size() + msSelectWord.size() + msSetName.size()) == 0)
+		{
+			fontData->Color.a = 0.7f;
+		}
 		wordName = L"ENTER";
 		break;
 
 	case PROCESS_NUMBER::ALT:
+		fontData->fontSize = 20.0f;
 		wordName = L"ALT";
 		break;
 
 	case PROCESS_NUMBER::SHIFT:
+		fontData->fontSize = 20.0f;
 		wordName = L"SHIFT";
 		break;
 
 	case PROCESS_NUMBER::LETF:
+		fontData->fontSize = 20.0f;
 		wordName = L"←";
 		break;
 
 	case PROCESS_NUMBER::RIGHT:
+		fontData->fontSize = 20.0f;
 		wordName = L"→";
 		break;
 	}
+	mpResourceManager->SetFontData(fontData);
 
 	return wordName;
 }
@@ -1204,19 +1281,19 @@ std::wstring SPDUINameSet::GetWordName(char number, FLOAT* fontSize)
 // 描画
 void SPDUINameSet::Draw(SetPlayerDataUI* parent)
 {
-	Master::mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.1325f, mpDataManager->GetDisplaySize().Y * 0.14f,
+	mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * 0.1325f, mpDataManager->GetDisplaySize().Y * 0.14f,
 		mpDataManager->GetDisplaySize().X * 0.055f, mpDataManager->GetDisplaySize().Y * 0.07f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
 
 	FontData fontData = FontData();
 	fontData.fontSize = 40.0f;
 	fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_BOLD;
-	Master::mpResourceManager->SetFontData(&fontData);
-	Master::mpResourceManager->DrawString(std::to_string(parent->GetSelectPlayerNumber() + 1) + "P", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.13f, mpDataManager->GetDisplaySize().Y * 0.13f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+	mpResourceManager->SetFontData(&fontData);
+	mpResourceManager->DrawString(std::to_string(parent->GetSelectPlayerNumber() + 1) + "P", XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.13f, mpDataManager->GetDisplaySize().Y * 0.13f), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
 
 	fontData = FontData();
-	Master::mpResourceManager->SetFontData(&fontData);
+	mpResourceManager->SetFontData(&fontData);
 
-	float setNumberX = 0.055f;
+	float setNumberX = 0.05f;
 	float setNumberY = 0.1f;
 
 	std::wstring draw;
@@ -1224,8 +1301,23 @@ void SPDUINameSet::Draw(SetPlayerDataUI* parent)
 	{
 		for (int x = 0; x < KEY_POS_NUMBER_WIDTH; x++)
 		{
-			draw = GetWordName(KEY_POS_NUMBERS[y][x], &fontData.fontSize);
+			if ((mnSelectNumberY == y) && (mnSelectNumberX == x))
+			{
+				mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (x * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (y * setNumberY)),
+					mpDataManager->GetDisplaySize().X * 0.049f, mpDataManager->GetDisplaySize().Y * 0.09f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+			}
+			else
+			{
+				mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (x * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (y * setNumberY)),
+					mpDataManager->GetDisplaySize().X * 0.049f, mpDataManager->GetDisplaySize().Y * 0.09f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+			}
+			
+
+			draw = GetWordName(KEY_POS_NUMBERS[y][x], &fontData);
 			mpResourceManager->DrawString(draw, XMFLOAT2(mpDataManager->GetDisplaySize().X * (0.1f + (x * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.35f + (y * setNumberY))), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+			fontData = FontData();
+			mpResourceManager->SetFontData(&fontData);
 		}
 	}
 }

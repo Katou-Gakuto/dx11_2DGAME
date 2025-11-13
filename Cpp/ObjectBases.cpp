@@ -674,7 +674,7 @@ void UIBase::CheckKeyboard()
 // コントローラーが反応したら関数を実行させる
 void UIBase::CheckController()
 {
-	if (mpKeyState->GetAllNowKeyFlags_Controller(false) != 0)
+	if (mpKeyState->GetAllNowKeyFlags_Controller() != 0)
 	{
 		ControllerProcess();
 	}
@@ -787,7 +787,7 @@ bool UIBase::CheckDown_Frame()
 {
 	if ((mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::DOWN, false) ||
 		mpKeyState->GetKeyAllController(CONTROLLER_KEY_TYPE::LEFT_STICK_DOWN, false) ||
-		mpKeyState->GetWordKey_Board(KEY_BOARD_WORD::ARROW_DOEN)) &&
+		mpKeyState->GetWordKey_Board(KEY_BOARD_WORD::ARROW_DOWN)) &&
 		(CheckFrame(0) || (mnChangeFrame == mpTimeManager->GetFrame() + 15)))
 	{
 		mnChangeFrame = mpTimeManager->GetFrame() + 15;

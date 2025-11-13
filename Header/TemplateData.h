@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <string>
+#include <vector>
 
 #include "Macro.h"
 #include "Master.h"
@@ -782,5 +783,122 @@ struct DrawData
 	void Draw()
 	{
 		Master::mpResourceManager->DrawSprite(drawPos.X, drawPos.Y, drawSize.X, drawSize.Y, nowDrawUVPos.X, UVSize.X, nowDrawUVPos.Y, UVSize.Y, resourceId, drawIntFlag);
+	}
+};
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* 【マップ】関連
+*/
+
+#pragma pack(push, 1)
+/*ビットマップヘッダー*/
+struct BMPHeader {
+	uint16_t bfType;
+	uint32_t bfSize;
+	uint16_t bfReserved1;
+	uint16_t bfReserved2;
+	uint32_t bfOffBits;
+
+	uint32_t biSize;
+	int32_t  biWidth;
+	int32_t  biHeight;
+	uint16_t biPlanes;
+	uint16_t biBitCount;
+	uint32_t biCompression;
+	uint32_t biSizeImage;
+	int32_t  biXPelsPerMeter;
+	int32_t  biYPelsPerMeter;
+	uint32_t biClrUsed;
+	uint32_t biClrImportant;
+	
+	BMPHeader()
+	{
+		bfType = 0;
+		bfSize = 0;
+		bfReserved1 = 0;
+		bfReserved2 = 0;
+		bfOffBits = 0;
+
+		biSize = 0;
+		biWidth = 0;
+		biHeight = 0;
+		biPlanes = 0;
+		biBitCount = 0;
+		biCompression = 0;
+		biSizeImage = 0;
+		biXPelsPerMeter = 0;
+		biYPelsPerMeter = 0;
+		biClrUsed = 0;
+		biClrImportant = 0;
+	}
+};
+#pragma pack(pop)
+
+/*1ピクセル色情報*/
+struct OnePixelColorData
+{
+	unsigned char blue;
+	unsigned char green;
+	unsigned char red;
+	unsigned char alpha;
+
+	operator char*()
+	{
+		return (char*)(&blue);
+	}
+};
+
+/*ビットマップデータ*/
+struct BitMapData
+{
+	// ビットマップヘッダーデータ
+	BMPHeader bmpHeaderData;
+
+	// 色データ
+	std::vector<OnePixelColorData> onePixelData;
+
+	// X座標
+	int xPos;
+	// X座標
+	int yPos;
+
+	// 最大yポジション
+	int maxYPos;
+
+	BitMapData()
+	{
+		bmpHeaderData = BMPHeader();
+		onePixelData.clear();
+		
+		xPos = 0;
+		yPos = 0;
+
+		maxYPos = 0;
+	}
+
+	OnePixelColorData& operator [](int number)
+	{
+		return onePixelData[number];
+	}
+
+	OnePixelColorData& GetMapPixel(bool xMoveFlag)
+	{
+		return onePixelData[(yPos * maxYPos) + xPos];
+		if (xMoveFlag)
+		{
+			xPos += 1;
+			if (xPos >= bmpHeaderData.biWidth)
+			{
+				xPos = 0;
+			}
+		}
+		else
+		{
+			yPos += 1;
+			if (yPos >= bmpHeaderData.biHeight)
+			{
+				yPos = 0;
+			}
+		}
 	}
 };

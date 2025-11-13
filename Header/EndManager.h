@@ -4,6 +4,8 @@
 class EndManager
 {
 private:
+	// エンドフラグ
+	bool mbEndFlag;
 
 public:
 	/*コンストラクタ*/
@@ -16,4 +18,7 @@ public:
 
 	/*終了フラグ取得*/
 	bool GetEndFlag();
+
+	/*終了フラグ設定*/
+	void SetEndFlag(bool flag) { mbEndFlag = flag; }
 };

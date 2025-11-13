@@ -3,6 +3,7 @@
 
 #include "../Header/Camera.h"
 #include "../Header/Characters.h"
+#include "../Header/DataManager.h"
 #include "../Header/GameManager.h"
 #include "../Header/Macro.h"
 #include "../Header/MapManager.h"
@@ -35,12 +36,11 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0)
     {
     case -1:
     {
-        int setLine[2][ARRAY_SIZE] =
+        const int setLine[2][ARRAY_SIZE] =
         {
-            {3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1},
-            //            {3,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1},
+            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
 
-                        {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0}
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
         };
 
         memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));//sizeof(int) * ARRAY_SIZE);
@@ -49,6 +49,24 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0)
     break;
 
     case 0:
+    {
+        const int setLine[2][ARRAY_SIZE] =
+        {
+            {3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1},
+
+            {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0}
+        };
+
+        memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));//sizeof(int) * ARRAY_SIZE);
+        memcpy(oneLineData.mapObjectData, setLine[1], sizeof(oneLineData.mapObjectData));//sizeof(int) * ARRAY_SIZE);
+    }
+    break;
+
+    default:
+        break;
+    }
+
+    oneLineData.SetLine = (float)lineNumber;
     {
         int setLine[2][ARRAY_SIZE] =
         {
@@ -60,11 +78,6 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0)
         memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));//sizeof(int) * ARRAY_SIZE);
         memcpy(oneLineData.mapObjectData, setLine[1], sizeof(oneLineData.mapObjectData));//sizeof(int) * ARRAY_SIZE);
     }
-    break;
-    }
-
-    oneLineData.SetLine = (float)lineNumber;
-
     return oneLineData;
 }
 
@@ -120,7 +133,7 @@ VECTOR_2D MapData::NumberChange(VECTOR_2D changeVolume, VECTOR_2D mapPos)
     {
         for (int y = 0; y < changeVolume.IntY(); y++)
         {
-            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, /*/0/*/-1/**/ ), mapPos);
+            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, Master::mpDataManager->GetBitMapData().GetMapPixel(false).blue), mapPos);
             moveNumber.Y += 1.0f;
         }
     }
@@ -128,7 +141,7 @@ VECTOR_2D MapData::NumberChange(VECTOR_2D changeVolume, VECTOR_2D mapPos)
     {
         for (int y = -1; y > changeVolume.IntY() - 1; y--)
         {
-            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y), mapPos);
+            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, Master::mpDataManager->GetBitMapData().GetMapPixel(false).blue), mapPos);
             moveNumber.Y -= 1.0f;
         }
     }
@@ -137,7 +150,7 @@ VECTOR_2D MapData::NumberChange(VECTOR_2D changeVolume, VECTOR_2D mapPos)
     {
         for (int x = 0; x < changeVolume.IntX(); x++)
         {
-            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, /*/0/*/-1/**/), mapPos);
+            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, Master::mpDataManager->GetBitMapData().GetMapPixel(true).blue), mapPos);
             moveNumber.X += 1.0f;
         }
     }
@@ -145,7 +158,7 @@ VECTOR_2D MapData::NumberChange(VECTOR_2D changeVolume, VECTOR_2D mapPos)
     {
         for (int x = -1; x > changeVolume.IntX() - 1; x--)
         {
-            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x), mapPos);
+            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, Master::mpDataManager->GetBitMapData().GetMapPixel(true).blue), mapPos);
             moveNumber.X -= 1.0f;
         }
     }
@@ -169,6 +182,7 @@ MapManager::MapManager()
 , mstMapPosition(VECTOR_2D::Zero())
 , mbStartupFlag(false)
 {
+    Master::mpDataManager->SetBitMapData("Resource/PerlinNoise.bmp");
 }
 
 // デストラクタ
@@ -192,7 +206,7 @@ void MapManager::Initilize()
 
     for (int y = 0; y < MAP_HEIGHT_MAX; y++)
     {
-        MapManager::SetOneLine('Y', &mstMapDatas, MapChangeData::GetOneLineData(y, 0/*-1*/), mstMapPosition);
+        MapManager::SetOneLine('Y', &mstMapDatas, MapChangeData::GetOneLineData(y,-1), mstMapPosition);
     }
 
     mbStartupFlag = true;

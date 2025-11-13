@@ -16,6 +16,12 @@ private:
 	// ゲーム開始時間
 	int mnGameStartTime;
 
+	// ウィンドウ
+	HWND mdxsWnd;
+
+	// ビットマップデータ
+	BitMapData mstBitMapData;
+
 public:
 	/*コンストラクタ*/
 	DataManager();
@@ -58,6 +64,12 @@ public:
 	/*ゲーム開始時間取得*/
 	int GetGameStartTime() { return mnGameStartTime; }
 
+	/*ウィンドウ取得*/
+	HWND GetWnd() { return mdxsWnd; }
+
+	/*ビットマップデータ*/
+	BitMapData& GetBitMapData() { return mstBitMapData; }
+
 	/*--------------------------------------------------------------------------------------------------------------
 	* 【設定】
 	*/
@@ -78,4 +90,7 @@ public:
 
 	/*ゲーム開始時間設定*/
 	void SetGameStartTime(int time) { mnGameStartTime = time; }
+
+	/*ビットマップデータ設定*/
+	void SetBitMapData(std::string fileName);
 };

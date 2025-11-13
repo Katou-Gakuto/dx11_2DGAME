@@ -459,6 +459,7 @@ PlayerControllerUI::PlayerControllerUI()
 , mbStartFlag(false)
 , mpDataManager(nullptr)
 , mnBlinkTime(0)
+, mbEndFlag(false)
 {
 	mnResourceIDs.clear();
 
@@ -507,7 +508,7 @@ void PlayerControllerUI::UIUpdate()
 			mnBlinkTime = Master::mpTimeManager->GetFrame() + 40;
 		}
 
-		if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::B))
+		if (mpKeyState->GetKeyUpAllController(CONTROLLER_KEY_TYPE::B) && mbEndFlag)
 		{
 			if (mnSelectNumber == 0)
 			{
@@ -516,6 +517,10 @@ void PlayerControllerUI::UIUpdate()
 			}
 			mnSelectNumber = mnMaxSelectNumber + 1;
 			DecisionProcess();
+		}
+		if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::B))
+		{
+			mbEndFlag = true;
 		}
 
 		if (mnSelectNumber >= mnMaxSelectNumber)
@@ -623,6 +628,7 @@ void PlayerControllerUI::SetControllerStart()
 	mnSelectNumber = 0;
 	mnMaxSelectNumber = (int)mpDataManager->GetPlayerData().size();
 	mbStartFlag = true;
+	mbEndFlag = false;
 
 	SetUINumber();
 }

@@ -194,7 +194,7 @@ namespace KEY_BOARD_SET_NUMBER
 		ARROW_LEFT,					// 左移動
 		ARROW_UP,					// 上移動
 		ARROW_RIGHT,				// 右移動
-		ARROW_DOEN,					// 下移動
+		ARROW_DOWN,					// 下移動
 		
 		// 特殊キー
 		BACK_SPACE = 8,				// バックスペース
@@ -340,7 +340,7 @@ enum class KEY_BOARD_WORD
 	ARROW_LEFT,				// 左移動
 	ARROW_UP,				// 上移動
 	ARROW_RIGHT,			// 右移動
-	ARROW_DOEN,				// 下移動
+	ARROW_DOWN,				// 下移動
 };
 /*--------------------------------------------------------------------------------------------------------------
 * キーボード 特殊

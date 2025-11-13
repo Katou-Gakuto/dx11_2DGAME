@@ -8,6 +8,7 @@
 
 // コンストラクタ
 EndManager::EndManager()
+: mbEndFlag(false)
 {
 }
 
@@ -29,6 +30,8 @@ bool EndManager::GetEndFlag(MSG msg)
 
 	endFlag |= Master::mpResourceManager->GetEndFlag();
 
+	endFlag |= mbEndFlag;
+
 	return endFlag;
 }
 
@@ -42,6 +45,8 @@ bool EndManager::GetEndFlag()
 	endFlag |= Master::mpGameManager->GetEndFlag();
 
 	endFlag |= Master::mpResourceManager->GetEndFlag();
+
+	endFlag |= mbEndFlag;
 
 	return endFlag;
 }

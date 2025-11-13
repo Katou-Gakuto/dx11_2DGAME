@@ -239,7 +239,7 @@ private:
 	void SetNumberProcess(SetPlayerDataUI* parent, char number, bool flag = true) { SetNumberProcess(parent, (PROCESS_NUMBER)number, flag); }
 	void SetNumberProcess(SetPlayerDataUI* parent, int number, bool flag = true) { SetNumberProcess(parent, (PROCESS_NUMBER)number, flag); }
 
-	std::wstring GetWordName(char number, FLOAT* fontSize);
+	std::wstring GetWordName(char number, FontData* fontData);
 
 	// ’Ç‰Á•¶Žš‚ð•ÏŠ·‚·‚é
 	void ChangeAddWord();

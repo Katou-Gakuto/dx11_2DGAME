@@ -547,7 +547,7 @@ void KeyState::SetKey_Board(unsigned char* key)
 				SetNowWordKey_Board((key[(int)KEY_BOARD_SET_NUMBER::BOARD_KEY_TYPE::ARROW_LEFT] & 0x80) != 0, KEY_BOARD_WORD::ARROW_LEFT);
 				SetNowWordKey_Board((key[(int)KEY_BOARD_SET_NUMBER::BOARD_KEY_TYPE::ARROW_UP] & 0x80) != 0, KEY_BOARD_WORD::ARROW_UP);
 				SetNowWordKey_Board((key[(int)KEY_BOARD_SET_NUMBER::BOARD_KEY_TYPE::ARROW_RIGHT] & 0x80) != 0, KEY_BOARD_WORD::ARROW_RIGHT);
-				SetNowWordKey_Board((key[(int)KEY_BOARD_SET_NUMBER::BOARD_KEY_TYPE::ARROW_DOEN] & 0x80) != 0, KEY_BOARD_WORD::ARROW_DOEN);
+				SetNowWordKey_Board((key[(int)KEY_BOARD_SET_NUMBER::BOARD_KEY_TYPE::ARROW_DOWN] & 0x80) != 0, KEY_BOARD_WORD::ARROW_DOWN);
 			}
 
 			// “ÁŽê

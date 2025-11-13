@@ -201,6 +201,9 @@ private:
     // 点滅時間
     int mnBlinkTime;
 
+    // 終了キー押しフラグ
+    bool mbEndFlag;
+
 public:
     /*コンストラクタ*/
     PlayerControllerUI();
