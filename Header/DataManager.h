@@ -20,7 +20,7 @@ private:
 	HWND mdxsWnd;
 
 	// ビットマップデータ
-	BitMapData mstBitMapData;
+	std::vector<BitMapData> mstBitMapData;
 
 public:
 	/*コンストラクタ*/
@@ -68,7 +68,7 @@ public:
 	HWND GetWnd() { return mdxsWnd; }
 
 	/*ビットマップデータ*/
-	BitMapData& GetBitMapData() { return mstBitMapData; }
+	std::vector<BitMapData>& GetBitMapData() { return mstBitMapData; }
 
 	/*--------------------------------------------------------------------------------------------------------------
 	* 【設定】

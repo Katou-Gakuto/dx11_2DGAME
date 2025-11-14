@@ -56,6 +56,9 @@ public:
 	float X;
 	float Y;
 
+	VECTOR_2D() = default;
+	VECTOR_2D(float x, float y) { X = x; Y = y; }
+	VECTOR_2D(int x, int y) { X = (float)x; Y = (float)y; }
 
 	/*--------------------------------------------------------------------------------------------------------------
 	* ’l‚ð•ÏŠ·‚µ‚Ä•Ô‚·
@@ -883,7 +886,6 @@ struct BitMapData
 
 	OnePixelColorData& GetMapPixel(bool xMoveFlag)
 	{
-		return onePixelData[(yPos * maxYPos) + xPos];
 		if (xMoveFlag)
 		{
 			xPos += 1;
@@ -900,5 +902,34 @@ struct BitMapData
 				yPos = 0;
 			}
 		}
+		return onePixelData[(yPos * maxYPos) + xPos];
+	}
+
+	OnePixelColorData& GetMapPixel(int x_Pos, int y_Pos)
+	{
+		if (y_Pos < 0)
+		{
+			y_Pos = ((y_Pos % bmpHeaderData.biHeight) + bmpHeaderData.biHeight);
+		}
+		else
+		{
+			y_Pos %= bmpHeaderData.biHeight;
+		}
+
+		if (x_Pos < 0)
+		{
+			x_Pos = ((x_Pos % bmpHeaderData.biWidth) + bmpHeaderData.biWidth);
+		}
+		else
+		{
+			x_Pos %= bmpHeaderData.biWidth;
+		}
+
+		return onePixelData[(y_Pos * maxYPos) + x_Pos];
+	}
+
+	OnePixelColorData& GetMapPixel(VECTOR_2D pos)
+	{
+		return GetMapPixel(pos.IntX(), pos.IntY());
 	}
 };

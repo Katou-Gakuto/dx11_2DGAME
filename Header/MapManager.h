@@ -4,6 +4,8 @@
 #include "Macro.h"
 #include "TemplateData.h"
 
+#define MAP_CREATE_TYPE 1
+
 class Camera;
 class DataManager;
 class ObjectManager;
@@ -17,7 +19,7 @@ class ResourceManager;
 */
 enum class GROUND_TYPE
 {
-    DEFAULT = 0,
+    DEFAULT = 0,// デフォルト
     PLAIN,// 平原
 	FOREST,// 森林
     SAVANNA,// サバンナ
@@ -27,12 +29,12 @@ enum class GROUND_TYPE
 	VOLCANIC,// 火山地帯
 };
 
-/*-------------------------------------------------------
+/*------------------------------------------------------
 * マップオブジェクトタイプ
 */
 enum class MAP_OBJECT_TYPE
 {
-    DEFAULT = 0,
+    DEFAULT = 0,// デフォルト
 	ENEMY, // 敵キャラ
     FLOWER, // 花
     NONE,   // なし 
@@ -40,7 +42,7 @@ enum class MAP_OBJECT_TYPE
     ROCK,   // 岩
     BUSH,   // 茂み
     MOUNTAIN, // 山
-
+    WATER_PUDDLE, // 水たまり
 };
 
 
@@ -51,17 +53,19 @@ struct MapChangeData
 {
     static const unsigned int ARRAY_SIZE = MAP_HEIGHT_MAX > MAP_WIDTH_MAX ? MAP_HEIGHT_MAX : MAP_WIDTH_MAX;
 
-    int groundData[MAP_HEIGHT_MAX > MAP_WIDTH_MAX ? MAP_HEIGHT_MAX : MAP_WIDTH_MAX];
-    int mapObjectData[MAP_HEIGHT_MAX > MAP_WIDTH_MAX ? MAP_HEIGHT_MAX : MAP_WIDTH_MAX];
+    unsigned long groundData[MAP_HEIGHT_MAX > MAP_WIDTH_MAX ? MAP_HEIGHT_MAX : MAP_WIDTH_MAX];
+    unsigned long mapObjectData[MAP_HEIGHT_MAX > MAP_WIDTH_MAX ? MAP_HEIGHT_MAX : MAP_WIDTH_MAX];
 
     // 設定ライン
     VECTOR_2D SetLine;
+
+    
 
     /*初期化データ*/
     static MapChangeData InitData();
 
     /*一列分のデータ取得*/
-    static MapChangeData GetOneLineData(int lineNumber, int lineType);
+    static MapChangeData GetOneLineData(int lineNumber, int lineType, VECTOR_2D pos);
 };
 
 /*--------------------------------------------------------------------------------------------------------------
@@ -69,20 +73,19 @@ struct MapChangeData
 */
 struct MapData
 {
+    MapData();
+
     // マップの右上座標(配列の左上)
     VECTOR_2D mapLeftUpPos;
 
     // マップのグラウンド
-    int ground[MAP_HEIGHT_MAX][MAP_WIDTH_MAX];
+    unsigned long ground[MAP_HEIGHT_MAX][MAP_WIDTH_MAX];
 
     // マップ上のオブジェクト
-    int mapObject[MAP_HEIGHT_MAX][MAP_WIDTH_MAX];
+    unsigned long mapObject[MAP_HEIGHT_MAX][MAP_WIDTH_MAX];
 
     // マップの使用リソースナンバー
-    int mapResourceNumber[2][MAP_HEIGHT_MAX][MAP_WIDTH_MAX];
-
-    // 初期化データ
-    static MapData InitData();
+    unsigned long mapResourceNumber[2][MAP_HEIGHT_MAX][MAP_WIDTH_MAX];
 
     /*--------------------------------------------------------------------------------------------------------------
     * 【マップ座標】関連
@@ -137,9 +140,11 @@ public:
     void Draw();
 
     /*1ライン変更処理*/
-    static MapData SetOneLine(const char XorYLine, MapData *src, MapChangeData changeData, VECTOR_2D mapPos);
+    static MapData SetOneLine(const char XorYLine, MapData *src, MapChangeData changeData, VECTOR_2D mapPos, bool plusFlag = true);
     /*1タイル分の変更処理*/
-	static MapData SetOneTile(MapData* src, VECTOR_2D mapPos, int groundNumber, int mapObjectNumber);
+	static void SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos, unsigned long groundNumber, unsigned long mapObjectNumber, std::vector<int> checkVecs);
+    /*隣接タイルが違う種類が有効なフラグを返す*/
+    static unsigned long GetDifferentFlag(unsigned long src[38][62], VECTOR_2D targetPos, unsigned long targettype);
 
     /*グラウンドもしくはマップオブジェクトのナンバーに合わせたリソースナンバーを返す*/
     static int GetGroundOrMapObject_ResourceNumber(int number, bool groundFlag = true);
@@ -149,8 +154,4 @@ public:
 
     /*起動フラグ設定*/
     void SetStartupFlag(bool startupFlag) { mbStartupFlag = startupFlag; }
-
-private:
-    /*四角範囲描画*/
-    //void MapOneSquareDraw(float x, float y, float left, float right, float up, float down, int resourceId, unsigned int intFlag = 0U);
 };

@@ -11,8 +11,8 @@ DataManager::DataManager()
 : mstDisplaySize(VECTOR_2D::Zero())
 , mdxsWnd()
 , mnGameStartTime(0)
-, mstBitMapData(BitMapData())
 {
+	mstBitMapData.clear();
 	mstPlayerDatas.clear();
 }
 
@@ -52,6 +52,8 @@ bool DataManager::SetPlayerKeyNumber(int* keyNumbers)
 // ビットマップデータ設定
 void DataManager::SetBitMapData(std::string fileName)
 {
+	BitMapData bitMapData = BitMapData();
+
 	std::ifstream file(fileName, std::ios::binary);
 
 	if (!file) {
@@ -59,17 +61,19 @@ void DataManager::SetBitMapData(std::string fileName)
 		return;
 	}
 
-	file.read(reinterpret_cast<char*>(&mstBitMapData.bmpHeaderData), sizeof(mstBitMapData.bmpHeaderData));
+	file.read(reinterpret_cast<char*>(&bitMapData.bmpHeaderData), sizeof(bitMapData.bmpHeaderData));
 
-	if (mstBitMapData.bmpHeaderData.bfType != 0x4D42) {
+	if (bitMapData.bmpHeaderData.bfType != 0x4D42) {
 		return;
 	}
 
-	mstBitMapData.maxYPos = mstBitMapData.bmpHeaderData.biHeight;
-	mstBitMapData.onePixelData.resize(mstBitMapData.bmpHeaderData.biHeight * mstBitMapData.bmpHeaderData.biWidth);
+	bitMapData.maxYPos = bitMapData.bmpHeaderData.biHeight;
+	bitMapData.onePixelData.resize(bitMapData.bmpHeaderData.biHeight * bitMapData.bmpHeaderData.biWidth);
 
-	file.seekg(mstBitMapData.bmpHeaderData.bfOffBits, std::ios::beg);
+	file.seekg(bitMapData.bmpHeaderData.bfOffBits, std::ios::beg);
 
-	file.read(mstBitMapData[0], mstBitMapData.onePixelData.size() * 4);
+	file.read(bitMapData[0], bitMapData.onePixelData.size() * 4);
 	file.close();
+
+	mstBitMapData.push_back(bitMapData);
 }
