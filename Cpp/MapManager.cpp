@@ -545,11 +545,11 @@ MapData MapManager::SetOneLine(const char XorYLine, MapData *src, MapChangeData 
         {
             if (plusFlag)
             {
-                SetOneTile(src, VECTOR_2D(changeData.SetLine.IntX(), y), mapPos, changeData.groundData[y], changeData.mapObjectData[y], { 3, 1, 0, 5 });
+                SetOneTile(src, VECTOR_2D(changeData.SetLine.IntX(), y), mapPos + VECTOR_2D(0, y), changeData.groundData[y], changeData.mapObjectData[y], { 3, 1, 0, 5 });
             }
             else
             {
-                SetOneTile(src, VECTOR_2D(changeData.SetLine.IntX(), y), mapPos, changeData.groundData[y], changeData.mapObjectData[y], { 4, 1, 2, 7 });
+                SetOneTile(src, VECTOR_2D(changeData.SetLine.IntX(), y), mapPos + VECTOR_2D(0, y), changeData.groundData[y], changeData.mapObjectData[y], { 4, 1, 2, 7 });
             }
         }
         break;
@@ -568,11 +568,11 @@ MapData MapManager::SetOneLine(const char XorYLine, MapData *src, MapChangeData 
         {
             if (plusFlag)
             {
-                SetOneTile(src, VECTOR_2D(x, changeData.SetLine.IntY()), mapPos, changeData.groundData[x], changeData.mapObjectData[x], { 1, 3, 0, 2 });
+                SetOneTile(src, VECTOR_2D(x, changeData.SetLine.IntY()), mapPos + VECTOR_2D(x, 0), changeData.groundData[x], changeData.mapObjectData[x], {1, 3, 0, 2});
             }
             else
             {
-                SetOneTile(src, VECTOR_2D(x, changeData.SetLine.IntY()), mapPos, changeData.groundData[x], changeData.mapObjectData[x], { 6, 3, 5, 7 });
+                SetOneTile(src, VECTOR_2D(x, changeData.SetLine.IntY()), mapPos + VECTOR_2D(x, 0), changeData.groundData[x], changeData.mapObjectData[x], { 6, 3, 5, 7 });
             }
         }
         break;
@@ -723,7 +723,7 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
         {
         case MAP_OBJECT_TYPE::ENEMY:
         {
-            EnemyBase* enemy = new EnemyBase(VECTOR_2D::GetFloatVec(createPos.X + mapPos.IntX(), createPos.Y + mapPos.IntY()));
+            EnemyBase* enemy = new EnemyBase(VECTOR_2D::GetFloatVec(createPos.X, createPos.Y));
             mpInitilizeObject.push_back(enemy);
         }
         break;
