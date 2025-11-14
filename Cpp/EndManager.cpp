@@ -32,6 +32,13 @@ bool EndManager::GetEndFlag(MSG msg)
 
 	endFlag |= mbEndFlag;
 
+#if _DEBUG
+	if (endFlag)
+	{
+		int debug = 0;
+	}
+#endif
+
 	return endFlag;
 }
 

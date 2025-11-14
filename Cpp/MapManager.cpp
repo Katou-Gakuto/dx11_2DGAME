@@ -179,68 +179,53 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0, VE
     case -1:// 下移動
         for (int x = 0; x < MAP_WIDTH_MAX; x++)
         {
-            oneLineData.groundData[x] = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue;
-            oneLineData.mapObjectData[x] = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue;
+            unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue;
+            unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue;
             
-            if (Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue > 0)
-            {
-                oneLineData.groundData[x] = (unsigned long)GROUND_TYPE::PLAIN;
-            }
-            if (Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue > 0)
-            {
-                oneLineData.mapObjectData[x] = (unsigned long)MAP_OBJECT_TYPE::ENEMY;
-            }
+            oneLineData.groundData[x] = (unsigned long)GetGroundType(groundNumber);
+            oneLineData.mapObjectData[x] = (unsigned long)GetMapObjectType(mapObjectNumber);
         }
         break;
 
     case -2:// 上移動
         for (int x = 0; x < MAP_WIDTH_MAX; x++)
         {
-            oneLineData.groundData[x] = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, 0)).blue;
-            oneLineData.mapObjectData[x] = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, 0)).blue;
+            unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, 0)).blue;
+            unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, 0)).blue;
             
-            if (Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, 0)).blue > 0)
-            {
-                oneLineData.groundData[x] = (unsigned long)GROUND_TYPE::PLAIN;
-            }
-            if (Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, 0)).blue > 0)
-            {
-                oneLineData.mapObjectData[x] = (unsigned long)MAP_OBJECT_TYPE::ENEMY;
-            }
+            oneLineData.groundData[x] = (unsigned long)GetGroundType(groundNumber);
+            oneLineData.mapObjectData[x] = (unsigned long)GetMapObjectType(mapObjectNumber);
         }
         break;
 
     case -3:// 右移動
         for (int y = 0; y < MAP_HEIGHT_MAX; y++)
         {
-            oneLineData.groundData[y] = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(0, y)).blue;
-            oneLineData.mapObjectData[y] = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(0, y)).blue;
+            unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(0, y)).blue;
+            unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(0, y)).blue;
             
-            if (Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(0, y)).blue > 0)
-            {
-                oneLineData.groundData[y] = (unsigned long)GROUND_TYPE::PLAIN;
-            }
-            if (Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(0, y)).blue > 0)
-            {
-                oneLineData.mapObjectData[y] = (unsigned long)MAP_OBJECT_TYPE::ENEMY;
-            }
+            oneLineData.groundData[y] = (unsigned long)GetGroundType(groundNumber);
+            oneLineData.mapObjectData[y] = (unsigned long)GetMapObjectType(mapObjectNumber);
         }
         break;
 
     case -4:// 左移動
         for (int y = 0; y < MAP_HEIGHT_MAX; y++)
         {
-            oneLineData.groundData[y] = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue;
-            oneLineData.mapObjectData[y] = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue;
+            unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue;
+            unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue;
             
-            if (Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue > 0)
+            if (groundNumber < 0)
             {
-                oneLineData.groundData[y] = (unsigned long)GROUND_TYPE::PLAIN;
+                oneLineData.groundData[y] = (unsigned long)GROUND_TYPE::SNOWFIELD;
             }
-            if (Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue > 0)
+            if (mapObjectNumber < 0)
             {
-                oneLineData.mapObjectData[y] = (unsigned long)MAP_OBJECT_TYPE::ENEMY;
+                oneLineData.mapObjectData[y] = (unsigned long)MAP_OBJECT_TYPE::NONE;
             }
+
+            oneLineData.groundData[y] = (unsigned long)GetGroundType(groundNumber);
+            oneLineData.mapObjectData[y] = (unsigned long)GetMapObjectType(mapObjectNumber);
         }
         break;
     }
@@ -249,6 +234,72 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0, VE
     oneLineData.SetLine = (float)lineNumber;
 
     return oneLineData;
+}
+
+// 地面データタイプ取得
+GROUND_TYPE MapChangeData::GetGroundType(unsigned char number)
+{
+    if (number < 40)
+    {
+        return GROUND_TYPE::SNOWFIELD;
+    }
+    else if (number < 80)
+    {
+        return GROUND_TYPE::WETLAND;
+    }
+    else if (number < 120)
+    {
+        return GROUND_TYPE::PLAIN;
+    }
+    else if (number < 160)
+    {
+        return GROUND_TYPE::FOREST;
+    }
+    else if (number < 200)
+    {
+        return GROUND_TYPE::SAVANNA;
+    }
+    else if (number < 240)
+    {
+        return GROUND_TYPE::DESERT;
+    }
+    else if (number < 256)
+    {
+        return GROUND_TYPE::VOLCANIC;
+    }
+
+    return GROUND_TYPE::DEFAULT;
+}
+
+// 地マップオブジェクトタイプ取得
+MAP_OBJECT_TYPE MapChangeData::GetMapObjectType(unsigned char number)
+{
+    if (number < 45)
+    {
+        return MAP_OBJECT_TYPE::ENEMY;
+    }
+    else if (number < 90)
+    {
+        return MAP_OBJECT_TYPE::BUSH;
+    }
+    else if (number < 135)
+    {
+        return MAP_OBJECT_TYPE::WATER_PUDDLE;
+    }
+    else if (number < 180)
+    {
+        return MAP_OBJECT_TYPE::ROAD;
+    }
+    else if (number < 225)
+    {
+        return MAP_OBJECT_TYPE::FLOWER;
+    }
+    else if (number < 256)
+    {
+        return MAP_OBJECT_TYPE::MOUNTAIN;
+    }
+
+    return MAP_OBJECT_TYPE::DEFAULT;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -481,11 +532,9 @@ void MapManager::Draw()
                         break;
 
                     case GROUND_TYPE::SAVANNA:
-                        mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.125f, 0.125f, 0.0f, 0.125f, mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
 
                     case GROUND_TYPE::DESERT:
-                        mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.25f, 0.125f, 0.0f, 0.125f, mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
 
                     case GROUND_TYPE::SNOWFIELD:
@@ -508,6 +557,7 @@ void MapManager::Draw()
                     case MAP_OBJECT_TYPE::BUSH:
                     case MAP_OBJECT_TYPE::MOUNTAIN:
                     case MAP_OBJECT_TYPE::WATER_PUDDLE:
+                    case MAP_OBJECT_TYPE::ROAD:
                         mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.5f, 0.125f, 0.75f, 0.125f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
 
@@ -545,7 +595,7 @@ MapData MapManager::SetOneLine(const char XorYLine, MapData *src, MapChangeData 
         {
             if (plusFlag)
             {
-                SetOneTile(src, VECTOR_2D(changeData.SetLine.IntX(), y), mapPos + VECTOR_2D(0, y), changeData.groundData[y], changeData.mapObjectData[y], { 3, 1, 0, 5 });
+                SetOneTile(src, VECTOR_2D(changeData.SetLine.IntX(), y), mapPos + VECTOR_2D(MAP_WIDTH_MAX, y), changeData.groundData[y], changeData.mapObjectData[y], { 3, 1, 0, 5 });
             }
             else
             {
@@ -568,7 +618,7 @@ MapData MapManager::SetOneLine(const char XorYLine, MapData *src, MapChangeData 
         {
             if (plusFlag)
             {
-                SetOneTile(src, VECTOR_2D(x, changeData.SetLine.IntY()), mapPos + VECTOR_2D(x, 0), changeData.groundData[x], changeData.mapObjectData[x], {1, 3, 0, 2});
+                SetOneTile(src, VECTOR_2D(x, changeData.SetLine.IntY()), mapPos + VECTOR_2D(x, MAP_HEIGHT_MAX), changeData.groundData[x], changeData.mapObjectData[x], {1, 3, 0, 2});
             }
             else
             {
@@ -585,8 +635,8 @@ MapData MapManager::SetOneLine(const char XorYLine, MapData *src, MapChangeData 
 void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos, unsigned long groundNumber, unsigned long mapObjectNumber, std::vector<int> checkVecs)
 {
     static const VECTOR_2D mapCheckVec[8] = { VECTOR_2D(-1, -1), VECTOR_2D(0, -1), VECTOR_2D(1, -1),
-                                                VECTOR_2D(-1, 0),                    VECTOR_2D(1, 0),
-                                                VECTOR_2D(-1, 1),  VECTOR_2D(0, 1),  VECTOR_2D(1, 1) };
+                                              VECTOR_2D(-1, 0),                    VECTOR_2D(1, 0),
+                                              VECTOR_2D(-1, 1),  VECTOR_2D(0, 1),  VECTOR_2D(1, 1) };
 
     // リソース削除
     {
@@ -656,9 +706,8 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
         case GROUND_TYPE::FOREST:
         case GROUND_TYPE::PLAIN:
         case GROUND_TYPE::DEFAULT:
-            src->ground[mapPos.IntY()][mapPos.IntX()] = (groundNumber | GetDifferentFlag(src->ground, mapPos, groundNumber));
+            src->ground[mapPos.IntY()][mapPos.IntX()] = (groundNumber | GetDifferentFlag(src->ground, mapPos, groundNumber) | (groundNumber << 4));
             break;
-
 #endif
         }
 
@@ -687,6 +736,7 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
         }
         break;
 
+        case MAP_OBJECT_TYPE::ROAD:
         case MAP_OBJECT_TYPE::WATER_PUDDLE:
         case MAP_OBJECT_TYPE::MOUNTAIN:
         case MAP_OBJECT_TYPE::BUSH:
@@ -702,6 +752,7 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
 #elif MAP_CREATE_TYPE == 1
         case MAP_OBJECT_TYPE::DEFAULT:
         case MAP_OBJECT_TYPE::ENEMY:
+        case MAP_OBJECT_TYPE::ROAD:
         case MAP_OBJECT_TYPE::WATER_PUDDLE:
         case MAP_OBJECT_TYPE::MOUNTAIN:
         case MAP_OBJECT_TYPE::BUSH:
@@ -709,7 +760,7 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
         case MAP_OBJECT_TYPE::TREE:
         case MAP_OBJECT_TYPE::NONE:
         case MAP_OBJECT_TYPE::FLOWER:
-            src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, groundNumber));
+            src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, groundNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
             break;
 
 #endif
@@ -753,11 +804,13 @@ int MapManager::GetGroundOrMapObject_ResourceNumber(int number, bool groundFlag)
         case GROUND_TYPE::FOREST:
         case GROUND_TYPE::PLAIN:
         case GROUND_TYPE::SAVANNA:
+        case GROUND_TYPE::WETLAND:
+            result = mpResourceManager->AddResource(L"Resource/mapchip.png");
+            break;
+
         case GROUND_TYPE::SNOWFIELD:
         case GROUND_TYPE::VOLCANIC:
-        case GROUND_TYPE::WETLAND:
-
-            result = mpResourceManager->AddResource(L"Resource/mapchip.png");
+            result = mpResourceManager->AddResource(L"Resource/Base.png");
             break;
         }
     }
@@ -771,8 +824,58 @@ int MapManager::GetGroundOrMapObject_ResourceNumber(int number, bool groundFlag)
         case MAP_OBJECT_TYPE::ROCK:
         case MAP_OBJECT_TYPE::BUSH:
         case MAP_OBJECT_TYPE::MOUNTAIN:
-        case MAP_OBJECT_TYPE::WATER_PUDDLE:
             result = mpResourceManager->AddResource(L"Resource/mapchip.png");
+            break;
+
+        case MAP_OBJECT_TYPE::WATER_PUDDLE:
+            switch ((GROUND_TYPE)((number >> 4) & 0xf))
+            {
+            case GROUND_TYPE::DESERT:
+                break;
+            case GROUND_TYPE::FOREST:
+                result = mpResourceManager->AddResource(L"Resource/Map/WaterPuddle/Forest.png");
+                break;
+            case GROUND_TYPE::PLAIN:
+                result = mpResourceManager->AddResource(L"Resource/Map/WaterPuddle/Plain.png");
+                break;
+            case GROUND_TYPE::SAVANNA:
+                break;
+            case GROUND_TYPE::SNOWFIELD:
+                result = mpResourceManager->AddResource(L"Resource/Map/WaterPuddle/Ice.png");
+                break;
+            case GROUND_TYPE::VOLCANIC:
+                result = mpResourceManager->AddResource(L"Resource/Map/WaterPuddle/Lava.png");
+                break;
+            case GROUND_TYPE::WETLAND:
+                result = mpResourceManager->AddResource(L"Resource/Map/WaterPuddle/Wetland.png");
+                break;
+            }
+            break;
+
+        case MAP_OBJECT_TYPE::ROAD:
+            switch ((GROUND_TYPE)((number >> 4) & 0xf))
+            {
+            case GROUND_TYPE::DESERT:
+                result = mpResourceManager->AddResource(L"Resource/Map/Road/Desert_and_Savanna.png");
+                break;
+            case GROUND_TYPE::FOREST:
+                result = mpResourceManager->AddResource(L"Resource/Map/Road/Forest.png");
+                break;
+            case GROUND_TYPE::PLAIN:
+                result = mpResourceManager->AddResource(L"Resource/Map/Road/Plain.png");
+                break;
+            case GROUND_TYPE::SAVANNA:
+                result = mpResourceManager->AddResource(L"Resource/Map/Road/Desert_and_Savanna.png");
+                break;
+            case GROUND_TYPE::SNOWFIELD:
+                result = mpResourceManager->AddResource(L"Resource/Map/Road/Snow.png");
+                break;
+            case GROUND_TYPE::VOLCANIC:
+                break;
+            case GROUND_TYPE::WETLAND:
+                result = mpResourceManager->AddResource(L"Resource/Map/Road/Wetland.png");
+                break;
+            }
             break;
         }
     }

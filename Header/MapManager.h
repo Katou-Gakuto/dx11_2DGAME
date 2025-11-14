@@ -43,8 +43,28 @@ enum class MAP_OBJECT_TYPE
     BUSH,   // 茂み
     MOUNTAIN, // 山
     WATER_PUDDLE, // 水たまり
+    ROAD,   // 道
 };
 
+/* コピー用
+        case GROUND_TYPE::DEFAULT:
+        case GROUND_TYPE::DESERT:
+        case GROUND_TYPE::FOREST:
+        case GROUND_TYPE::PLAIN:
+        case GROUND_TYPE::SAVANNA:
+        case GROUND_TYPE::SNOWFIELD:
+        case GROUND_TYPE::VOLCANIC:
+        case GROUND_TYPE::WETLAND:
+* 
+        case MAP_OBJECT_TYPE::DEFAULT:
+        case MAP_OBJECT_TYPE::FLOWER:
+        case MAP_OBJECT_TYPE::TREE:
+        case MAP_OBJECT_TYPE::ROCK:
+        case MAP_OBJECT_TYPE::BUSH:
+        case MAP_OBJECT_TYPE::MOUNTAIN:
+        case MAP_OBJECT_TYPE::WATER_PUDDLE:
+        case MAP_OBJECT_TYPE::ROAD:
+*/
 
 /*--------------------------------------------------------------------------------------------------------------
 * マップ変更データ
@@ -66,6 +86,10 @@ struct MapChangeData
 
     /*一列分のデータ取得*/
     static MapChangeData GetOneLineData(int lineNumber, int lineType, VECTOR_2D pos);
+    /*地面データタイプ取得*/
+    static GROUND_TYPE GetGroundType(unsigned char number);
+    /*地マップオブジェクトタイプ取得*/
+    static MAP_OBJECT_TYPE GetMapObjectType(unsigned char number);
 };
 
 /*--------------------------------------------------------------------------------------------------------------
