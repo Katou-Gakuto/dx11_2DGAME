@@ -40,7 +40,7 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0)
         {
             {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
 
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2}
         };
 
         memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));//sizeof(int) * ARRAY_SIZE);
@@ -54,7 +54,7 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0)
         {
             {3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1},
 
-            {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0}
+            {2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,2}
         };
 
         memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));//sizeof(int) * ARRAY_SIZE);
@@ -263,31 +263,43 @@ void MapManager::Draw()
                 VECTOR_2D drawPos = MapData::CheckRange(VECTOR_2D::GetIntVec(x + mstMapDatas.mapLeftUpPos.IntX(), y + mstMapDatas.mapLeftUpPos.IntY())).SetInt2D();
                 if (mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()] != -1)
                 {
-                    switch (mstMapDatas.ground[drawPos.IntY()][drawPos.IntX()])
+                    switch ((GROUND_TYPE)mstMapDatas.ground[drawPos.IntY()][drawPos.IntX()])
                     {
-                    case 0:
+                    case GROUND_TYPE::DEFAULT:
                         mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.0f, 0.125f, 0.0f, 0.125f, mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
 
-                    case 1:
+                    case GROUND_TYPE::PLAIN:
                         mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.375f, 0.125f, 0.0f, 0.125f, mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
 
-                    case 2:
+                    case GROUND_TYPE::FOREST:
                         mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.125f, 0.125f, 0.0f, 0.125f, mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
 
-                    case 3:
+                    case GROUND_TYPE::SAVANNA:
                         mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.25f, 0.125f, 0.0f, 0.125f, mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                        break;
+
+                    case GROUND_TYPE::DESERT:
+                        break;
+
+                    case GROUND_TYPE::SNOWFIELD:
+                        break;
+
+                    case GROUND_TYPE::VOLCANIC:
+                        break;
+
+                    case GROUND_TYPE::WETLAND:
                         break;
                     }
                 }
 
                 if (mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()] != -1)
                 {
-                    switch (mstMapDatas.mapObject[drawPos.IntY()][drawPos.IntX()])
+                    switch ((MAP_OBJECT_TYPE)mstMapDatas.mapObject[drawPos.IntY()][drawPos.IntX()])
                     {
-                    case 0:
+                    case MAP_OBJECT_TYPE::FLOWER:
                         mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.5f, 0.125f, 0.75f, 0.125f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
                     }
@@ -336,9 +348,9 @@ MapData MapManager::SetOneLine(const char XorYLine, MapData *src, MapChangeData 
 
             // リソース設定 And 敵キャラ生成
             {
-                switch (src->mapObject[y][changeData.SetLine.IntX()])
+                switch ((MAP_OBJECT_TYPE)src->mapObject[y][changeData.SetLine.IntX()])
                 {
-                case 1:
+                case MAP_OBJECT_TYPE::ENEMY:
                 {
                     EnemyBase* enemy = new EnemyBase(VECTOR_2D::GetFloatVec(mapPos.X + changeData.SetLine.IntX(), mapPos.Y + y));
                     mpInitilizeObject.push_back(enemy);
@@ -381,9 +393,9 @@ MapData MapManager::SetOneLine(const char XorYLine, MapData *src, MapChangeData 
 
             // リソース設定 And 敵キャラ生成
             {
-                switch (src->mapObject[changeData.SetLine.IntY()][x])
+                switch ((MAP_OBJECT_TYPE)src->mapObject[changeData.SetLine.IntY()][x])
                 {
-                case 1:
+                case MAP_OBJECT_TYPE::ENEMY:
                 {
                     EnemyBase* enemy = new EnemyBase(VECTOR_2D::GetFloatVec(mapPos.X + x, mapPos.Y + changeData.SetLine.IntY()));
                     mpInitilizeObject.push_back(enemy);
@@ -408,27 +420,25 @@ int MapManager::GetGroundOrMapObject_ResourceNumber(int number, bool groundFlag)
 
     if (groundFlag)
     {
-        switch (number)
+        switch ((GROUND_TYPE)number)
         {
-        case 0:
-            result = mpResourceManager->AddResource(L"Resource/mapchip.png");
-            break;
-        case 1:
-            result = mpResourceManager->AddResource(L"Resource/mapchip.png");
-            break;
-        case 2:
-            result = mpResourceManager->AddResource(L"Resource/mapchip.png");
-            break;
-        case 3:
+        case GROUND_TYPE::DESERT:
+        case GROUND_TYPE::FOREST:
+        case GROUND_TYPE::PLAIN:
+        case GROUND_TYPE::SAVANNA:
+        case GROUND_TYPE::SNOWFIELD:
+        case GROUND_TYPE::VOLCANIC:
+        case GROUND_TYPE::WETLAND:
+
             result = mpResourceManager->AddResource(L"Resource/mapchip.png");
             break;
         }
     }
     else
     {
-        switch (number)
+        switch ((MAP_OBJECT_TYPE)number)
         {
-        case 0:
+        case MAP_OBJECT_TYPE::FLOWER:
             result = mpResourceManager->AddResource(L"Resource/mapchip.png");
             break;
         }

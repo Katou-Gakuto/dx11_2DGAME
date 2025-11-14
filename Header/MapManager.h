@@ -10,6 +10,41 @@ class ObjectManager;
 class ResourceManager;
 
 /*--------------------------------------------------------------------------------------------------------------
+* マップタイプデータ
+*/
+/*-------------------------------------------------------
+* 地面データタイプ
+*/
+enum class GROUND_TYPE
+{
+    DEFAULT = 0,
+    PLAIN,// 平原
+	FOREST,// 森林
+    SAVANNA,// サバンナ
+	WETLAND,// 湿地帯
+	DESERT,// 砂漠
+	SNOWFIELD,// 雪原
+	VOLCANIC,// 火山地帯
+};
+
+/*-------------------------------------------------------
+* マップオブジェクトタイプ
+*/
+enum class MAP_OBJECT_TYPE
+{
+    DEFAULT = 0,
+	ENEMY, // 敵キャラ
+    FLOWER, // 花
+    NONE,   // なし 
+    TREE,   // 木
+    ROCK,   // 岩
+    BUSH,   // 茂み
+    MOUNTAIN, // 山
+
+};
+
+
+/*--------------------------------------------------------------------------------------------------------------
 * マップ変更データ
 */
 struct MapChangeData
@@ -103,6 +138,8 @@ public:
 
     /*1ライン変更処理*/
     static MapData SetOneLine(const char XorYLine, MapData *src, MapChangeData changeData, VECTOR_2D mapPos);
+    /*1タイル分の変更処理*/
+	static MapData SetOneTile(MapData* src, VECTOR_2D mapPos, int groundNumber, int mapObjectNumber);
 
     /*グラウンドもしくはマップオブジェクトのナンバーに合わせたリソースナンバーを返す*/
     static int GetGroundOrMapObject_ResourceNumber(int number, bool groundFlag = true);
