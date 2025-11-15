@@ -161,26 +161,26 @@ void CharacterBase::TemplateMoveProcess()
 					switch (mnAngle)
 					{
 					case 0: // â∫
-						attackSize = VECTOR_2D::GetFloatVec(5.0f, 3.0f) * mstStatus.Size;
-						plusPos.Y += mstStatus.Size.Y;
+						attackSize = VECTOR_2D::GetFloatVec(3.0f, 2.0f) * mstStatus.Size;
+						plusPos.Y += mstStatus.Size.Y * 0.5f;
 						fileName = (wchar_t*)L"Resource/BattleEffect/pipo-btleffect096a.png";
 						break;
 
 					case 1: // ç∂
-						attackSize = VECTOR_2D::GetFloatVec(3.0f, 5.0f) * mstStatus.Size;
-						plusPos.X -= mstStatus.Size.X;
+						attackSize = VECTOR_2D::GetFloatVec(2.0f, 3.0f) * mstStatus.Size;
+						plusPos.X -= mstStatus.Size.X * 0.5f;
 						fileName = (wchar_t*)L"Resource/BattleEffect/pipo-btleffect090a.png";
 						break;
 
 					case 2: // è„
-						attackSize = VECTOR_2D::GetFloatVec(5.0f, 3.0f) * mstStatus.Size;
-						plusPos.Y -= mstStatus.Size.Y;
+						attackSize = VECTOR_2D::GetFloatVec(2.0f, 3.0f) * mstStatus.Size;
+						plusPos.Y -= mstStatus.Size.Y * 0.5f;
 						fileName = (wchar_t*)L"Resource/BattleEffect/pipo-btleffect096.png";
 						break;
 
 					case 3: // âE
-						attackSize = VECTOR_2D::GetFloatVec(3.0f, 5.0f) * mstStatus.Size;
-						plusPos.X += mstStatus.Size.X;
+						attackSize = VECTOR_2D::GetFloatVec(2.0f, 3.0f) * mstStatus.Size;
+						plusPos.X += mstStatus.Size.X * 0.5f;
 						fileName = (wchar_t*)L"Resource/BattleEffect/pipo-btleffect090a.png";
 						break;
 					}

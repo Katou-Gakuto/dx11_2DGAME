@@ -13,6 +13,7 @@
 #include "../Header/ObjectBases.h"
 #include "../Header/ObjectManager.h"
 #include "../Header/ResourceManager.h"
+#include "../Header/TargetDatas.h"
 #include "../Header/TemplateData.h"
 
 
@@ -475,7 +476,7 @@ void MapManager::Initilize()
 
     for (int y = 0; y < MAP_HEIGHT_MAX; y++)
     {
-        MapManager::SetOneLine('Y', &mstMapDatas, MapChangeData::GetOneLineData(y,-1), mstMapPosition);
+        MapManager::SetOneLine('Y', &mstMapDatas, MapChangeData::GetOneLineData(y, -1), mstMapPosition);
     }
     MapCreateType = 1;
 
@@ -498,26 +499,56 @@ void MapManager::Update()
         }
         mpInitilizeObject.clear();
 
-    // マップの移動
-    VECTOR_2D mapMove = (mpCamera->GetCameraPos() - (mstMapPosition + VECTOR_2D::GetIntVec(MAP_WIDTH_MAX, MAP_HEIGHT_MAX) * 0.5f));
-    if (mapMove.SetInt2D() != 0)
-    {
-        mstMapPosition += mstMapDatas.NumberChange(mapMove, mstMapPosition);
-    }
+        // マップの移動
+        VECTOR_2D mapMove = (mpCamera->GetCameraPos() - (mstMapPosition + VECTOR_2D::GetIntVec(MAP_WIDTH_MAX, MAP_HEIGHT_MAX) * 0.5f));
+        if (mapMove.SetInt2D() != 0)
+        {
+            mstMapPosition += mstMapDatas.NumberChange(mapMove, mstMapPosition);
+        }
 
-    // マップ効果キャラクターに反映
-    /*VECTOR_2D drawPos = MapData::CheckRange(VECTOR_2D::GetIntVec(mstMapDatas.mapLeftUpPos.IntX() + 0, mstMapDatas.mapLeftUpPos.IntY() + 0));
-    switch (mstMapDatas.ground[drawPos.IntY()][drawPos.IntX()])
-    {
-    case 0:
-        break;
-    }
+        // マップ効果キャラクターに反映
+        // プレイヤーキャラクターに反映
+        for (auto& player : Master::mpGameManager->GetTargetDatas()->GetPlayers())
+        {
+            player->GetStatus().Flag = 0;
 
-    switch (mstMapDatas.mapObject[drawPos.IntY()][drawPos.IntX()])
-    {
-    case 0:
-        break;
-    }*/
+            VECTOR_2D checkPos = MapData::CheckRange(VECTOR_2D::GetIntVec(player->GetStatus().Position.IntX() + (MAP_WIDTH_MAX * 0.5f), player->GetStatus().Position.IntY() + (MAP_HEIGHT_MAX * 0.5f)));
+            switch ((GROUND_TYPE)(mstMapDatas.ground[checkPos.IntY()][checkPos.IntX()] & 0xf))
+            {
+            case GROUND_TYPE::DEFAULT:
+                break;
+            }
+
+            switch ((MAP_OBJECT_TYPE)(mstMapDatas.mapObject[checkPos.IntY()][checkPos.IntX()] & 0xf))
+            {
+            case MAP_OBJECT_TYPE::WATER_PUDDLE:
+                player->GetStatus().Flag |= (unsigned long)SET_STATUS_FLAG::SLOW_FLAG;
+                break;
+            }
+
+            player->GetStatus().SetLevelStatus();
+        }
+        // 敵キャラクターに反映
+        for (auto& enemy : Master::mpGameManager->GetTargetDatas()->GetEnemys())
+        {
+            enemy->GetStatus().Flag = 0;
+
+            VECTOR_2D checkPos = MapData::CheckRange(VECTOR_2D::GetIntVec(enemy->GetStatus().Position.IntX() + (MAP_WIDTH_MAX * 0.5f), enemy->GetStatus().Position.IntY() + (MAP_HEIGHT_MAX * 0.5f)));
+            switch ((GROUND_TYPE)(mstMapDatas.ground[checkPos.IntY()][checkPos.IntX()] & 0xf))
+            {
+            case GROUND_TYPE::DEFAULT:
+                break;
+            }
+
+            switch ((MAP_OBJECT_TYPE)(mstMapDatas.mapObject[checkPos.IntY()][checkPos.IntX()] & 0xf))
+            {
+            case MAP_OBJECT_TYPE::WATER_PUDDLE:
+                enemy->GetStatus().Flag |= (unsigned long)SET_STATUS_FLAG::SLOW_FLAG;
+                break;
+            }
+
+            enemy->GetStatus().SetLevelStatus();
+        }
     }
 }
 

@@ -19,7 +19,7 @@ void CloseRangeAttack::AttackInitilize()
 	mstCollisionData.CollisionType = COLLISION_TYPE::BOX;
 	mstCollisionData.ObjectType = meObjectType;
 	mstCollisionData.Position = mstAttackPosition;
-	mstCollisionData.Size = mstAttackSize;
+	mstCollisionData.Size = mstAttackSize * 0.6f;
 }
 
 // アタック終了

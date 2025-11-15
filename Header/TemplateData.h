@@ -368,15 +368,19 @@ enum class CHARACTER_TYPE
 	MAX,
 };
 
+/*フラグ設定用*/
+enum class SET_STATUS_FLAG
+{
+	/*鈍足フラグ*/
+	SLOW_FLAG = 0x1,
+};
+
 /*ステータス*/
 struct STATUS
 {
 private:
-	// MAX_HP
-	unsigned int LevelOneMaxHp;
-
-	// 攻撃力
-	unsigned int LevelOneAttackPower;
+	// 速度
+	float LevelOneSpeed;
 
 	// 前回のダメージを受けた時間
 	int PreDamegeTime;
@@ -408,6 +412,9 @@ public:
 	// 種類
 	CHARACTER_TYPE CharacterType;
 
+	// フラグ
+	unsigned long Flag;
+
 	// スコア
 	int Score;
 
@@ -423,14 +430,14 @@ public:
 		STATUS result = STATUS();
 		result.Level = level;
 		result.MaxHp = maxHp;
-		result.LevelOneMaxHp = maxHp;
 		result.Hp = hp;
 		result.AttackPower = attackPower;
-		result.LevelOneAttackPower = attackPower;
 		result.Speed = speed;
+		result.LevelOneSpeed = speed;
 		result.Position = position;
 		result.Size = size;
 		result.CharacterType = characterType;
+		result.Flag = 0;
 		result.Score = 0;
 		result.PreDamegeTime = 0;
 		result.InvincibilityTime = 340;
@@ -439,8 +446,14 @@ public:
 	}
 
 	/*設定されているレベルに従ってステータスを上げる*/
-	void SetLevelStatus(bool playerFlag)
+	void SetLevelStatus()
 	{
+		this->Speed = this->LevelOneSpeed + (this->LevelOneSpeed * (this->Level * 0.1f));
+
+		if (this->Flag & (unsigned long)SET_STATUS_FLAG::SLOW_FLAG)
+		{
+			this->Speed *= 0.5f;
+		}
 	}
 
 	/*ダメージ*/
@@ -481,6 +494,10 @@ public:
 	void PlusScore(int score)
 	{
 		this->Score += score;
+		if (this->Score > (this->Level * 50))
+		{
+			this->Level = (unsigned int)((float)this->Score * 0.02f);
+		}
 	}
 };
 
