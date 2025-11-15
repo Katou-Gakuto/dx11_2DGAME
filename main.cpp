@@ -298,7 +298,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     return ( int )msg.wParam;
 }
 
-
 //--------------------------------------------------------------------------------------
 // Register class and create window
 //--------------------------------------------------------------------------------------
@@ -317,7 +316,11 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
     wcex.hCursor = LoadCursor(NULL, IDC_ARROW); // カーソルを変える ハードウェアカーソル　速いけど絵とかにできない　　無効化して絵　ソフトウェアカーソル
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = NULL;   // ツールとか作るときに　オプションとかプロパティとかを選択するときのやつ
+#if _DEBUG
     wcex.lpszClassName = "TutorialWindowClass"; // 名前を付けたやつ 二重起動をさせないなどで使える 名刺
+#else
+    wcex.lpszClassName = L"TutorialWindowClass"; // 名前を付けたやつ 二重起動をさせないなどで使える 名刺
+#endif
     wcex.hIconSm = NULL; // 左上のアイコン　タスクバーにカーソルあわせてやつとか
     // ウィンドウズAPI
     if( !RegisterClassEx( &wcex ) )
@@ -328,6 +331,7 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
     RECT rc = { 0, 0, 1280, 720 };  // 矩形を設定する
     // ウィンドウズAPI     /*ウィンドウズの形*/
     AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );    // ウィンドウズの大きさをいい感じにそろえてくれる
+#if _DEBUG
     // ウィンドウズAPI
     g_hWnd = CreateWindow(  "TutorialWindowClass",  // 上の名刺と合わせる
                             "Team Battle", // ウィンドタイトル
@@ -340,6 +344,20 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
                             NULL,
                             hInstance,
                             NULL );
+#else
+    // ウィンドウズAPI
+    g_hWnd = CreateWindow(L"TutorialWindowClass",  // 上の名刺と合わせる
+        L"Team Battle", // ウィンドタイトル
+        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,    // ウィンドタイプ 最小化や最大化などを追加できる
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        rc.right - rc.left,
+        rc.bottom - rc.top,
+        NULL,
+        NULL,
+        hInstance,
+        NULL);
+#endif
 
     if( !g_hWnd )
         return E_FAIL;
@@ -532,8 +550,13 @@ HRESULT InitDevice()
     hr = CompileShaderFromFile(L"Tutorial07.fx", "VS", "vs_4_0", &pVSBlob);
     if (FAILED(hr))
     {
+#if _DEBUG
         MessageBox(NULL,
             "The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", "Error", MB_OK);
+#else
+		MessageBox(NULL,
+			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+#endif
         return hr;
     }
 
@@ -570,8 +593,13 @@ HRESULT InitDevice()
     hr = CompileShaderFromFile(L"Tutorial07.fx", "PS", "ps_4_0", &pPSBlob);
     if (FAILED(hr))
     {
+#if _DEBUG
         MessageBox(NULL,
             "The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", "Error", MB_OK);
+#else
+		MessageBox(NULL,
+			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+#endif
         return hr;
     }
 

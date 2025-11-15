@@ -37,199 +37,192 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0, VE
 {
     MapChangeData oneLineData = MapChangeData::InitData();
 
-#if MAP_CREATE_TYPE == 0
-    switch (lineType)
+    if (MapCreateType == 0)
     {
-    case -1:
-    {
-        const unsigned long setLine[2][ARRAY_SIZE] = {
-            {   (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
-                (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN
-            },
-            {   (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER
-            }
-        };
-
-        memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));
-        memcpy(oneLineData.mapObjectData, setLine[1], sizeof(oneLineData.mapObjectData));
-    }
-    break;
-
-    case 0:
-    {
-        const unsigned long setLine[2][ARRAY_SIZE] = {
-            {   (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::WETLAND, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT
-            },
-            {   (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::ENEMY, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::ENEMY, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::ENEMY, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT
-            }
-        };
-
-        memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));
-        memcpy(oneLineData.mapObjectData, setLine[1], sizeof(oneLineData.mapObjectData));
-    }
-    break;
-
-    default:
-    {
-        const unsigned long setLine[2][ARRAY_SIZE] = {
-            {   (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
-                (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT
-            },
-            {   (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
-                (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT
-            }
-        };
-
-        memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));
-        memcpy(oneLineData.mapObjectData, setLine[1], sizeof(oneLineData.mapObjectData));
-    }
-    break;
-    }
-
-#elif MAP_CREATE_TYPE == 1
-    switch (lineType)
-    {
-    case -1:// 下移動
-        for (int x = 0; x < MAP_WIDTH_MAX; x++)
+        switch (lineType)
         {
-            unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue;
-            unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue;
-            
-            oneLineData.groundData[x] = (unsigned long)GetGroundType(groundNumber);
-            oneLineData.mapObjectData[x] = (unsigned long)GetMapObjectType(mapObjectNumber);
+        case -1:
+        {
+            const unsigned long setLine[2][ARRAY_SIZE] = {
+                {   (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN,
+                    (unsigned long)GROUND_TYPE::PLAIN, (unsigned long)GROUND_TYPE::PLAIN
+                },
+                {   (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::FLOWER
+                }
+            };
+
+            memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));
+            memcpy(oneLineData.mapObjectData, setLine[1], sizeof(oneLineData.mapObjectData));
         }
         break;
 
-    case -2:// 上移動
-        for (int x = 0; x < MAP_WIDTH_MAX; x++)
+        case 0:
         {
-            unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, 0)).blue;
-            unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, 0)).blue;
-            
-            oneLineData.groundData[x] = (unsigned long)GetGroundType(groundNumber);
-            oneLineData.mapObjectData[x] = (unsigned long)GetMapObjectType(mapObjectNumber);
+            const unsigned long setLine[2][ARRAY_SIZE] = {
+                {   (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::WETLAND, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT
+                },
+                {   (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::ENEMY, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::ENEMY, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::ENEMY, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::FLOWER,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::FLOWER, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT
+                }
+            };
+
+            memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));
+            memcpy(oneLineData.mapObjectData, setLine[1], sizeof(oneLineData.mapObjectData));
         }
         break;
 
-    case -3:// 右移動
-        for (int y = 0; y < MAP_HEIGHT_MAX; y++)
+        default:
         {
-            unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(0, y)).blue;
-            unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(0, y)).blue;
-            
-            oneLineData.groundData[y] = (unsigned long)GetGroundType(groundNumber);
-            oneLineData.mapObjectData[y] = (unsigned long)GetMapObjectType(mapObjectNumber);
+            const unsigned long setLine[2][ARRAY_SIZE] = {
+                {   (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT,
+                    (unsigned long)GROUND_TYPE::DEFAULT, (unsigned long)GROUND_TYPE::DEFAULT
+                },
+                {   (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT,
+                    (unsigned long)MAP_OBJECT_TYPE::DEFAULT, (unsigned long)MAP_OBJECT_TYPE::DEFAULT
+                }
+            };
+
+            memcpy(oneLineData.groundData, setLine[0], sizeof(oneLineData.groundData));
+            memcpy(oneLineData.mapObjectData, setLine[1], sizeof(oneLineData.mapObjectData));
         }
         break;
-
-    case -4:// 左移動
-        for (int y = 0; y < MAP_HEIGHT_MAX; y++)
+        }
+    }
+    else if (MapCreateType == 1)
+    {
+        switch (lineType)
         {
-            unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue;
-            unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue;
-            
-            if (groundNumber < 0)
+        case -1:// 下移動
+            for (int x = 0; x < MAP_WIDTH_MAX; x++)
             {
-                oneLineData.groundData[y] = (unsigned long)GROUND_TYPE::SNOWFIELD;
-            }
-            if (mapObjectNumber < 0)
-            {
-                oneLineData.mapObjectData[y] = (unsigned long)MAP_OBJECT_TYPE::NONE;
-            }
+                unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue;
+                unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, MAP_HEIGHT_MAX)).blue;
 
-            oneLineData.groundData[y] = (unsigned long)GetGroundType(groundNumber);
-            oneLineData.mapObjectData[y] = (unsigned long)GetMapObjectType(mapObjectNumber);
+                oneLineData.groundData[x] = (unsigned long)GetGroundType(groundNumber);
+                oneLineData.mapObjectData[x] = (unsigned long)GetMapObjectType(mapObjectNumber);
+            }
+            break;
+
+        case -2:// 上移動
+            for (int x = 0; x < MAP_WIDTH_MAX; x++)
+            {
+                unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(x, 0)).blue;
+                unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(x, 0)).blue;
+
+                oneLineData.groundData[x] = (unsigned long)GetGroundType(groundNumber);
+                oneLineData.mapObjectData[x] = (unsigned long)GetMapObjectType(mapObjectNumber);
+            }
+            break;
+
+        case -3:// 右移動
+            for (int y = 0; y < MAP_HEIGHT_MAX; y++)
+            {
+                unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(0, y)).blue;
+                unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(0, y)).blue;
+
+                oneLineData.groundData[y] = (unsigned long)GetGroundType(groundNumber);
+                oneLineData.mapObjectData[y] = (unsigned long)GetMapObjectType(mapObjectNumber);
+            }
+            break;
+
+        case -4:// 左移動
+            for (int y = 0; y < MAP_HEIGHT_MAX; y++)
+            {
+                unsigned char groundNumber = Master::mpDataManager->GetBitMapData()[0].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue;
+                unsigned char mapObjectNumber = Master::mpDataManager->GetBitMapData()[1].GetMapPixel(pos + VECTOR_2D(MAP_WIDTH_MAX, y)).blue;
+
+                oneLineData.groundData[y] = (unsigned long)GetGroundType(groundNumber);
+                oneLineData.mapObjectData[y] = (unsigned long)GetMapObjectType(mapObjectNumber);
+            }
+            break;
         }
-        break;
     }
-#endif
 
     oneLineData.SetLine = (float)lineNumber;
 
@@ -239,34 +232,34 @@ MapChangeData MapChangeData::GetOneLineData(int lineNumber, int lineType = 0, VE
 // 地面データタイプ取得
 GROUND_TYPE MapChangeData::GetGroundType(unsigned char number)
 {
-    if (number < 40)
+    if (number < 80)
     {
         return GROUND_TYPE::SNOWFIELD;
     }
-    else if (number < 80)
-    {
-        return GROUND_TYPE::WETLAND;
-    }
-    else if (number < 120)
+    else if (number < 190)
     {
         return GROUND_TYPE::PLAIN;
     }
-    else if (number < 160)
-    {
-        return GROUND_TYPE::FOREST;
-    }
-    else if (number < 200)
-    {
-        return GROUND_TYPE::SAVANNA;
-    }
-    else if (number < 240)
-    {
-        return GROUND_TYPE::DESERT;
-    }
     else if (number < 256)
     {
-        return GROUND_TYPE::VOLCANIC;
+        return GROUND_TYPE::WETLAND;
     }
+    // else if (number < 160)
+    // {
+    //     return GROUND_TYPE::FOREST;
+    // }
+    // else if (number < 200)
+    // {
+    //     return GROUND_TYPE::SAVANNA;
+    // }
+    // else if (number < 240)
+    // {
+    //     return GROUND_TYPE::DESERT;
+    // }
+    // else if (number < 256)
+    // {
+    //     return GROUND_TYPE::VOLCANIC;
+    // }
 
     return GROUND_TYPE::DEFAULT;
 }
@@ -274,30 +267,45 @@ GROUND_TYPE MapChangeData::GetGroundType(unsigned char number)
 // 地マップオブジェクトタイプ取得
 MAP_OBJECT_TYPE MapChangeData::GetMapObjectType(unsigned char number)
 {
-    if (number < 45)
+    if (number < 40)
     {
         return MAP_OBJECT_TYPE::ENEMY;
     }
-    else if (number < 90)
+    else if (number < 150)
     {
-        return MAP_OBJECT_TYPE::BUSH;
+        if ((number % 2) != 0)
+        {
+            return MAP_OBJECT_TYPE::FLOWER;
+        }
+        else
+        {
+            return MAP_OBJECT_TYPE::NONE;
+        }
     }
-    else if (number < 135)
+    else if (number < 200)
     {
         return MAP_OBJECT_TYPE::WATER_PUDDLE;
     }
-    else if (number < 180)
+    else if (number < 210)
     {
-        return MAP_OBJECT_TYPE::ROAD;
-    }
-    else if (number < 225)
-    {
-        return MAP_OBJECT_TYPE::FLOWER;
+        return MAP_OBJECT_TYPE::NONE;
     }
     else if (number < 256)
     {
-        return MAP_OBJECT_TYPE::MOUNTAIN;
+        return MAP_OBJECT_TYPE::WATER_PUDDLE;
     }
+    // else if (number < 90)
+    // {
+    //     return MAP_OBJECT_TYPE::BUSH;
+    // }
+    // else if (number < 180)
+    // {
+    //     return MAP_OBJECT_TYPE::ROAD;
+    // }
+    // else if (number < 256)
+    // {
+    //     return MAP_OBJECT_TYPE::MOUNTAIN;
+    // }
 
     return MAP_OBJECT_TYPE::DEFAULT;
 }
@@ -348,75 +356,78 @@ VECTOR_2D MapData::NumberChange(VECTOR_2D changeVolume, VECTOR_2D mapPos)
 {
     VECTOR_2D moveNumber = VECTOR_2D::Zero();
 
-#if MAP_CREATE_TYPE == 0
-    if (changeVolume.Y > 0.0f)
+    if (MapCreateType == 0)
     {
-        for (int y = 0; y < changeVolume.IntY(); y++)
+        if (changeVolume.Y > 0.0f)
         {
-            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, Master::mpDataManager->GetBitMapData()[0].GetMapPixel(false).blue), mapPos, true);
-            moveNumber.Y += 1.0f;
+            for (int y = 0; y < changeVolume.IntY(); y++)
+            {
+                MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, Master::mpDataManager->GetBitMapData()[0].GetMapPixel(false).blue), mapPos, true);
+                moveNumber.Y += 1.0f;
+            }
         }
-    }
-    else if (changeVolume.Y < 0.0f)
-    {
-        for (int y = -1; y > changeVolume.IntY() - 1; y--)
+        else if (changeVolume.Y < 0.0f)
         {
-            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, Master::mpDataManager->GetBitMapData()[0].GetMapPixel(false).blue), mapPos, false);
-            moveNumber.Y -= 1.0f;
+            for (int y = -1; y > changeVolume.IntY() - 1; y--)
+            {
+                MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, Master::mpDataManager->GetBitMapData()[0].GetMapPixel(false).blue), mapPos, false);
+                moveNumber.Y -= 1.0f;
+            }
         }
-    }
 
-    if (changeVolume.X > 0.0f)
-    {
-        for (int x = 0; x < changeVolume.IntX(); x++)
+        if (changeVolume.X > 0.0f)
         {
-            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, Master::mpDataManager->GetBitMapData()[0].GetMapPixel(true).blue), mapPos, true);
-            moveNumber.X += 1.0f;
+            for (int x = 0; x < changeVolume.IntX(); x++)
+            {
+                MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, Master::mpDataManager->GetBitMapData()[0].GetMapPixel(true).blue), mapPos, true);
+                moveNumber.X += 1.0f;
+            }
+        }
+        else if (changeVolume.X < 0.0f)
+        {
+            for (int x = -1; x > changeVolume.IntX() - 1; x--)
+            {
+                MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, Master::mpDataManager->GetBitMapData()[0].GetMapPixel(true).blue), mapPos, false);
+                moveNumber.X -= 1.0f;
+            }
         }
     }
-    else if (changeVolume.X < 0.0f)
+    else if (MapCreateType == 1)
     {
-        for (int x = -1; x > changeVolume.IntX() - 1; x--)
+        if (changeVolume.Y > 0.0f)
         {
-            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, Master::mpDataManager->GetBitMapData()[0].GetMapPixel(true).blue), mapPos, false);
-            moveNumber.X -= 1.0f;
+            for (int y = 0; y < changeVolume.IntY(); y++)
+            {
+                MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, -1, mapPos), mapPos, true);
+                moveNumber.Y += 1.0f;
+            }
         }
-    }
-#elif MAP_CREATE_TYPE == 1
-    if (changeVolume.Y > 0.0f)
-    {
-        for (int y = 0; y < changeVolume.IntY(); y++)
+        else if (changeVolume.Y < 0.0f)
         {
-            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, -1, mapPos), mapPos, true);
-            moveNumber.Y += 1.0f;
+            for (int y = -1; y > changeVolume.IntY() - 1; y--)
+            {
+                MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, -2, mapPos), mapPos, false);
+                moveNumber.Y -= 1.0f;
+            }
         }
-    }
-    else if (changeVolume.Y < 0.0f)
-    {
-        for (int y = -1; y > changeVolume.IntY() - 1; y--)
-        {
-            MapManager::SetOneLine('Y', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntY() + y, -2, mapPos), mapPos, false);
-            moveNumber.Y -= 1.0f;
-        }
-    }
 
-    if (changeVolume.X > 0.0f)
-    {
-        for (int x = 0; x < changeVolume.IntX(); x++)
+        if (changeVolume.X > 0.0f)
         {
-            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, -3, mapPos), mapPos, true);
-            moveNumber.X += 1.0f;
+            for (int x = 0; x < changeVolume.IntX(); x++)
+            {
+                MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, -3, mapPos), mapPos, true);
+                moveNumber.X += 1.0f;
+            }
+        }
+        else if (changeVolume.X < 0.0f)
+        {
+            for (int x = -1; x > changeVolume.IntX() - 1; x--)
+            {
+                MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, -4), mapPos, false);
+                moveNumber.X -= 1.0f;
+            }
         }
     }
-    else if (changeVolume.X < 0.0f)
-    {
-        for (int x = -1; x > changeVolume.IntX() - 1; x--)
-        {
-            MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, -4), mapPos, false);
-            moveNumber.X -= 1.0f;
-        }
-    }
-#endif
 
     this->mapLeftUpPos = MapData::CheckRange(this->mapLeftUpPos.SetInt2D() + changeVolume.SetInt2D());
 
@@ -438,9 +449,7 @@ MapManager::MapManager()
 , mbStartupFlag(false)
 {
     Master::mpDataManager->SetBitMapData("Resource/PerlinNoise.bmp");
-#if MAP_CREATE_TYPE == 1
     Master::mpDataManager->SetBitMapData("Resource/PerlinNoise.bmp");
-#endif
 }
 
 // デストラクタ
@@ -458,6 +467,8 @@ void MapManager::Initilize()
 
     mpInitilizeObject.clear();
 
+    MapCreateType = 0;
+
     mstMapPosition = mpCamera->GetCameraPos() - (VECTOR_2D::GetIntVec(MAP_WIDTH_MAX, MAP_HEIGHT_MAX) * 0.5f);
 
     mstMapDatas = MapData();
@@ -466,6 +477,7 @@ void MapManager::Initilize()
     {
         MapManager::SetOneLine('Y', &mstMapDatas, MapChangeData::GetOneLineData(y,-1), mstMapPosition);
     }
+    MapCreateType = 1;
 
     mbStartupFlag = true;
 }
@@ -538,12 +550,14 @@ void MapManager::Draw()
                         break;
 
                     case GROUND_TYPE::SNOWFIELD:
+                        mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.0f, 0.125f, 0.8f, 0.2f, mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
 
                     case GROUND_TYPE::VOLCANIC:
                         break;
 
                     case GROUND_TYPE::WETLAND:
+                        mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.375f, 0.125f, 0.0f, 0.125f, mstMapDatas.mapResourceNumber[0][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
                     }
                 }
@@ -563,37 +577,105 @@ void MapManager::Draw()
                         case GROUND_TYPE::DEFAULT:
                         case GROUND_TYPE::DESERT:
                         case GROUND_TYPE::FOREST:
-                        case GROUND_TYPE::PLAIN:
                         case GROUND_TYPE::SAVANNA:
                         case GROUND_TYPE::SNOWFIELD:
                         case GROUND_TYPE::VOLCANIC:
+                            break;
+                        case GROUND_TYPE::PLAIN:
                         case GROUND_TYPE::WETLAND:
+                            // ビット方向メモ
+                            /*0b0000'0000*/
+                            /*0b右下、下、左下、右、'左、右上、上、左上*/
+
+                            // 左上、上、左の3方向を確認
                             switch ((mstMapDatas.mapObject[drawPos.IntY()][drawPos.IntX()] >> 16) & 0b0000'1011)
                             {
-                            case 0b0000:// なし
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.8f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                            case 0b0000'0000:// なし
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.8f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                                 break;
-                            case 0b0001:// 左上のみ
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.6f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                            case 0b0000'0001:// 左上
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.6f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                                 break;
-                            case 0b0011:// 左上と上
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.4f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                            case 0b0000'0010:// 上
+                            case 0b0000'0011:// 左上と上
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.4f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                                 break;
-                            case 0b1011:// 左上と上と左
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                            case 0b0000'1011:// 左上と上と左
+                            case 0b0000'1010:// 上と左
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                                 break;
-                            case 0b0010:// 上
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.6f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                            case 0b0000'1000:// 左
+                            case 0b0000'1001:// 左上と左
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.2f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                                 break;
-                            case 0b1010:// 上と左
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.1f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                            }
+
+                            // 右上、右、右下の3方向を確認
+                            switch ((mstMapDatas.mapObject[drawPos.IntY()][drawPos.IntX()] >> 16) & 0b0001'0110)
+                            {
+                            case 0b0000'0000:// なし
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.8f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                                 break;
-                            case 0b1000:// 左
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                            case 0b0000'0100:// 右上
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.6f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                                 break;
-                            case 0b1001:// 左上と左
-                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                            case 0b0000'0010:// 上
+                            case 0b0000'0110:// 右上と上
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.4f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0001'0110:// 右上と上と右
+                            case 0b0001'0010:// 上と右
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0001'0000:// 右
+                            case 0b0001'0100:// 右上と右
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y - 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.2f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            }
+
+                            // 左下、下、左の3方向を確認
+                            switch ((mstMapDatas.mapObject[drawPos.IntY()][drawPos.IntX()] >> 16) & 0b0110'1000)
+                            {
+                            case 0b0000'0000:// なし
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.9f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0010'0000:// 左下
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.7f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0100'0000:// 下
+                            case 0b0110'0000:// 左下と下
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.5f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0110'1000:// 左下と下と左
+                            case 0b0100'1000:// 下と左
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.1f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0000'1000:// 左
+                            case 0b0010'1000:// 左下と左
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.3f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            }
+
+                            // 右下、下、右の3方向を確認
+                            switch ((mstMapDatas.mapObject[drawPos.IntY()][drawPos.IntX()] >> 16) & 0b1101'0000)
+                            {
+                            case 0b0000'0000:// なし
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.9f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b1000'0000:// 右下
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.7f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0100'0000:// 下
+                            case 0b1100'0000:// 右下と下
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.5f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b1101'0000:// 右下と下と右
+                            case 0b0101'0000:// 下と右
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.1f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0001'0000:// 右
+                            case 0b1001'0000:// 右下と右
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X + 0.25f, y + mstMapPosition.Y + 0.25f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.3f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                                 break;
                             }
                         }
@@ -695,123 +777,134 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
         unsigned long plusData = 0;
         unsigned long count = 0;
 
-        switch ((GROUND_TYPE)(groundNumber & 0xf))
+        if (MapCreateType == 0)
         {
-#if MAP_CREATE_TYPE == 0
-        case GROUND_TYPE::DEFAULT:
-        {
-            bool setFlag = false;
-            for (int i = 0; i < checkVecs.size(); i++)
+            switch ((GROUND_TYPE)(groundNumber & 0xf))
             {
-                VECTOR_2D checkPos = MapData::CheckRange(mapCheckVec[checkVecs[i]] + mapPos).SetInt2D();
-                if (((src->ground[checkPos.IntY()][checkPos.IntX()] & (0xff << 8)) != 0) && ((src->ground[checkPos.IntY()][checkPos.IntX()] & (0xff << 8)) != 1))
+            case GROUND_TYPE::DEFAULT:
+            {
+                bool setFlag = false;
+                for (int i = 0; i < checkVecs.size(); i++)
                 {
-                    src->ground[mapPos.IntY()][mapPos.IntX()] = (((((src->ground[checkPos.IntY()][checkPos.IntX()] >> 8) & 0xff) - 1) << 8) | (src->ground[checkPos.IntY()][checkPos.IntX()] & 0xff) | GetDifferentFlag(src->ground, mapPos, src->ground[checkPos.IntY()][checkPos.IntX()] & 0xf));
-                    setFlag = true;
-                    break;
+                    VECTOR_2D checkPos = MapData::CheckRange(mapCheckVec[checkVecs[i]] + mapPos).SetInt2D();
+                    if (((src->ground[checkPos.IntY()][checkPos.IntX()] & (0xff << 8)) != 0) && ((src->ground[checkPos.IntY()][checkPos.IntX()] & (0xff << 8)) != 1))
+                    {
+                        src->ground[mapPos.IntY()][mapPos.IntX()] = (((((src->ground[checkPos.IntY()][checkPos.IntX()] >> 8) & 0xff) - 1) << 8) | (src->ground[checkPos.IntY()][checkPos.IntX()] & 0xff) | GetDifferentFlag(src->ground, mapPos, src->ground[checkPos.IntY()][checkPos.IntX()] & 0xf));
+                        setFlag = true;
+                        break;
+                    }
+                }
+                if (!setFlag)
+                {
+                    src->ground[mapPos.IntY()][mapPos.IntX()] = (int)GROUND_TYPE::PLAIN;
                 }
             }
-            if (!setFlag)
-            {
-                src->ground[mapPos.IntY()][mapPos.IntX()] = (int)GROUND_TYPE::PLAIN;
+            break;
+
+            case GROUND_TYPE::VOLCANIC:
+                ++count;
+            case GROUND_TYPE::SNOWFIELD:
+                ++count;
+            case GROUND_TYPE::DESERT:
+                ++count;
+            case GROUND_TYPE::WETLAND:
+                ++count;
+            case GROUND_TYPE::SAVANNA:
+                ++count;
+            case GROUND_TYPE::FOREST:
+                ++count;
+            case GROUND_TYPE::PLAIN:
+                ++count;
+
+                plusData = ((count << 4) | ((unsigned long)(rand() & 0xff) << 8) | GetDifferentFlag(src->ground, mapPos, groundNumber));
+                src->ground[mapPos.IntY()][mapPos.IntX()] = (groundNumber | plusData);
+                break;
             }
         }
-        break;
-
-        case GROUND_TYPE::VOLCANIC:
-            ++count;
-        case GROUND_TYPE::SNOWFIELD:
-            ++count;
-        case GROUND_TYPE::DESERT:
-            ++count;
-        case GROUND_TYPE::WETLAND:
-            ++count;
-        case GROUND_TYPE::SAVANNA:
-            ++count;
-        case GROUND_TYPE::FOREST:
-            ++count;
-        case GROUND_TYPE::PLAIN:
-            ++count;
-
-            plusData = ((count << 4) | ((unsigned long)(rand() & 0xff) << 8) | GetDifferentFlag(src->ground, mapPos, groundNumber));
-            src->ground[mapPos.IntY()][mapPos.IntX()] = (groundNumber | plusData);
-            break;
-
-#elif MAP_CREATE_TYPE == 1
-        case GROUND_TYPE::VOLCANIC:
-        case GROUND_TYPE::SNOWFIELD:
-        case GROUND_TYPE::DESERT:
-        case GROUND_TYPE::WETLAND:
-        case GROUND_TYPE::SAVANNA:
-        case GROUND_TYPE::FOREST:
-        case GROUND_TYPE::PLAIN:
-        case GROUND_TYPE::DEFAULT:
-            src->ground[mapPos.IntY()][mapPos.IntX()] = (groundNumber | GetDifferentFlag(src->ground, mapPos, groundNumber) | (groundNumber << 4));
-            break;
-#endif
+        else if (MapCreateType == 1)
+        {
+            switch ((GROUND_TYPE)(groundNumber & 0xf))
+            {
+            case GROUND_TYPE::VOLCANIC:
+            case GROUND_TYPE::SNOWFIELD:
+            case GROUND_TYPE::DESERT:
+            case GROUND_TYPE::WETLAND:
+            case GROUND_TYPE::SAVANNA:
+            case GROUND_TYPE::FOREST:
+            case GROUND_TYPE::PLAIN:
+            case GROUND_TYPE::DEFAULT:
+                src->ground[mapPos.IntY()][mapPos.IntX()] = (groundNumber | GetDifferentFlag(src->ground, mapPos, groundNumber) | (groundNumber << 4));
+                break;
+            }
         }
 
         plusData = 0;
-        switch ((MAP_OBJECT_TYPE)(mapObjectNumber & 0xf))
+        if (MapCreateType == 0)
         {
-#if MAP_CREATE_TYPE == 0
-        case MAP_OBJECT_TYPE::DEFAULT:
-        {
-            bool setFlag = false;
-            for (int i = 0; i < checkVecs.size(); i++)
+            switch ((MAP_OBJECT_TYPE)(mapObjectNumber & 0xf))
             {
-                VECTOR_2D checkPos = MapData::CheckRange(mapCheckVec[checkVecs[i]] + mapPos).SetInt2D();
-
-                if (((src->mapObject[checkPos.IntY()][checkPos.IntX()] & (0xff << 8)) != 0) && ((src->mapObject[checkPos.IntY()][checkPos.IntX()] & (0xff << 8)) != 1))
+            case MAP_OBJECT_TYPE::DEFAULT:
+            {
+                bool setFlag = false;
+                for (int i = 0; i < checkVecs.size(); i++)
                 {
-                    src->mapObject[mapPos.IntY()][mapPos.IntX()] = (((((src->mapObject[checkPos.IntY()][checkPos.IntX()] >> 8) & 0xff) - 1) << 8) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)) | (src->mapObject[checkPos.IntY()][checkPos.IntX()] & 0xf) | GetDifferentFlag(src->mapObject, mapPos, src->mapObject[checkPos.IntY()][checkPos.IntX()] & 0xf));
-                    setFlag = true;
-                    break;
+                    VECTOR_2D checkPos = MapData::CheckRange(mapCheckVec[checkVecs[i]] + mapPos).SetInt2D();
+
+                    if (((src->mapObject[checkPos.IntY()][checkPos.IntX()] & (0xff << 8)) != 0) && ((src->mapObject[checkPos.IntY()][checkPos.IntX()] & (0xff << 8)) != 1))
+                    {
+                        src->mapObject[mapPos.IntY()][mapPos.IntX()] = (((((src->mapObject[checkPos.IntY()][checkPos.IntX()] >> 8) & 0xff) - 1) << 8) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)) | (src->mapObject[checkPos.IntY()][checkPos.IntX()] & 0xf) | GetDifferentFlag(src->mapObject, mapPos, src->mapObject[checkPos.IntY()][checkPos.IntX()] & 0xf));
+                        setFlag = true;
+                        break;
+                    }
+                }
+                if (!setFlag)
+                {
+                    src->mapObject[mapPos.IntY()][mapPos.IntX()] = (int)MAP_OBJECT_TYPE::NONE;
                 }
             }
-            if (!setFlag)
-            {
-                src->mapObject[mapPos.IntY()][mapPos.IntX()] = (int)MAP_OBJECT_TYPE::NONE;
+            break;
+
+            case MAP_OBJECT_TYPE::ROAD:
+            case MAP_OBJECT_TYPE::WATER_PUDDLE:
+            case MAP_OBJECT_TYPE::MOUNTAIN:
+            case MAP_OBJECT_TYPE::BUSH:
+            case MAP_OBJECT_TYPE::ROCK:
+            case MAP_OBJECT_TYPE::TREE:
+            case MAP_OBJECT_TYPE::NONE:
+            case MAP_OBJECT_TYPE::FLOWER:
+
+                plusData = ((src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)) | ((unsigned long)(rand() & 0xff) << 8) | GetDifferentFlag(src->ground, mapPos, mapObjectNumber));
+                src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | plusData);
+
+                break;
+
+            default:
+                src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, mapObjectNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
+                break;
             }
         }
-        break;
+        else if (MapCreateType == 1)
+        {
+            switch ((MAP_OBJECT_TYPE)(mapObjectNumber & 0xf))
+            {
+            case MAP_OBJECT_TYPE::DEFAULT:
+            case MAP_OBJECT_TYPE::ENEMY:
+            case MAP_OBJECT_TYPE::ROAD:
+            case MAP_OBJECT_TYPE::WATER_PUDDLE:
+            case MAP_OBJECT_TYPE::MOUNTAIN:
+            case MAP_OBJECT_TYPE::BUSH:
+            case MAP_OBJECT_TYPE::ROCK:
+            case MAP_OBJECT_TYPE::TREE:
+            case MAP_OBJECT_TYPE::NONE:
+            case MAP_OBJECT_TYPE::FLOWER:
+                src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, mapObjectNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
+                break;
 
-        case MAP_OBJECT_TYPE::ROAD:
-        case MAP_OBJECT_TYPE::WATER_PUDDLE:
-        case MAP_OBJECT_TYPE::MOUNTAIN:
-        case MAP_OBJECT_TYPE::BUSH:
-        case MAP_OBJECT_TYPE::ROCK:
-        case MAP_OBJECT_TYPE::TREE:
-        case MAP_OBJECT_TYPE::NONE:
-        case MAP_OBJECT_TYPE::FLOWER:
+            default:
+                src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, mapObjectNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
+                break;
 
-            plusData = ((src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)) | ((unsigned long)(rand() & 0xff) << 8) | GetDifferentFlag(src->ground, mapPos, mapObjectNumber));
-            src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | plusData);
-
-            break;
-
-        default:
-            src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, groundNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
-            break;
-
-#elif MAP_CREATE_TYPE == 1
-        case MAP_OBJECT_TYPE::DEFAULT:
-        case MAP_OBJECT_TYPE::ENEMY:
-        case MAP_OBJECT_TYPE::ROAD:
-        case MAP_OBJECT_TYPE::WATER_PUDDLE:
-        case MAP_OBJECT_TYPE::MOUNTAIN:
-        case MAP_OBJECT_TYPE::BUSH:
-        case MAP_OBJECT_TYPE::ROCK:
-        case MAP_OBJECT_TYPE::TREE:
-        case MAP_OBJECT_TYPE::NONE:
-        case MAP_OBJECT_TYPE::FLOWER:
-            src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, groundNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
-            break;
-
-        default:
-            src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, groundNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
-            break;
-#endif
+            }
         }
 
     }
@@ -835,14 +928,31 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
 // 隣接タイルが違う種類が有効なフラグを返す
 unsigned long MapManager::GetDifferentFlag(unsigned long src[38][62], VECTOR_2D targetPos, unsigned long targettype)
 {
-    unsigned long result = 0;
-    /*
-    for (int i = 0; i < )
+    static const VECTOR_2D mapCheckVec[8] = { VECTOR_2D(-1, -1), VECTOR_2D(0, -1), VECTOR_2D(1, -1),
+                                              VECTOR_2D(-1, 0),                    VECTOR_2D(1, 0),
+                                              VECTOR_2D(-1, 1),  VECTOR_2D(0, 1),  VECTOR_2D(1, 1) };
+
+    static const unsigned long mapFlagNumber[8] = {0b0000'0001ul << 16, 0b0000'0010ul << 16, 0b0000'0100ul << 16,
+                                                   0b0000'1000ul << 16,                      0b0001'0000ul << 16,
+                                                   0b0010'0000ul << 16, 0b0100'0000ul << 16, 0b1000'0000ul << 16 };
+
+    unsigned long result = 0ul;
+    
+    for (int i = 0; i < 8; i++)
     {
+        VECTOR_2D pos = MapData::CheckRange(VECTOR_2D((int)mapCheckVec[i].X + targetPos.IntX(), (int)mapCheckVec[i].Y + targetPos.IntY()));
+        if ((src[pos.IntY()][pos.IntX()] & 0xf) != (targettype & 0xf))
+        {
+            result |= mapFlagNumber[i];
+            src[pos.IntY()][pos.IntX()] |= mapFlagNumber[7 - i];
+        }
+        else
+        {
+            src[pos.IntY()][pos.IntX()] &= ~mapFlagNumber[7 - i];
+        }
+    }
 
-    }*/
-
-    return 0ul;
+    return result;
 }
 
 // グラウンドもしくはマップオブジェクトのナンバーに合わせたリソースナンバーを返す
@@ -864,6 +974,9 @@ int MapManager::GetGroundOrMapObject_ResourceNumber(int number, bool groundFlag)
             break;
 
         case GROUND_TYPE::SNOWFIELD:
+            result = mpResourceManager->AddResource(L"Resource/Snow.png");
+            break;
+
         case GROUND_TYPE::VOLCANIC:
             result = mpResourceManager->AddResource(L"Resource/Base.png");
             break;

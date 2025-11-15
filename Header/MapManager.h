@@ -4,7 +4,7 @@
 #include "Macro.h"
 #include "TemplateData.h"
 
-#define MAP_CREATE_TYPE 1
+static int MapCreateType = 0;
 
 class Camera;
 class DataManager;

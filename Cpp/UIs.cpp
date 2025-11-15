@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 
 #include "../Header/DataManager.h"
+#include "../Header/EndManager.h"
 #include "../Header/GameManager.h"
 #include "../Header/FSM.h"
 #include "../Header/KeyState.h"
@@ -68,6 +69,11 @@ void TitleUI::UIUpdate()
 			mfFontColorAlpha = 0.2f;
 			mbFontColorAlphaPlusFlag = true;
 		}
+	}
+
+	if (mpKeyState->GetKeyDownAllController(CONTROLLER_KEY_TYPE::B))
+	{
+		Master::mpEndManager->SetEndFlag(true);
 	}
 
 	DefaultDecision();
