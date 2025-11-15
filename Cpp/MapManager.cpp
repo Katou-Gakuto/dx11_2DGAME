@@ -557,8 +557,48 @@ void MapManager::Draw()
                     case MAP_OBJECT_TYPE::BUSH:
                     case MAP_OBJECT_TYPE::MOUNTAIN:
                     case MAP_OBJECT_TYPE::WATER_PUDDLE:
+                        switch ((GROUND_TYPE)(mstMapDatas.ground[drawPos.IntY()][drawPos.IntX()] & 0xf))
+                        {
+
+                        case GROUND_TYPE::DEFAULT:
+                        case GROUND_TYPE::DESERT:
+                        case GROUND_TYPE::FOREST:
+                        case GROUND_TYPE::PLAIN:
+                        case GROUND_TYPE::SAVANNA:
+                        case GROUND_TYPE::SNOWFIELD:
+                        case GROUND_TYPE::VOLCANIC:
+                        case GROUND_TYPE::WETLAND:
+                            switch ((mstMapDatas.mapObject[drawPos.IntY()][drawPos.IntX()] >> 16) & 0b0000'1011)
+                            {
+                            case 0b0000:// なし
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.8f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0001:// 左上のみ
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.6f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0011:// 左上と上
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.4f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b1011:// 左上と上と左
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b0010:// 上
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.6f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b1010:// 上と左
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0625f, 0.0625f, 0.1f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b1000:// 左
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            case 0b1001:// 左上と左
+                                mpResourceManager->DrawSprite(x + mstMapPosition.X - 0.5f, y + mstMapPosition.Y - 0.5f, 0.5f, 0.5f, 0.0f, 0.0625f, 0.0f, 0.1f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                                break;
+                            }
+                        }
                     case MAP_OBJECT_TYPE::ROAD:
-                        mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.5f, 0.125f, 0.75f, 0.125f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
+                        //mpResourceManager->DrawSprite(x + mstMapPosition.X, y + mstMapPosition.Y, 1.0f, 1.0f, 0.5f, 0.125f, 0.75f, 0.125f, mstMapDatas.mapResourceNumber[1][drawPos.IntY()][drawPos.IntX()], ULTRAVIOLET_PLUS_FLAG | CAMERA_VIEW_FLAG | MIDDLE_FLAG);
                         break;
 
                     case MAP_OBJECT_TYPE::FLOWER:
@@ -749,6 +789,11 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
             src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | plusData);
 
             break;
+
+        default:
+            src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, groundNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
+            break;
+
 #elif MAP_CREATE_TYPE == 1
         case MAP_OBJECT_TYPE::DEFAULT:
         case MAP_OBJECT_TYPE::ENEMY:
@@ -763,6 +808,9 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
             src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, groundNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
             break;
 
+        default:
+            src->mapObject[mapPos.IntY()][mapPos.IntX()] = (mapObjectNumber | GetDifferentFlag(src->mapObject, mapPos, groundNumber) | (src->ground[mapPos.IntY()][mapPos.IntX()] & (0xf << 4)));
+            break;
 #endif
         }
 
@@ -787,6 +835,13 @@ void MapManager::SetOneTile(MapData* src, VECTOR_2D mapPos, VECTOR_2D createPos,
 // 隣接タイルが違う種類が有効なフラグを返す
 unsigned long MapManager::GetDifferentFlag(unsigned long src[38][62], VECTOR_2D targetPos, unsigned long targettype)
 {
+    unsigned long result = 0;
+    /*
+    for (int i = 0; i < )
+    {
+
+    }*/
+
     return 0ul;
 }
 
