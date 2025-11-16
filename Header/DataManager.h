@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 
+#include "ResourceManager.h"
 #include "TemplateData.h"
 
 class DataManager
@@ -84,6 +85,7 @@ public:
 
 	/*プレイヤー名設定*/
 	void SetPlayerName(int playerNumber, std::string playerName) { mstPlayerDatas[playerNumber].name = playerName; }
+	void SetPlayerName(int playerNumber, std::wstring playerName) { mstPlayerDatas[playerNumber].name = ResourceManager::WstringToString(playerName); }
 
 	/*プレイヤー種類設定*/
 	void SetPlayerType(int playerNumber, int playerType) { mstPlayerDatas[playerNumber].characterType = playerType; }

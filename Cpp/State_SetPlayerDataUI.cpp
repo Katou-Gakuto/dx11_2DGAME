@@ -964,13 +964,15 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 			}
 			else
 			{
-				{// –¼‘O“ü—Í
-					msSetName = L"dsad";
-					std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-					mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), /*"sda‚ ‚³");//*/converter.to_bytes(msSetName));// ‚Ð‚ç‚ª‚È•ÏŠ·o—ˆ‚È‚¢
+				if (msSetName.size() > 0)
+				{
+					{// –¼‘O“ü—Í
+						std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+						mpDataManager->SetPlayerName(parent->GetSelectPlayerNumber(), msSetName);
+					}
+					// ŽŸ‚ÉˆÚ“®
+					parent->Decision();
 				}
-				// ŽŸ‚ÉˆÚ“®
-				parent->Decision();
 			}
 			break;
 
@@ -1320,4 +1322,11 @@ void SPDUINameSet::Draw(SetPlayerDataUI* parent)
 			mpResourceManager->SetFontData(&fontData);
 		}
 	}
+
+	std::wstring drawString = L"Name: " + msSetName.substr(0, mnSetNameSelectNumber) + msAddWord.substr(0, mnAddWordSelectNumber) + msSelectWord + msAddWord.substr(mnAddWordSelectNumber) + msSetName.substr(mnSetNameSelectNumber);
+
+	fontData = FontData();
+	fontData.fontSize = 40.0f;
+	mpResourceManager->SetFontData(&fontData);
+	mpResourceManager->DrawString(drawString, XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.2f, mpDataManager->GetDisplaySize().Y * 0.25f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 }

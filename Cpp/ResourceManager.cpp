@@ -500,3 +500,11 @@ std::wstring ResourceManager::StringToWString(std::string oString)
 	// •ÏŠ·Œ‹‰Ê‚ð•Ô‚·
 	return(oRet);
 }
+
+std::string ResourceManager::WstringToString(const std::wstring& wstr)
+{
+	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	std::string str(size_needed, 0);
+	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], size_needed, nullptr, nullptr);
+	return str;
+}

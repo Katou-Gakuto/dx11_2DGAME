@@ -227,11 +227,12 @@ public:
 	/*エンドフラグ取得*/
 	bool GetEndFlag() { return mbEndFlag; }
 
-private:
-
 	/*--------------------------------------------------------------------------------------------------------------
 	* 【文字描画用】
 	*/
 	/*stringをwstringへ変換する*/
 	std::wstring StringToWString(std::string oString);
+
+	/*wstringをstringへ変換する*/
+	static std::string WstringToString(const std::wstring& wstr);
 };
