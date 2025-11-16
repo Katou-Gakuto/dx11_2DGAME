@@ -408,84 +408,84 @@ int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 				if (((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::ARROW_LEFT)) != 0) &&
 					((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::ALT)) != 0))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::LETF);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::LETF);
 				}
 				if (((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::ARROW_RIGHT)) != 0) &&
 					((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::ALT)) != 0))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::RIGHT);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::RIGHT);
 				}
 
 				// ホーム
 				if ((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::HOME)) != 0)
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::HOME);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::HOME);
 				}
 
 				// エンド
 				if ((wordKeyBoradFlags & ((unsigned long long)1 << (int)KEY_BOARD_WORD::END)) != 0)
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::END);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::END);
 				}
 			}
 
 			{// 特殊キー処理
-				// 全角半角
+				// 全角半角 エラー起こる
 				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::FULL_WIDTH))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, true);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, true);
 				}
 				else if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::HALF_WIDTH))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, false);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH, false);
 				}
 
 				// シフト
 				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_SHIFT, true);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_SHIFT, true);
 				}
 				else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_SHIFT, false);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_SHIFT, false);
 				}
 
 				// インサート
 				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::INSERT))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_INSERT, true);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_INSERT, true);
 				}
 				else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::INSERT))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_INSERT, false);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_INSERT, false);
 				}
 
 				// オルト
 				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ALT_LEFT_AND_RIGHT))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_ALT, true);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_ALT, true);
 				}
 				else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::ALT_LEFT_AND_RIGHT))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_ALT, false);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_ALT, false);
 				}
 
 				// バックスペース
 				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::BACK_SPACE))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::BACK_SPAE);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::BACK_SPAE);
 				}
 
 				// タブ
 				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::TAB))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::TAB);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::TAB);
 				}
 
 				// デリート
 				if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::_DELETE))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::DELETE_PROCESS);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::DELETE_PROCESS);
 				}
 
 				// コントロール別処理
@@ -494,7 +494,7 @@ int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 					// エンター
 					if (mpKeyState->GetSpecialKeyDown_Board(KEY_BOARD_SPECIAL::ENTER))
 					{
-						SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
+						SetNumberProcess(parent, (int)PROCESS_NUMBER::ENTER);
 					}
 				}
 				else
@@ -530,11 +530,11 @@ int SPDUINameSet::KeyboardUpdate(SetPlayerDataUI* parent)
 				// キャプチャーロック
 				if (mpKeyState->GetAllToggleState())// トグルキーダウンとアップ作る
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, true);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, true);
 				}
 				else if (mpKeyState->GetSpecialKeyUp_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT))
 				{
-					SetNumberProcess(parent, PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, false);
+					SetNumberProcess(parent, (int)PROCESS_NUMBER::KEY_BOARD_CAPSLOCK, false);
 				}
 			}
 		}
@@ -684,7 +684,7 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 {
 	if ((char)number >= 0)
 	{
-		if ((int)number <= (int)PROCESS_NUMBER::SPACE)
+		if (((int)number <= (int)PROCESS_NUMBER::SPACE) && (GetNameCount() <= 12/*最大文字数*/))
 		{
 			if ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION)) != 0)
 			{
@@ -805,15 +805,15 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 		case PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH:
 			if (flag)
 			{
-				mucWordFlags |= ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
+				//mucWordFlags |= ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
 			}
 			else
 			{
-				mucWordFlags &= ~((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
+				//mucWordFlags &= ~((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
 			}
 			break;
 		case PROCESS_NUMBER::FULL_HALF_WIDTH:
-			mucWordFlags ^= ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
+			//mucWordFlags ^= ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION);
 			break;
 
 		case PROCESS_NUMBER::BACK_SPAE:
@@ -1158,6 +1158,73 @@ void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER numb
 	}
 }
 
+// ナンバーにあった処理をする
+void SPDUINameSet::SetNumberProcess(SetPlayerDataUI* parent, int number, bool flag)
+{
+	for (int y = 0; y < (KEY_POS_NUMBER_HEIGHT - 1); y++)
+	{
+		for (int x = 0; x < KEY_POS_NUMBER_WIDTH; x++)
+		{
+			if (KEY_POS_NUMBERS[y][x] == (char)number)
+			{
+				mnSelectNumberY = y;
+				mnSelectNumberX = x;
+				SetNumberProcess(parent, (PROCESS_NUMBER)number, flag);
+				return;
+			}
+		}
+	}
+
+	if ((int)PROCESS_NUMBER::SPACE == number)
+	{
+		mnSelectNumberY = 4;
+		mnSelectNumberX = 0;
+		SetNumberProcess(parent, (PROCESS_NUMBER)number, flag);
+		return;
+	}
+
+	if ((int)PROCESS_NUMBER::KEY_BOARD_FULL_HALF_WIDTH == number)
+	{
+		mnSelectNumberY = 0;
+		mnSelectNumberX = 0;
+		SetNumberProcess(parent, (PROCESS_NUMBER)number, flag);
+		return;
+	}
+
+	if ((int)PROCESS_NUMBER::KEY_BOARD_SHIFT == number)
+	{
+		mnSelectNumberY = 3;
+		mnSelectNumberX = 0;
+		SetNumberProcess(parent, (PROCESS_NUMBER)number, flag);
+		return;
+	}
+
+	if ((int)PROCESS_NUMBER::KEY_BOARD_CAPSLOCK == number)
+	{
+		mnSelectNumberY = 2;
+		mnSelectNumberX = 0;
+		SetNumberProcess(parent, (PROCESS_NUMBER)number, flag);
+		return;
+	}
+
+	if ((int)PROCESS_NUMBER::KEY_BOARD_INSERT == number)
+	{
+		mnSelectNumberY = 0;
+		mnSelectNumberX = 15;
+		SetNumberProcess(parent, (PROCESS_NUMBER)number, flag);
+		return;
+	}
+
+	if ((int)PROCESS_NUMBER::KEY_BOARD_ALT == number)
+	{
+		mnSelectNumberY = 2;
+		mnSelectNumberX = 15;
+		SetNumberProcess(parent, (PROCESS_NUMBER)number, flag);
+		return;
+	}
+}
+
+
 std::wstring SPDUINameSet::GetWordName(char number, FontData* fontData)
 {
 	std::wstring wordName = L"";
@@ -1191,7 +1258,7 @@ std::wstring SPDUINameSet::GetWordName(char number, FontData* fontData)
 		}
 		else
 		{
-			wordName = L"A";//SPACE";
+			wordName = L"SPACE";
 		}
 
 		return wordName;
@@ -1203,26 +1270,26 @@ std::wstring SPDUINameSet::GetWordName(char number, FontData* fontData)
 		fontData->fontSize = 20.0f;
 		if ((mucWordFlags & ((unsigned char)1 << (int)WORD_FLAGS_BIT::FONT_CONVERSION)) != 0)
 		{
-			wordName = L"HALF";
+			//wordName = L"HALF";
 		}
 		else
 		{
-			wordName = L"FULL";
+			//wordName = L"FULL";
 		}
 		break;
 
 	case PROCESS_NUMBER::BACK_SPAE:
-		fontData->fontSize = 20.0f;
+		fontData->fontSize = 10.0f;
 		wordName = L"BACK SPAE";
 		break;
 
 	case PROCESS_NUMBER::INSERT:
-		fontData->fontSize = 20.0f;
+		fontData->fontSize = 15.0f;
 		wordName = L"INSERT";
 		break;
 
 	case PROCESS_NUMBER::HOME:
-		fontData->fontSize = 20.0f;
+		fontData->fontSize = 15.0f;
 		wordName = L"HOME";
 		break;
 
@@ -1232,7 +1299,7 @@ std::wstring SPDUINameSet::GetWordName(char number, FontData* fontData)
 		break;
 
 	case PROCESS_NUMBER::DELETE_PROCESS:
-		fontData->fontSize = 20.0f;
+		fontData->fontSize = 15.0f;
 		wordName = L"DELETE";
 		break;
 
@@ -1242,7 +1309,7 @@ std::wstring SPDUINameSet::GetWordName(char number, FontData* fontData)
 		break;
 
 	case PROCESS_NUMBER::CAPSLOCK:
-		fontData->fontSize = 20.0f;
+		fontData->fontSize = 10.0f;
 		wordName = L"CAPSLOCK";
 		break;
 
@@ -1299,10 +1366,19 @@ void SPDUINameSet::Draw(SetPlayerDataUI* parent)
 	float setNumberY = 0.1f;
 
 	std::wstring draw;
-	for (int y = 0; y < KEY_POS_NUMBER_HEIGHT; y++)
+	for (int y = 0; y < (KEY_POS_NUMBER_HEIGHT - 1); y++)
 	{
 		for (int x = 0; x < KEY_POS_NUMBER_WIDTH; x++)
 		{
+			if (
+				(((y == 1) || (y == 2)) && ((x == 13) || (x == 14))) ||// エンター
+				((y == 3) && ((x == 12) || (x == 13) || (x == 14))) ||// シフト
+				((y == 2) && ((x == 15) || (x == 16)))// オルト
+				)
+			{
+				continue;
+			}
+
 			if ((mnSelectNumberY == y) && (mnSelectNumberX == x))
 			{
 				mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (x * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (y * setNumberY)),
@@ -1323,10 +1399,115 @@ void SPDUINameSet::Draw(SetPlayerDataUI* parent)
 		}
 	}
 
+	{// エンター
+
+		if (((mnSelectNumberY == 1) || (mnSelectNumberY == 2)) && ((mnSelectNumberX == 13) || (mnSelectNumberX == 14)))
+		{
+			mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (13.5f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (1.5f * setNumberY)),
+				mpDataManager->GetDisplaySize().X * 0.099f, mpDataManager->GetDisplaySize().Y * 0.19f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+		}
+		else
+		{
+			mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (13.5f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (1.5f * setNumberY)),
+				mpDataManager->GetDisplaySize().X * 0.099f, mpDataManager->GetDisplaySize().Y * 0.19f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+		}
+
+		fontData = FontData();
+		fontData.fontSize = 35.0f;
+		fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_THIN;
+		if (GetNameCount() <= 0)
+		{
+			fontData.Color.a = 0.5f;
+		}
+		mpResourceManager->SetFontData(&fontData);
+
+		draw = L"ENTER";
+		mpResourceManager->DrawString(draw, XMFLOAT2(mpDataManager->GetDisplaySize().X * (0.1f + (13.45f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.35f + (1.53f * setNumberY))), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+		fontData = FontData();
+		mpResourceManager->SetFontData(&fontData);
+	}
+
+	{// シフト
+
+		if ((mnSelectNumberY == 3) && ((mnSelectNumberX == 12) || (mnSelectNumberX == 13) || (mnSelectNumberX == 14)))
+		{
+			mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (13.0f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (3.0f * setNumberY)),
+				mpDataManager->GetDisplaySize().X * 0.149f, mpDataManager->GetDisplaySize().Y * 0.09f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+		}
+		else
+		{
+			mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (13.0f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (3.0f * setNumberY)),
+				mpDataManager->GetDisplaySize().X * 0.149f, mpDataManager->GetDisplaySize().Y * 0.09f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+		}
+
+		fontData = FontData();
+		fontData.fontSize = 45.0f;
+		fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_THIN;
+		mpResourceManager->SetFontData(&fontData);
+
+		draw = L"SHIFT";
+		mpResourceManager->DrawString(draw, XMFLOAT2(mpDataManager->GetDisplaySize().X * (0.1f + (13.0f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.35f + (3.01f * setNumberY))), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+		fontData = FontData();
+		mpResourceManager->SetFontData(&fontData);
+	}
+
+	{// オルト
+
+		if ((mnSelectNumberY == 2) && ((mnSelectNumberX == 15) || (mnSelectNumberX == 16)))
+		{
+			mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (15.5f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (2.0f * setNumberY)),
+				mpDataManager->GetDisplaySize().X * 0.099f, mpDataManager->GetDisplaySize().Y * 0.09f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+		}
+		else
+		{
+			mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (15.5f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (2.0f * setNumberY)),
+				mpDataManager->GetDisplaySize().X * 0.099f, mpDataManager->GetDisplaySize().Y * 0.09f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+		}
+
+		fontData = FontData();
+		fontData.fontSize = 45.0f;
+		fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_THIN;
+		mpResourceManager->SetFontData(&fontData);
+
+		draw = L"ALT";
+		mpResourceManager->DrawString(draw, XMFLOAT2(mpDataManager->GetDisplaySize().X * (0.1f + (15.5f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.35f + (2.01f * setNumberY))), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+		fontData = FontData();
+		mpResourceManager->SetFontData(&fontData);
+	}
+
+	{// スペース
+
+		if (mnSelectNumberY == 4)
+		{
+			mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (8.0f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (4.0f * setNumberY)),
+				mpDataManager->GetDisplaySize().X * 0.849f, mpDataManager->GetDisplaySize().Y * 0.09f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[0], MIDDLE_FLAG);
+		}
+		else
+		{
+			mpResourceManager->DrawSprite(mpDataManager->GetDisplaySize().X * (0.1f + (8.0f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.37f + (4.0f * setNumberY)),
+				mpDataManager->GetDisplaySize().X * 0.849f, mpDataManager->GetDisplaySize().Y * 0.09f, 0.0f, 1.0f, 0.0f, 1.0f, mnResourceIDs[1], MIDDLE_FLAG);
+		}
+
+		fontData = FontData();
+		fontData.fontSize = 45.0f;
+		fontData.fontWeight = DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_THIN;
+		mpResourceManager->SetFontData(&fontData);
+
+		draw = L"SPACE";
+		mpResourceManager->DrawString(draw, XMFLOAT2(mpDataManager->GetDisplaySize().X * (0.1f + (8.0f * setNumberX)), mpDataManager->GetDisplaySize().Y * (0.35f + (4.01f * setNumberY))), D2D1_DRAW_TEXT_OPTIONS_NONE, MIDDLE_FLAG, fontData.fontSize);
+
+		fontData = FontData();
+		mpResourceManager->SetFontData(&fontData);
+	}
+
+
 	std::wstring drawString = L"Name: " + msSetName.substr(0, mnSetNameSelectNumber) + msAddWord.substr(0, mnAddWordSelectNumber) + msSelectWord + msAddWord.substr(mnAddWordSelectNumber) + msSetName.substr(mnSetNameSelectNumber);
 
 	fontData = FontData();
 	fontData.fontSize = 40.0f;
 	mpResourceManager->SetFontData(&fontData);
-	mpResourceManager->DrawString(drawString, XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.2f, mpDataManager->GetDisplaySize().Y * 0.25f), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	mpResourceManager->DrawString(drawString, XMFLOAT2(mpDataManager->GetDisplaySize().X * 0.2f, mpDataManager->GetDisplaySize().Y * 0.15f), D2D1_DRAW_TEXT_OPTIONS_NONE);
 }

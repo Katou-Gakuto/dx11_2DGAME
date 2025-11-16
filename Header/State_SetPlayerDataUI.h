@@ -237,7 +237,7 @@ private:
 	/*ƒiƒ“ƒo[‚É‚ ‚Á‚½ˆ—‚ğ‚·‚é*/
 	void SetNumberProcess(SetPlayerDataUI* parent, PROCESS_NUMBER number, bool flag = true);
 	void SetNumberProcess(SetPlayerDataUI* parent, char number, bool flag = true) { SetNumberProcess(parent, (PROCESS_NUMBER)number, flag); }
-	void SetNumberProcess(SetPlayerDataUI* parent, int number, bool flag = true) { SetNumberProcess(parent, (PROCESS_NUMBER)number, flag); }
+	void SetNumberProcess(SetPlayerDataUI* parent, int number, bool flag = true);
 
 	std::wstring GetWordName(char number, FontData* fontData);
 
@@ -249,4 +249,6 @@ private:
 
 	// ‚Ğ‚ç‚ª‚È‚É‚·‚é
 
+	// “ü—Í’†•¶š”‚ğæ“¾
+	int GetNameCount() { return msSetName.size() + msAddWord.size() + msSelectWord.size(); }
 };
