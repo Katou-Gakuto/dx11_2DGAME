@@ -549,33 +549,52 @@ int SPDUINameSet::ControllerUpdate(SetPlayerDataUI* parent)
 	{
 		if (mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber()) != 0)
 		{
-			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
 			{
-				mnSelectNumberY = CheckYPos(mnSelectNumberY - 1);
-			}
-			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
-			{
-				mnSelectNumberY = CheckYPos(mnSelectNumberY + 1);
-			}
-
-			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
-			{
-				mnSelectNumberX = CheckXPos(mnSelectNumberX + 1);
-			}
-			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
-			{
-				mnSelectNumberX = CheckXPos(mnSelectNumberX - 1);
+				if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::UP, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+				{
+					mnSelectNumberY = CheckYPos(mnSelectNumberY - 1);
+				}
 			}
 
-			if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
 			{
-				SetNumberProcess(parent, KEY_POS_NUMBERS[mnSelectNumberY][mnSelectNumberX]);
+				if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::DOWN, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+				{
+					mnSelectNumberY = CheckYPos(mnSelectNumberY + 1);
+				}
 			}
 
-			if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) &&
-				mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+			if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
 			{
-				SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
+				if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::RIGHT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+				{
+					mnSelectNumberX = CheckXPos(mnSelectNumberX + 1);
+				}
+			}
+			if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
+			{
+				if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::LEFT, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+				{
+					mnSelectNumberX = CheckXPos(mnSelectNumberX - 1);
+				}
+			}
+
+			if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
+			{
+				if (mpKeyState->GetKeyDown_Controller(CONTROLLER_KEY_TYPE::A, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+				{
+					SetNumberProcess(parent, KEY_POS_NUMBERS[mnSelectNumberY][mnSelectNumberX]);
+				}
+			}
+
+			if (parent->GetSelectPlayerNumber() < mpDataManager->GetPlayerCount())
+			{
+				if (mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::L, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())) &&
+					mpKeyState->GetKey_Controller(CONTROLLER_KEY_TYPE::R, mpDataManager->GetPlayerKeyNumber(parent->GetSelectPlayerNumber())))
+				{
+					SetNumberProcess(parent, PROCESS_NUMBER::ENTER);
+				}
 			}
 		}
 	}

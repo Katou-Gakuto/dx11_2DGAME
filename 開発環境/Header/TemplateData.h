@@ -926,7 +926,7 @@ struct BitMapData
 	{
 		if (y_Pos < 0)
 		{
-			y_Pos = ((y_Pos % bmpHeaderData.biHeight) + bmpHeaderData.biHeight);
+			y_Pos = ((y_Pos % bmpHeaderData.biHeight) + bmpHeaderData.biHeight) % bmpHeaderData.biHeight;
 		}
 		else
 		{
@@ -935,7 +935,7 @@ struct BitMapData
 
 		if (x_Pos < 0)
 		{
-			x_Pos = ((x_Pos % bmpHeaderData.biWidth) + bmpHeaderData.biWidth);
+			x_Pos = ((x_Pos % bmpHeaderData.biWidth) + bmpHeaderData.biWidth) % bmpHeaderData.biWidth;
 		}
 		else
 		{
