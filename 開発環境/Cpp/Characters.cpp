@@ -92,6 +92,7 @@ void CloseRangeCharacter::CharacterEndUpdate()
 	}
 
 	srcCollisionData = Master::mpGameManager->GetObjectManager()->CheckObjectHit(srcCollisionData, (int)OBJECT_TYPE::COLLISION_BASE);
+	srcCollisionData = Master::mpGameManager->GetObjectManager()->CheckObjectHit(srcCollisionData, (int)OBJECT_TYPE::CHARACTER_BASE);
 	mstStatus.Position += srcCollisionData.NotHitPosMove;
 }
 
