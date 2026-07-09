@@ -386,7 +386,15 @@ EnemyBase::~EnemyBase()
 // キャラクターコントローラー初期化
 void EnemyBase::CharacterControllerInitilize()
 {
-	mpCharacter = new CloseRangeCharacter(DrawData::GetDrawData(0, L"Resource/Enemy/0.png"), this, 3, 0, 1, 2, 1, STATUS::SetAllStatus(1 + (int)((Master::mpDataManager->GetGameStartTime() - Master::mpTimeManager->GetGameTime()) * 0.00001f), 1, 1, 1, 0.05f, mstStartPosition, VECTOR_2D::One(), CHARACTER_TYPE::CLOSE_RENGE), 450, 1450);
+	int time = Master::mpTimeManager->GetGameTime();
+	int level = (int)((float)(int)(Master::mpDataManager->GetGameStartTime() - Master::mpTimeManager->GetGameTime()) * 0.00001f);
+	if (level < 0)
+	{
+		level = -level;
+	}
+	level += 1;
+
+	mpCharacter = new CloseRangeCharacter(DrawData::GetDrawData(0, L"Resource/Enemy/0.png"), this, 3, 0, 1, 2, 1, STATUS::SetAllStatus(level, 1, 1, 1, 0.05f, mstStartPosition, VECTOR_2D::One(), CHARACTER_TYPE::CLOSE_RENGE), 450, 1450);
 	mpCharacter->Initilize();
 	Master::mpGameManager->GetTargetDatas()->AddEnemy(mpCharacter);
 

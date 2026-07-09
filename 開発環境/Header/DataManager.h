@@ -15,7 +15,7 @@ private:
 	VECTOR_2D mstDisplaySize;
 
 	// ゲーム開始時間
-	int mnGameStartTime;
+	unsigned int mnGameStartTime;
 
 	// ウィンドウ
 	HWND mdxsWnd;
@@ -63,7 +63,7 @@ public:
 	VECTOR_2D GetDisplaySize() { return mstDisplaySize; }
 
 	/*ゲーム開始時間取得*/
-	int GetGameStartTime() { return mnGameStartTime; }
+	unsigned int GetGameStartTime() { return mnGameStartTime; }
 
 	/*ウィンドウ取得*/
 	HWND GetWnd() { return mdxsWnd; }
@@ -91,7 +91,7 @@ public:
 	void SetPlayerType(int playerNumber, int playerType) { mstPlayerDatas[playerNumber].characterType = playerType; }
 
 	/*ゲーム開始時間設定*/
-	void SetGameStartTime(int time) { mnGameStartTime = time; }
+	void SetGameStartTime(unsigned int time) { mnGameStartTime = time; }
 
 	/*ビットマップデータ設定*/
 	void SetBitMapData(std::string fileName);

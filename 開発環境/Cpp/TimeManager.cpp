@@ -3,7 +3,7 @@
 #include "../Header/TimeManager.h"
 
 // コンストラクタ
-TimeManager::TimeManager(unsigned long oneFrameTime)
+TimeManager::TimeManager(unsigned int oneFrameTime)
 : mnFrameCount(0)
 , mnStartTime(0)
 , mnPreviousTime(0)
@@ -27,8 +27,8 @@ void TimeManager::Initilize()
 // 更新
 bool TimeManager::GetNextUpdateFlag()
 {
-    unsigned long nowTime = timeGetTime();
-    if ((mnPreviousTime + mnOneFrame) <= nowTime)
+    unsigned int nowTime = timeGetTime();
+    if (mnOneFrame <= nowTime - mnPreviousTime)
     {
         mnFrameCount += 1;
 
