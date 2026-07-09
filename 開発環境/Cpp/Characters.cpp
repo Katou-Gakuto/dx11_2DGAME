@@ -400,7 +400,7 @@ void EnemyBase::CharacterControllerInitilize()
 
 	meSetCharacterType = CHARACTER_TYPE::CLOSE_RENGE;
 
-	mfAttackRange = 1.0f;
+	mfAttackRange = 1.5f;
 }
 
 // キャラクターコントローラー終了

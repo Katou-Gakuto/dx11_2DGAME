@@ -268,7 +268,7 @@ GROUND_TYPE MapChangeData::GetGroundType(unsigned char number)
 // 地マップオブジェクトタイプ取得
 MAP_OBJECT_TYPE MapChangeData::GetMapObjectType(unsigned char number)
 {
-    if (number < (42 + ((Master::mpDataManager->GetPlayerCount() -1) * 10)))
+    if (number < (52 + ((Master::mpDataManager->GetPlayerCount() -1) * 10)))
     {
         return MAP_OBJECT_TYPE::ENEMY;
     }
