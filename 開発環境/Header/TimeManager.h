@@ -7,24 +7,24 @@ class TimeManager
 private:
 
     // フレームカウント
-    int mnFrameCount;
+    unsigned long mnFrameCount;
     // スタートタイム
-    int mnStartTime;
+    unsigned long mnStartTime;
     // 一つ前の時間
-    int mnPreviousTime;
+    unsigned long mnPreviousTime;
     // ストップタイム
-    int mnStopTime;
+    unsigned long mnStopTime;
     // ストップフラグ
     bool mbStopFlag;
     // 1フレームの秒数
-    int mnOneFrame;     
+    unsigned long mnOneFrame;
 
     // 新しいシーンに移っている処理をしたフラグ
     bool mbNewSceneTimeFlag;    
 
 public:
     /*コンストラクタ*/
-    TimeManager(int oneFrameTime = 17); 
+    TimeManager(unsigned long oneFrameTime = 17);
     /*デストラクタ*/
     ~TimeManager();  
 
@@ -39,25 +39,25 @@ public:
     /// フレーム数取得
     /// </summary>
     /// <returns>経過フレーム数</returns>
-    int GetFrame() { return mnFrameCount; }
+    unsigned long GetFrame() { return mnFrameCount; }
     
     /// <summary>
     /// ゲーム時間取得
     /// </summary>
     /// <returns>ゲームの経過時間</returns>
-    int GetGameTime() { return timeGetTime() - (mnStartTime + (mbNewSceneTimeFlag ? (mnStopTime + (timeGetTime() - mnPreviousTime)) : mnStopTime)); }
+    unsigned long GetGameTime() { return timeGetTime() - (mnStartTime + (mbNewSceneTimeFlag ? (mnStopTime + (timeGetTime() - mnPreviousTime)) : mnStopTime)); }
 
     /// <summary>
     /// スタートからの経過時間
     /// </summary>
     /// <returns>経過時間</returns>
-    int GetTime() { return timeGetTime() - mnStartTime; }
+    unsigned long GetTime() { return timeGetTime() - mnStartTime; }
 
     /// <summary>
     /// 一つ前の更新時間
     /// </summary>
     /// <returns>更新時間</returns>
-    int GetPreviousTime() { return mnPreviousTime; }
+    unsigned long GetPreviousTime() { return mnPreviousTime; }
 
     /// <summary>
     /// ゲーム停止フラグ取得
@@ -75,13 +75,13 @@ public:
     /// 1フレームの秒数取得(ミリ秒)
     /// </summary>
     /// <returns>1フレームの秒数(ミリ秒)</returns>
-    int GetOneFrame() { return mnOneFrame; }
+    unsigned long GetOneFrame() { return mnOneFrame; }
     
     /// <summary>
     /// 1フレームの秒数設定(ミリ秒)
     /// </summary>
     /// <param name="time">1フレームの秒数(ミリ秒)</param>
-    void SetOneFrame(int time) { mnOneFrame = time; }
+    void SetOneFrame(unsigned long time) { mnOneFrame = time; }
 
     /// <summary>
     /// シーン変更中に経ったゲーム時間を一定化するフラグを設定
