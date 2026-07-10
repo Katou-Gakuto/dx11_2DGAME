@@ -424,7 +424,7 @@ VECTOR_2D MapData::NumberChange(VECTOR_2D changeVolume, VECTOR_2D mapPos)
         {
             for (int x = -1; x > changeVolume.IntX() - 1; x--)
             {
-                MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, -4), mapPos, false);
+                MapManager::SetOneLine('X', this, MapChangeData::GetOneLineData(this->mapLeftUpPos.IntX() + x, -4, mapPos), mapPos, false);
                 moveNumber.X -= 1.0f;
             }
         }
